@@ -5,465 +5,157 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LinkedIn Content Hub</title>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --bg: #ffffff;
-    --bg2: #f7f7f5;
-    --bg3: #f0efe9;
-    --text: #1a1a18;
-    --text2: #6b6b67;
-    --text3: #9b9b97;
-    --border: rgba(0,0,0,0.12);
-    --border2: rgba(0,0,0,0.2);
-    --accent: #7F77DD;
-    --accent-dark: #534AB7;
-    --accent-light: #EEEDFE;
-    --accent-text: #3C3489;
-    --radius: 8px;
-    --radius-lg: 12px;
-    --radius-xl: 16px;
-    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#ffffff;--bg2:#f7f7f5;--bg3:#f0efe9;
+  --text:#1a1a18;--text2:#6b6b67;--text3:#9b9b97;
+  --border:rgba(0,0,0,0.12);--border2:rgba(0,0,0,0.2);
+  --accent:#7F77DD;--accent-dark:#534AB7;--accent-light:#EEEDFE;--accent-text:#3C3489;
+  --radius:8px;--radius-lg:12px;--shadow:0 1px 3px rgba(0,0,0,0.08);
+  --green:#27500A;--green-bg:#EAF3DE;--red:#A32D2D;--red-bg:#FCEBEB;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#1c1c1a;--bg2:#242422;--bg3:#2c2c2a;
+    --text:#f0efe9;--text2:#9b9b97;--text3:#6b6b67;
+    --border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.18);
+    --accent:#9F99E8;--accent-dark:#CECBF6;--accent-light:#26215C;--accent-text:#CECBF6;
+    --green:#C0DD97;--green-bg:#173404;--red:#F7C1C1;--red-bg:#501313;
   }
-
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #1c1c1a;
-      --bg2: #242422;
-      --bg3: #2c2c2a;
-      --text: #f0efe9;
-      --text2: #9b9b97;
-      --text3: #6b6b67;
-      --border: rgba(255,255,255,0.1);
-      --border2: rgba(255,255,255,0.18);
-      --accent: #9F99E8;
-      --accent-dark: #CECBF6;
-      --accent-light: #26215C;
-      --accent-text: #CECBF6;
-      --shadow: 0 1px 3px rgba(0,0,0,0.3);
-    }
-  }
-
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-    background: var(--bg3);
-    color: var(--text);
-    min-height: 100vh;
-    font-size: 15px;
-    line-height: 1.6;
-  }
-
-  /* Header */
-  .header {
-    background: var(--bg);
-    border-bottom: 1px solid var(--border);
-    padding: 0 1.5rem;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  .header-inner {
-    max-width: 960px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 56px;
-  }
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 600;
-    font-size: 15px;
-    color: var(--text);
-  }
-  .logo-icon {
-    width: 28px;
-    height: 28px;
-    background: var(--accent);
-    border-radius: 7px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 14px;
-    font-weight: 700;
-  }
-  .header-date {
-    font-size: 12px;
-    color: var(--text2);
-  }
-
-  /* Nav */
-  .nav-wrap {
-    background: var(--bg);
-    border-bottom: 1px solid var(--border);
-    padding: 0 1.5rem;
-  }
-  .nav {
-    max-width: 960px;
-    margin: 0 auto;
-    display: flex;
-    gap: 2px;
-  }
-  .nav-btn {
-    padding: 12px 18px;
-    font-size: 13px;
-    font-weight: 500;
-    border: none;
-    background: transparent;
-    color: var(--text2);
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -1px;
-    transition: color 0.15s, border-color 0.15s;
-    white-space: nowrap;
-  }
-  .nav-btn:hover { color: var(--text); }
-  .nav-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
-  .nav-btn .icon { margin-right: 5px; }
-
-  /* Main */
-  .main {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 1.5rem;
-  }
-
-  /* Sections */
-  .section { display: none; }
-  .section.active { display: block; }
-
-  /* Cards */
-  .card {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 1.25rem;
-    box-shadow: var(--shadow);
-  }
-  .card-title {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text);
-    margin-bottom: 1rem;
-  }
-
-  /* Grid */
-  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem; }
-  @media (max-width: 640px) {
-    .grid2 { grid-template-columns: 1fr; }
-    .grid3 { grid-template-columns: 1fr 1fr; }
-    .nav-btn { padding: 12px 10px; font-size: 12px; }
-    .nav-btn .icon { display: none; }
-  }
-
-  /* Form elements */
-  label {
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--text2);
-    display: block;
-    margin-bottom: 5px;
-  }
-  input, textarea, select {
-    font-family: inherit;
-    font-size: 13px;
-    color: var(--text);
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 8px 10px;
-    width: 100%;
-    transition: border-color 0.15s;
-    outline: none;
-  }
-  input:focus, textarea:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(127,119,221,0.12); }
-  textarea { resize: vertical; }
-  select { cursor: pointer; }
-  .form-group { margin-bottom: 12px; }
-
-  /* Buttons */
-  .btn {
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    border-radius: var(--radius);
-    padding: 8px 14px;
-    border: 1px solid var(--border2);
-    background: transparent;
-    color: var(--text);
-    transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    white-space: nowrap;
-  }
-  .btn:hover { background: var(--bg2); }
-  .btn:active { transform: scale(0.97); }
-  .btn-primary {
-    background: var(--accent);
-    color: white;
-    border-color: var(--accent);
-  }
-  .btn-primary:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
-  .btn-danger { color: #c0392b; border-color: #f5c6c6; }
-  .btn-danger:hover { background: #fff5f5; }
-  .btn-sm { padding: 5px 10px; font-size: 12px; }
-  .btn-full { width: 100%; justify-content: center; }
-  .btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
-
-  /* Badges */
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 2px 8px;
-    border-radius: 20px;
-    white-space: nowrap;
-  }
-  .badge-ai { background: #EEEDFE; color: #3C3489; }
-  .badge-mkt { background: #E1F5EE; color: #085041; }
-  .badge-pb { background: #FBEAF0; color: #4B1528; }
-  .badge-news { background: #FAEEDA; color: #633806; }
-  .badge-idea { background: #F1EFE8; color: #444441; }
-  .badge-draft { background: #E6F1FB; color: #0C447C; }
-  .badge-posted { background: #EAF3DE; color: #27500A; }
-  @media (prefers-color-scheme: dark) {
-    .badge-ai { background: #26215C; color: #CECBF6; }
-    .badge-mkt { background: #04342C; color: #9FE1CB; }
-    .badge-pb { background: #4B1528; color: #F4C0D1; }
-    .badge-news { background: #412402; color: #FAC775; }
-    .badge-idea { background: #2C2C2A; color: #D3D1C7; }
-    .badge-draft { background: #042C53; color: #B5D4F4; }
-    .badge-posted { background: #173404; color: #C0DD97; }
-  }
-
-  /* Filter chips */
-  .filter-bar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1rem; }
-  .filter-chip {
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 500;
-    border: 1px solid var(--border2);
-    background: transparent;
-    color: var(--text2);
-    cursor: pointer;
-    font-family: inherit;
-    transition: all 0.15s;
-  }
-  .filter-chip:hover { color: var(--text); border-color: var(--accent); }
-  .filter-chip.active { background: var(--accent); border-color: var(--accent); color: white; }
-
-  /* Day chips */
-  .day-chips { display: flex; gap: 8px; flex-wrap: wrap; }
-  .day-chip {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 1.5px solid var(--border2);
-    background: transparent;
-    font-size: 11px;
-    font-weight: 600;
-    cursor: pointer;
-    color: var(--text2);
-    font-family: inherit;
-    transition: all 0.15s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .day-chip:hover { border-color: var(--accent); color: var(--accent); }
-  .day-chip.today { border-color: var(--accent); color: var(--accent); }
-  .day-chip.active { background: var(--accent); border-color: var(--accent); color: white; }
-
-  /* Streak display */
-  .streak-big { font-size: 48px; font-weight: 700; color: var(--text); line-height: 1; }
-  .streak-label { font-size: 13px; color: var(--text2); margin-top: 2px; }
-  .streak-msg { font-size: 13px; color: var(--accent); font-weight: 500; margin-top: 6px; }
-
-  /* Stat cards */
-  .stat-card {
-    background: var(--bg2);
-    border-radius: var(--radius);
-    padding: 1rem;
-    text-align: center;
-  }
-  .stat-label { font-size: 11px; color: var(--text2); font-weight: 500; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.04em; }
-  .stat-val { font-size: 24px; font-weight: 600; color: var(--text); }
-
-  /* Calendar */
-  .cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
-  .cal-title { font-size: 14px; font-weight: 600; }
-  .cal-nav { display: flex; align-items: center; gap: 6px; }
-  .month-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
-  .day-label { font-size: 10px; font-weight: 600; color: var(--text3); text-align: center; padding: 4px 0; text-transform: uppercase; }
-  .cal-cell {
-    aspect-ratio: 1;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    cursor: pointer;
-    border: 1px solid var(--border);
-    color: var(--text2);
-    font-weight: 500;
-    transition: all 0.12s;
-    background: transparent;
-    font-family: inherit;
-  }
-  .cal-cell:hover { border-color: var(--accent); color: var(--accent); }
-  .cal-cell.empty { border: none; cursor: default; pointer-events: none; }
-  .cal-cell.today-cell { border-color: var(--accent); color: var(--accent); font-weight: 700; }
-  .cal-cell.posted-cell { background: var(--accent); border-color: var(--accent); color: white; }
-
-  /* Idea cards */
-  .idea-card {
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 12px;
-    margin-bottom: 8px;
-    background: var(--bg);
-    transition: border-color 0.15s, box-shadow 0.15s;
-  }
-  .idea-card:hover { border-color: var(--border2); box-shadow: var(--shadow); }
-  .idea-card.is-posted { opacity: 0.6; }
-  .idea-title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
-  .idea-title-text { font-size: 13px; font-weight: 600; flex: 1; }
-  .idea-badges { display: flex; gap: 4px; flex-shrink: 0; }
-  .idea-draft-preview { font-size: 12px; color: var(--text2); margin-bottom: 6px; line-height: 1.5; }
-  .idea-source { font-size: 11px; color: var(--text3); margin-bottom: 8px; }
-  .idea-actions { display: flex; gap: 6px; align-items: center; }
-  .spacer { flex: 1; }
-
-  /* Inspiration cards */
-  .insp-card {
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 12px;
-    margin-bottom: 8px;
-    background: var(--bg);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    transition: border-color 0.15s;
-  }
-  .insp-card:hover { border-color: var(--border2); }
-  .avatar {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    background: var(--accent-light);
-    color: var(--accent-text);
-    font-size: 13px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-  .insp-info { flex: 1; min-width: 0; }
-  .insp-name { font-size: 13px; font-weight: 600; }
-  .insp-about { font-size: 12px; color: var(--text2); }
-  .insp-link { font-size: 12px; color: var(--accent); text-decoration: none; }
-  .insp-link:hover { text-decoration: underline; }
-
-  /* Generator */
-  .api-key-bar {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 12px;
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-  .api-key-bar label { margin: 0; white-space: nowrap; color: var(--text2); font-size: 12px; font-weight: 500; }
-  .api-key-input { flex: 1; min-width: 180px; font-family: monospace; letter-spacing: 0.03em; }
-  .api-status { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 20px; }
-  .api-status.set { background: #EAF3DE; color: #27500A; }
-  .api-status.unset { background: #FCEBEB; color: #A32D2D; }
-  @media (prefers-color-scheme: dark) {
-    .api-status.set { background: #173404; color: #C0DD97; }
-    .api-status.unset { background: #501313; color: #F7C1C1; }
-  }
-  .gen-output {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1rem;
-    font-size: 14px;
-    line-height: 1.75;
-    min-height: 140px;
-    white-space: pre-wrap;
-    word-break: break-word;
-    color: var(--text2);
-  }
-  .gen-output.has-content { color: var(--text); }
-  .spinner {
-    display: inline-block;
-    width: 14px;
-    height: 14px;
-    border: 2px solid rgba(255,255,255,0.3);
-    border-top-color: white;
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    vertical-align: middle;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* Toast */
-  .toast {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    background: #1a1a18;
-    color: #f0efe9;
-    padding: 10px 16px;
-    border-radius: var(--radius);
-    font-size: 13px;
-    font-weight: 500;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: all 0.25s;
-    pointer-events: none;
-    z-index: 999;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  }
-  .toast.show { opacity: 1; transform: translateY(0); }
-
-  /* Misc */
-  .divider { border: none; border-top: 1px solid var(--border); margin: 1rem 0; }
-  .flex { display: flex; }
-  .items-center { align-items: center; }
-  .justify-between { justify-content: space-between; }
-  .gap-6 { gap: 6px; }
-  .gap-8 { gap: 8px; }
-  .gap-12 { gap: 12px; }
-  .mt-8 { margin-top: 8px; }
-  .mt-12 { margin-top: 12px; }
-  .mt-16 { margin-top: 16px; }
-  .text-sm { font-size: 13px; }
-  .text-xs { font-size: 12px; }
-  .text-muted { color: var(--text2); }
-  .font-600 { font-weight: 600; }
-  .empty-state { padding: 2rem 0; text-align: center; color: var(--text3); font-size: 13px; }
-
-  /* Pace bar */
-  .pace-bar-track { height: 6px; background: var(--bg3); border-radius: 3px; margin: 8px 0; overflow: hidden; }
-  .pace-bar-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.4s ease; }
-
-  /* Section header row */
-  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
-  .section-h1 { font-size: 18px; font-weight: 700; }
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg3);color:var(--text);min-height:100vh;font-size:15px;line-height:1.6}
+.header{background:var(--bg);border-bottom:1px solid var(--border);padding:0 1.5rem;position:sticky;top:0;z-index:100}
+.header-inner{max-width:980px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:56px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px}
+.logo-icon{width:28px;height:28px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;color:white;font-size:13px;font-weight:800}
+.sync-status{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;display:flex;align-items:center;gap:5px}
+.sync-ok{background:var(--green-bg);color:var(--green)}
+.sync-err{background:var(--red-bg);color:var(--red)}
+.sync-mid{background:var(--bg2);color:var(--text2)}
+.dot{width:6px;height:6px;border-radius:50%;background:currentColor;display:inline-block}
+.nav-wrap{background:var(--bg);border-bottom:1px solid var(--border);padding:0 1.5rem}
+.nav{max-width:980px;margin:0 auto;display:flex;gap:2px}
+.nav-btn{padding:12px 18px;font-size:13px;font-weight:500;border:none;background:transparent;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s,border-color .15s;white-space:nowrap;font-family:inherit}
+.nav-btn:hover{color:var(--text)}
+.nav-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+.main{max-width:980px;margin:0 auto;padding:1.5rem}
+.section{display:none}.section.active{display:block}
+.card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;box-shadow:var(--shadow)}
+.card-title{font-size:14px;font-weight:600;margin-bottom:1rem}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem}
+@media(max-width:640px){
+  .grid2{grid-template-columns:1fr}
+  .grid3{grid-template-columns:1fr 1fr}
+  .nav-btn{padding:12px 10px;font-size:12px}
+}
+label{font-size:12px;font-weight:500;color:var(--text2);display:block;margin-bottom:5px}
+input,textarea,select{font-family:inherit;font-size:13px;color:var(--text);background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:8px 10px;width:100%;transition:border-color .15s;outline:none}
+input:focus,textarea:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(127,119,221,0.12)}
+textarea{resize:vertical}
+.form-group{margin-bottom:12px}
+.btn{font-family:inherit;font-size:13px;font-weight:500;cursor:pointer;border-radius:var(--radius);padding:8px 14px;border:1px solid var(--border2);background:transparent;color:var(--text);transition:background .15s,transform .1s;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.btn:hover{background:var(--bg2)}
+.btn:active{transform:scale(0.97)}
+.btn-primary{background:var(--accent);color:white;border-color:var(--accent)}
+.btn-primary:hover{background:var(--accent-dark);border-color:var(--accent-dark)}
+.btn-danger{color:var(--red);border-color:rgba(163,45,45,0.2)}
+.btn-danger:hover{background:var(--red-bg)}
+.btn-sm{padding:5px 10px;font-size:12px}
+.btn-full{width:100%;justify-content:center}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.badge{display:inline-flex;align-items:center;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;white-space:nowrap}
+.badge-AI{background:#EEEDFE;color:#3C3489}
+.badge-Marketing{background:#E1F5EE;color:#085041}
+.badge-Personal{background:#FBEAF0;color:#4B1528}
+.badge-News{background:#FAEEDA;color:#633806}
+.badge-Idea{background:#F1EFE8;color:#444441}
+.badge-Draft{background:#E6F1FB;color:#0C447C}
+.badge-Posted{background:#EAF3DE;color:#27500A}
+@media(prefers-color-scheme:dark){
+  .badge-AI{background:#26215C;color:#CECBF6}
+  .badge-Marketing{background:#04342C;color:#9FE1CB}
+  .badge-Personal{background:#4B1528;color:#F4C0D1}
+  .badge-News{background:#412402;color:#FAC775}
+  .badge-Idea{background:#2C2C2A;color:#D3D1C7}
+  .badge-Draft{background:#042C53;color:#B5D4F4}
+  .badge-Posted{background:#173404;color:#C0DD97}
+}
+.filter-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem}
+.filter-chip{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:500;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;font-family:inherit;transition:all .15s}
+.filter-chip:hover{color:var(--text);border-color:var(--accent)}
+.filter-chip.active{background:var(--accent);border-color:var(--accent);color:white}
+.day-chips{display:flex;gap:8px;flex-wrap:wrap}
+.day-chip{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer;color:var(--text2);font-family:inherit;transition:all .15s;display:flex;align-items:center;justify-content:center}
+.day-chip:hover{border-color:var(--accent);color:var(--accent)}
+.day-chip.today{border-color:var(--accent);color:var(--accent)}
+.day-chip.active{background:var(--accent);border-color:var(--accent);color:white}
+.streak-big{font-size:48px;font-weight:700;line-height:1}
+.streak-msg{font-size:13px;color:var(--accent);font-weight:500;margin-top:6px}
+.stat-card{background:var(--bg2);border-radius:var(--radius);padding:1rem;text-align:center}
+.stat-label{font-size:11px;color:var(--text2);font-weight:500;margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em}
+.stat-val{font-size:24px;font-weight:600}
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.cal-title{font-size:14px;font-weight:600}
+.cal-nav{display:flex;align-items:center;gap:6px}
+.month-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.day-label{font-size:10px;font-weight:600;color:var(--text3);text-align:center;padding:4px 0;text-transform:uppercase}
+.cal-cell{aspect-ratio:1;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;border:1px solid var(--border);color:var(--text2);font-weight:500;transition:all .12s;background:transparent;font-family:inherit}
+.cal-cell:hover{border-color:var(--accent);color:var(--accent)}
+.cal-cell.empty{border:none;cursor:default;pointer-events:none}
+.cal-cell.today-cell{border-color:var(--accent);color:var(--accent);font-weight:700}
+.cal-cell.posted-cell{background:var(--accent);border-color:var(--accent);color:white}
+.pace-bar-track{height:6px;background:var(--bg3);border-radius:3px;margin:8px 0;overflow:hidden}
+.pace-bar-fill{height:100%;background:var(--accent);border-radius:3px;transition:width .4s ease}
+.idea-card{border:1px solid var(--border);border-radius:var(--radius);background:var(--bg);transition:border-color .15s,box-shadow .15s;margin-bottom:8px;overflow:hidden}
+.idea-card:hover{border-color:var(--border2);box-shadow:var(--shadow)}
+.idea-card.is-posted{opacity:.6}
+.idea-card-header{padding:12px;cursor:pointer;display:flex;align-items:flex-start;gap:8px;user-select:none}
+.idea-card-header:hover{background:var(--bg2)}
+.idea-title-text{font-size:13px;font-weight:600;flex:1;line-height:1.4}
+.idea-source-tag{font-size:11px;color:var(--text3);margin-top:2px}
+.idea-badges-row{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.expand-arrow{font-size:11px;color:var(--text3);transition:transform .2s}
+.expand-arrow.open{transform:rotate(180deg)}
+.idea-body{display:none;border-top:1px solid var(--border);padding:12px}
+.idea-body.open{display:block}
+.idea-draft-full{font-size:13px;color:var(--text);line-height:1.75;white-space:pre-wrap;word-break:break-word;margin-bottom:10px;background:var(--bg2);border-radius:var(--radius);padding:10px}
+.idea-links-section{margin-bottom:10px}
+.idea-link-row{display:flex;align-items:center;gap:6px;padding:3px 0;font-size:12px}
+.idea-link-row a{color:var(--accent);text-decoration:none;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.idea-link-row a:hover{text-decoration:underline}
+.idea-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:4px}
+.insp-card{border:1px solid var(--border);border-radius:var(--radius);padding:12px;margin-bottom:8px;background:var(--bg);display:flex;align-items:center;gap:12px;transition:border-color .15s}
+.insp-card:hover{border-color:var(--border2)}
+.avatar{width:38px;height:38px;border-radius:50%;background:var(--accent-light);color:var(--accent-text);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.insp-name{font-size:13px;font-weight:600}
+.insp-about{font-size:12px;color:var(--text2)}
+.insp-link{font-size:12px;color:var(--accent);text-decoration:none}
+.insp-link:hover{text-decoration:underline}
+.api-key-bar{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:12px;margin-bottom:1rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.api-key-bar label{margin:0;white-space:nowrap;font-size:12px;font-weight:500}
+.api-status{font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px}
+.api-status.set{background:var(--green-bg);color:var(--green)}
+.api-status.unset{background:var(--red-bg);color:var(--red)}
+.gen-output{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;font-size:14px;line-height:1.75;min-height:140px;white-space:pre-wrap;word-break:break-word;color:var(--text2)}
+.gen-output.has-content{color:var(--text)}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;display:none;align-items:center;justify-content:center;padding:1rem}
+.modal-overlay.open{display:flex}
+.modal{background:var(--bg);border-radius:var(--radius-lg);padding:1.5rem;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3)}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
+.modal-title{font-size:15px;font-weight:600}
+.modal-close{background:none;border:none;cursor:pointer;font-size:22px;color:var(--text2);line-height:1;padding:2px 6px;border-radius:4px}
+.modal-close:hover{background:var(--bg2);color:var(--text)}
+.modal-actions{display:flex;gap:8px;margin-top:1.25rem;justify-content:flex-end}
+.divider{border:none;border-top:1px solid var(--border);margin:1rem 0}
+.flex{display:flex}.items-center{align-items:center}.justify-between{justify-content:space-between}
+.gap-6{gap:6px}.gap-8{gap:8px}.mt-8{margin-top:8px}.mt-12{margin-top:12px}
+.text-sm{font-size:13px}.text-xs{font-size:12px}.text-muted{color:var(--text2)}.font-600{font-weight:600}.spacer{flex:1}
+.empty-state{padding:2rem 0;text-align:center;color:var(--text3);font-size:13px}
+.toast{position:fixed;bottom:24px;right:24px;background:#1a1a18;color:#f0efe9;padding:10px 16px;border-radius:var(--radius);font-size:13px;font-weight:500;opacity:0;transform:translateY(10px);transition:all .25s;pointer-events:none;z-index:999;box-shadow:0 4px 12px rgba(0,0,0,0.2);max-width:300px}
+.toast.show{opacity:1;transform:translateY(0)}
 </style>
 </head>
 <body>
@@ -474,624 +166,595 @@
       <div class="logo-icon">Li</div>
       LinkedIn Content Hub
     </div>
-    <div class="header-date" id="header-date"></div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <div id="sync-badge" class="sync-status sync-mid"><span class="dot"></span> Connecting...</div>
+      <div style="font-size:12px;color:var(--text2)" id="header-date"></div>
+    </div>
   </div>
 </div>
 
 <div class="nav-wrap">
   <nav class="nav">
-    <button class="nav-btn active" onclick="showSection('streak', this)"><span class="icon">🔥</span>Streak</button>
-    <button class="nav-btn" onclick="showSection('ideas', this)"><span class="icon">💡</span>Ideas Bank</button>
-    <button class="nav-btn" onclick="showSection('generator', this)"><span class="icon">✨</span>AI Generator</button>
-    <button class="nav-btn" onclick="showSection('inspiration', this)"><span class="icon">👥</span>Inspiration</button>
+    <button class="nav-btn active" onclick="showSection('streak',this)">🔥 Streak</button>
+    <button class="nav-btn" onclick="showSection('ideas',this)">💡 Ideas Bank</button>
+    <button class="nav-btn" onclick="showSection('generator',this)">✨ AI Generator</button>
+    <button class="nav-btn" onclick="showSection('inspiration',this)">👥 Inspiration</button>
   </nav>
 </div>
 
 <main class="main">
 
-  <!-- SECTION: STREAK -->
-  <div id="sec-streak" class="section active">
-    <div class="grid2" style="margin-bottom:1rem; align-items:start">
-      <div class="card">
-        <div class="card-title">This week</div>
-        <div style="display:flex; align-items:flex-end; gap:12px; margin-bottom:1.25rem">
-          <div class="streak-big" id="streak-num">0</div>
-          <div>
-            <div class="streak-label">/7 days posted</div>
-            <div class="streak-msg" id="streak-msg"></div>
-          </div>
-        </div>
-        <div class="day-chips" id="day-chips"></div>
-      </div>
-      <div class="card">
-        <div class="card-title">Monthly overview</div>
-        <div class="grid3" style="margin-bottom:12px">
-          <div class="stat-card"><div class="stat-label">Posted</div><div class="stat-val" id="stat-month">0</div></div>
-          <div class="stat-card"><div class="stat-label">Goal %</div><div class="stat-val" id="stat-pct">0%</div></div>
-          <div class="stat-card"><div class="stat-label">Remaining</div><div class="stat-val" id="stat-remain">0</div></div>
-        </div>
-        <div class="pace-bar-track"><div class="pace-bar-fill" id="pace-bar" style="width:0%"></div></div>
-        <div class="text-xs text-muted" id="pace-note" style="margin-top:4px"></div>
-      </div>
-    </div>
-
+<!-- STREAK -->
+<div id="sec-streak" class="section active">
+  <div class="grid2" style="margin-bottom:1rem;align-items:start">
     <div class="card">
-      <div class="cal-header">
-        <div class="cal-title" id="cal-title"></div>
-        <div class="cal-nav">
-          <button class="btn btn-sm" onclick="calPrev()" title="Previous month">&#8249;</button>
-          <button class="btn btn-sm" onclick="calToday()">Today</button>
-          <button class="btn btn-sm" onclick="calNext()" title="Next month">&#8250;</button>
+      <div class="card-title">This week</div>
+      <div style="display:flex;align-items:flex-end;gap:12px;margin-bottom:1.25rem">
+        <div class="streak-big" id="streak-num">0</div>
+        <div>
+          <div style="font-size:13px;color:var(--text2)">/7 days posted</div>
+          <div class="streak-msg" id="streak-msg"></div>
         </div>
       </div>
-      <div class="month-grid" id="cal-day-labels"></div>
-      <div class="month-grid" style="margin-top:4px" id="cal-grid"></div>
+      <div class="day-chips" id="day-chips"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Monthly overview</div>
+      <div class="grid3" style="margin-bottom:12px">
+        <div class="stat-card"><div class="stat-label">Posted</div><div class="stat-val" id="stat-month">0</div></div>
+        <div class="stat-card"><div class="stat-label">Goal %</div><div class="stat-val" id="stat-pct">0%</div></div>
+        <div class="stat-card"><div class="stat-label">Remaining</div><div class="stat-val" id="stat-remain">0</div></div>
+      </div>
+      <div class="pace-bar-track"><div class="pace-bar-fill" id="pace-bar" style="width:0%"></div></div>
+      <div class="text-xs text-muted" id="pace-note" style="margin-top:4px"></div>
     </div>
   </div>
+  <div class="card">
+    <div class="cal-header">
+      <div class="cal-title" id="cal-title"></div>
+      <div class="cal-nav">
+        <button class="btn btn-sm" onclick="calPrev()">&#8249;</button>
+        <button class="btn btn-sm" onclick="calToday()">Today</button>
+        <button class="btn btn-sm" onclick="calNext()">&#8250;</button>
+      </div>
+    </div>
+    <div class="month-grid" id="cal-day-labels"></div>
+    <div class="month-grid" style="margin-top:4px" id="cal-grid"></div>
+  </div>
+</div>
 
-  <!-- SECTION: IDEAS BANK -->
-  <div id="sec-ideas" class="section">
-    <div class="grid2" style="align-items:start">
-      <div class="card" style="position:sticky; top:80px">
-        <div class="card-title">Add new idea</div>
-        <div class="form-group">
-          <label>Topic / title *</label>
-          <input id="idea-title" placeholder="e.g. How AI is reshaping email marketing">
-        </div>
-        <div class="form-group">
-          <label>Draft text (optional)</label>
-          <textarea id="idea-draft" rows="4" placeholder="Jot down your draft, key points, or angle..."></textarea>
-        </div>
-        <div class="grid2">
-          <div class="form-group">
-            <label>Inspiration source</label>
-            <input id="idea-source" placeholder="Person or URL">
-          </div>
-          <div class="form-group">
-            <label>Category</label>
-            <select id="idea-cat">
-              <option value="AI">AI</option>
-              <option value="Marketing">Marketing</option>
-              <option value="Personal Brand">Personal Brand</option>
-              <option value="News">News</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Status</label>
-          <select id="idea-status">
-            <option value="Idea">Idea</option>
-            <option value="Draft">Draft</option>
+<!-- IDEAS BANK -->
+<div id="sec-ideas" class="section">
+  <div class="grid2" style="align-items:start">
+    <div class="card" style="position:sticky;top:80px">
+      <div class="card-title">Add new idea</div>
+      <div class="form-group"><label>Topic / title *</label><input id="idea-title" placeholder="e.g. How AI is reshaping email marketing"></div>
+      <div class="form-group"><label>Draft text (optional)</label><textarea id="idea-draft" rows="4" placeholder="Jot down your draft, key points, or angle..."></textarea></div>
+      <div class="grid2">
+        <div class="form-group"><label>Inspiration source</label><input id="idea-source" placeholder="Person or URL"></div>
+        <div class="form-group"><label>Category</label>
+          <select id="idea-cat">
+            <option value="AI">AI</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Personal Brand">Personal Brand</option>
+            <option value="News">News</option>
           </select>
         </div>
-        <button class="btn btn-primary btn-full" onclick="addIdea()">+ Add to bank</button>
       </div>
+      <div class="form-group">
+        <label>Reference links (optional)</label>
+        <textarea id="idea-links" rows="2" placeholder="Paste one link per line — LinkedIn posts, articles, screenshots..."></textarea>
+        <div class="text-xs text-muted" style="margin-top:4px">Each link becomes clickable inside the idea card</div>
+      </div>
+      <div class="form-group"><label>Status</label>
+        <select id="idea-status"><option value="Idea">Idea</option><option value="Draft">Draft</option></select>
+      </div>
+      <button class="btn btn-primary btn-full" onclick="addIdea()">+ Add to bank</button>
+    </div>
+    <div>
+      <div class="filter-bar">
+        <button class="filter-chip active" data-filter="all" onclick="filterIdeas(this)">All</button>
+        <button class="filter-chip" data-filter="cat:AI" onclick="filterIdeas(this)">AI</button>
+        <button class="filter-chip" data-filter="cat:Marketing" onclick="filterIdeas(this)">Marketing</button>
+        <button class="filter-chip" data-filter="cat:Personal Brand" onclick="filterIdeas(this)">Personal Brand</button>
+        <button class="filter-chip" data-filter="cat:News" onclick="filterIdeas(this)">News</button>
+        <button class="filter-chip" data-filter="st:Idea" onclick="filterIdeas(this)">Idea</button>
+        <button class="filter-chip" data-filter="st:Draft" onclick="filterIdeas(this)">Draft</button>
+        <button class="filter-chip" data-filter="st:Posted" onclick="filterIdeas(this)">Posted</button>
+      </div>
+      <div id="ideas-list"></div>
+    </div>
+  </div>
+</div>
 
-      <div>
-        <div class="filter-bar">
-          <button class="filter-chip active" data-filter="all" onclick="filterIdeas(this)">All</button>
-          <button class="filter-chip" data-filter="cat:AI" onclick="filterIdeas(this)">AI</button>
-          <button class="filter-chip" data-filter="cat:Marketing" onclick="filterIdeas(this)">Marketing</button>
-          <button class="filter-chip" data-filter="cat:Personal Brand" onclick="filterIdeas(this)">Personal Brand</button>
-          <button class="filter-chip" data-filter="cat:News" onclick="filterIdeas(this)">News</button>
-          <button class="filter-chip" data-filter="st:Idea" onclick="filterIdeas(this)">Idea</button>
-          <button class="filter-chip" data-filter="st:Draft" onclick="filterIdeas(this)">Draft</button>
-          <button class="filter-chip" data-filter="st:Posted" onclick="filterIdeas(this)">Posted</button>
+<!-- AI GENERATOR -->
+<div id="sec-generator" class="section">
+  <div class="api-key-bar">
+    <label>🔑 Claude API Key</label>
+    <input type="password" id="api-key-input" style="flex:1;min-width:180px;font-family:monospace" placeholder="sk-ant-..." autocomplete="off" oninput="saveApiKey()">
+    <span id="api-status" class="api-status unset">Not set</span>
+    <button class="btn btn-sm" onclick="clearApiKey()">Clear</button>
+  </div>
+  <div class="text-xs text-muted" style="margin-bottom:1rem;line-height:1.6">
+    Stored only in your browser's localStorage — never shared. Get yours at <strong>console.anthropic.com</strong>
+  </div>
+  <div class="grid2" style="align-items:start">
+    <div class="card">
+      <div class="card-title">Write your post</div>
+      <div class="form-group"><label>Topic or inspiration snippet *</label>
+        <textarea id="gen-input" rows="5" placeholder="e.g. AI agents are replacing marketing coordinators — what does this mean for teams?"></textarea>
+      </div>
+      <div class="form-group"><label>Tone</label>
+        <select id="gen-tone">
+          <option value="">Default — professional but conversational</option>
+          <option value="bold and contrarian">Bold and contrarian</option>
+          <option value="storytelling and personal">Storytelling and personal</option>
+          <option value="data-driven and analytical">Data-driven and analytical</option>
+          <option value="educational and how-to">Educational and how-to</option>
+        </select>
+      </div>
+      <button class="btn btn-primary btn-full" id="gen-btn" onclick="generatePost()">✨ Generate post</button>
+    </div>
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div class="text-sm font-600">Generated post</div>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-sm" id="copy-btn" onclick="copyPost()" style="display:none">📋 Copy</button>
+          <button class="btn btn-sm" id="regen-btn" onclick="regenerate()" style="display:none">↺ Redo</button>
         </div>
-        <div id="ideas-list"></div>
+      </div>
+      <div class="gen-output" id="gen-output">Your generated post will appear here...</div>
+      <div id="gen-save-row" style="display:none;margin-top:12px">
+        <button class="btn btn-full" onclick="saveToBank()">↓ Save to ideas bank as draft</button>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- SECTION: AI GENERATOR -->
-  <div id="sec-generator" class="section">
-    <div class="api-key-bar">
-      <label for="api-key-input">🔑 Claude API Key</label>
-      <input type="password" id="api-key-input" class="api-key-input" placeholder="sk-ant-api03-..." autocomplete="off" oninput="saveApiKey()">
-      <span id="api-status" class="api-status unset">Not set</span>
-      <button class="btn btn-sm" onclick="clearApiKey()">Clear</button>
+<!-- INSPIRATION -->
+<div id="sec-inspiration" class="section">
+  <div class="grid2" style="align-items:start">
+    <div class="card" style="position:sticky;top:80px">
+      <div class="card-title">Add creator</div>
+      <div class="form-group"><label>Name *</label><input id="insp-name" placeholder="e.g. Neil Patel"></div>
+      <div class="form-group"><label>LinkedIn URL</label><input id="insp-url" placeholder="https://linkedin.com/in/..."></div>
+      <div class="form-group"><label>What they post about</label><input id="insp-about" placeholder="e.g. SEO, content marketing, AI tools"></div>
+      <button class="btn btn-primary btn-full" onclick="addCreator()">+ Add creator</button>
     </div>
-    <div class="text-xs text-muted" style="margin-bottom:1rem; line-height:1.6">
-      Your key is stored only in your browser's localStorage — it never leaves your device except to call the Anthropic API directly. Get a key at <strong>console.anthropic.com</strong>.
-    </div>
-
-    <div class="grid2" style="align-items:start">
-      <div class="card">
-        <div class="card-title">Write your post</div>
-        <div class="form-group">
-          <label>Topic or inspiration snippet *</label>
-          <textarea id="gen-input" rows="5" placeholder="e.g. 'AI agents are replacing marketing coordinators — what does this mean for teams?' or paste a post that inspired you..."></textarea>
-        </div>
-        <div class="form-group">
-          <label>Tone</label>
-          <select id="gen-tone">
-            <option value="">Default — professional but conversational</option>
-            <option value="bold and contrarian">Bold and contrarian</option>
-            <option value="storytelling and personal">Storytelling and personal</option>
-            <option value="data-driven and analytical">Data-driven and analytical</option>
-            <option value="educational and how-to">Educational and how-to</option>
-          </select>
-        </div>
-        <button class="btn btn-primary btn-full" id="gen-btn" onclick="generatePost()">✨ Generate post</button>
-      </div>
-
-      <div class="card">
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px">
-          <div class="text-sm font-600">Generated post</div>
-          <div style="display:flex; gap:6px">
-            <button class="btn btn-sm" id="copy-btn" onclick="copyPost()" style="display:none">📋 Copy</button>
-            <button class="btn btn-sm" id="regen-btn" onclick="regenerate()" style="display:none">↺ Regenerate</button>
-          </div>
-        </div>
-        <div class="gen-output" id="gen-output">Your generated post will appear here...</div>
-        <div id="gen-save-row" style="display:none; margin-top:12px">
-          <button class="btn btn-full" onclick="saveToBank()">↓ Save to ideas bank as draft</button>
-        </div>
-      </div>
-    </div>
+    <div id="insp-list"></div>
   </div>
-
-  <!-- SECTION: INSPIRATION -->
-  <div id="sec-inspiration" class="section">
-    <div class="grid2" style="align-items:start">
-      <div class="card" style="position:sticky; top:80px">
-        <div class="card-title">Add creator</div>
-        <div class="form-group">
-          <label>Name *</label>
-          <input id="insp-name" placeholder="e.g. Neil Patel">
-        </div>
-        <div class="form-group">
-          <label>LinkedIn URL</label>
-          <input id="insp-url" placeholder="https://linkedin.com/in/...">
-        </div>
-        <div class="form-group">
-          <label>What they post about</label>
-          <input id="insp-about" placeholder="e.g. SEO, content marketing, AI tools">
-        </div>
-        <button class="btn btn-primary btn-full" onclick="addCreator()">+ Add creator</button>
-      </div>
-      <div>
-        <div class="section-header">
-          <div class="text-sm text-muted" id="insp-count"></div>
-        </div>
-        <div id="insp-list"></div>
-      </div>
-    </div>
-  </div>
+</div>
 
 </main>
+
+<!-- Edit Modal -->
+<div class="modal-overlay" id="edit-modal" onclick="handleModalClick(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Edit idea</div>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="form-group"><label>Topic / title</label><input id="edit-title"></div>
+    <div class="form-group"><label>Draft text</label><textarea id="edit-draft" rows="6"></textarea></div>
+    <div class="grid2">
+      <div class="form-group"><label>Category</label>
+        <select id="edit-cat">
+          <option value="AI">AI</option>
+          <option value="Marketing">Marketing</option>
+          <option value="Personal Brand">Personal Brand</option>
+          <option value="News">News</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Status</label>
+        <select id="edit-status">
+          <option value="Idea">Idea</option>
+          <option value="Draft">Draft</option>
+          <option value="Posted">Posted</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group"><label>Inspiration source</label><input id="edit-source"></div>
+    <div class="form-group"><label>Reference links</label>
+      <textarea id="edit-links" rows="3" placeholder="One link per line"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEdit()">Save changes</button>
+    </div>
+  </div>
+</div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// ─── Utilities ────────────────────────────────────────────
+// ─── Supabase config ──────────────────────────────────────
+const SB_URL = 'https://hkxwlyotfswofmegnxmv.supabase.co';
+const SB_KEY = 'sb_publishable_ioO0El5vb-8K4UEhKK5ZHg_XFyKd5oB';
+const SB_H = {
+  'Content-Type':'application/json',
+  'apikey': SB_KEY,
+  'Authorization': 'Bearer ' + SB_KEY
+};
+
+// ─── Utils ────────────────────────────────────────────────
 const $ = id => document.getElementById(id);
-const DAYS_SHORT = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-function ls_get(k, def) {
-  try { const v = localStorage.getItem(k); return v !== null ? JSON.parse(v) : def; } catch { return def; }
-}
-function ls_set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+function ls(k,d){try{const v=localStorage.getItem(k);return v!==null?JSON.parse(v):d}catch{return d}}
+function lss(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}
+function uuid(){return 'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function esc(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'):''}
+function dk(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function todayK(){return dk(new Date())}
+function monday(d){const t=new Date(d),day=t.getDay(),diff=t.getDate()-day+(day===0?-6:1);return new Date(t.setDate(diff))}
 
-function showToast(msg, dur = 2200) {
-  const t = $('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(t._tid);
-  t._tid = setTimeout(() => t.classList.remove('show'), dur);
-}
-
-function fmt_date(d) {
-  return d.toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
-}
-function date_key(d) {
-  const y = d.getFullYear();
-  const m = String(d.getMonth()+1).padStart(2,'0');
-  const day = String(d.getDate()).padStart(2,'0');
-  return `${y}-${m}-${day}`;
-}
-function today_key() { return date_key(new Date()); }
-function get_monday(d) {
-  const dt = new Date(d);
-  const day = dt.getDay();
-  const diff = dt.getDate() - day + (day === 0 ? -6 : 1);
-  return new Date(dt.setDate(diff));
+let toastTimer;
+function toast(msg,dur=2500){
+  const el=$('toast');el.textContent=msg;el.classList.add('show');
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),dur);
 }
 
-// ─── Data helpers ─────────────────────────────────────────
-const getData = {
-  posted: () => ls_get('posted_days', {}),
-  ideas: () => ls_get('ideas', []),
-  creators: () => ls_get('creators', []),
-  apiKey: () => ls_get('api_key', ''),
-};
-const setData = {
-  posted: v => ls_set('posted_days', v),
-  ideas: v => ls_set('ideas', v),
-  creators: v => ls_set('creators', v),
-  apiKey: v => ls_set('api_key', v),
-};
-
-// ─── Navigation ───────────────────────────────────────────
-function showSection(id, btn) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  $('sec-' + id).classList.add('active');
-  (btn || document.querySelector(`.nav-btn[onclick*="${id}"]`)).classList.add('active');
-  if (id === 'streak') renderStreak();
-  if (id === 'ideas') renderIdeas();
-  if (id === 'inspiration') renderCreators();
-  if (id === 'generator') initGenerator();
+function syncBadge(state,msg){
+  const el=$('sync-badge');
+  el.className='sync-status sync-'+(state==='ok'?'ok':state==='err'?'err':'mid');
+  el.innerHTML=`<span class="dot"></span> ${msg}`;
 }
 
-// ─── Header date ──────────────────────────────────────────
-$('header-date').textContent = fmt_date(new Date());
+$('header-date').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+// ─── Supabase helpers ─────────────────────────────────────
+async function sbq(path,opts={}){
+  const r=await fetch(SB_URL+'/rest/v1/'+path,{headers:{...SB_H,...(opts.headers||{})}, ...opts});
+  if(!r.ok){const t=await r.text();throw new Error(t);}
+  if(r.status===204)return null;
+  const ct=r.headers.get('content-type')||'';
+  return ct.includes('json')?r.json():null;
+}
+
+async function sbAll(table){
+  try{
+    const d=await sbq(table+'?order=created.desc');
+    return d||[];
+  }catch{return ls('_'+table,[]);}
+}
+
+async function sbUpsert(table,row){
+  try{
+    await sbq(table,{method:'POST',body:JSON.stringify(row),headers:{'Prefer':'resolution=merge-duplicates,return=minimal'}});
+    syncBadge('ok','Synced');
+  }catch{
+    syncBadge('err','Offline — saved locally');
+    const arr=ls('_'+table,[]);
+    const i=arr.findIndex(r=>r.id===row.id);
+    if(i>=0)arr[i]=row;else arr.unshift(row);
+    lss('_'+table,arr);
+  }
+}
+
+async function sbDel(table,id){
+  try{
+    await sbq(table+'?id=eq.'+encodeURIComponent(id),{method:'DELETE'});
+    syncBadge('ok','Synced');
+  }catch{
+    syncBadge('err','Offline — saved locally');
+    lss('_'+table,ls('_'+table,[]).filter(r=>r.id!==id));
+  }
+}
 
 // ─── STREAK ───────────────────────────────────────────────
-let calView = null;
+let posted={};
+let calView=null;
 
-function renderStreak() {
-  const posted = getData.posted();
-  const mon = get_monday(new Date());
-  let weekCount = 0;
-  const chips = $('day-chips');
-  chips.innerHTML = '';
-  const today = today_key();
-
-  for (let i = 0; i < 7; i++) {
-    const d = new Date(mon);
-    d.setDate(mon.getDate() + i);
-    const k = date_key(d);
-    const isActive = !!posted[k];
-    const isToday = k === today;
-    if (isActive) weekCount++;
-    const btn = document.createElement('button');
-    btn.className = 'day-chip' + (isActive ? ' active' : '') + (isToday && !isActive ? ' today' : '');
-    btn.textContent = DAYS_SHORT[i];
-    btn.title = k;
-    btn.onclick = () => toggleDay(k);
-    chips.appendChild(btn);
-  }
-
-  $('streak-num').textContent = weekCount;
-  const msgs = [
-    'Start strong today!',
-    'Good start — keep going!',
-    'Building momentum! 💪',
-    'Halfway there — push on!',
-    'Nearly a perfect week!',
-    "You're on fire! 🔥",
-    "Perfect week! You're unstoppable! 🏆"
-  ];
-  $('streak-msg').textContent = msgs[Math.min(weekCount, 6)];
-
-  // Monthly stats
-  const now = new Date();
-  const y = now.getFullYear(), m = now.getMonth();
-  const daysInMonth = new Date(y, m + 1, 0).getDate();
-  let monthCount = 0;
-  for (let d = 1; d <= daysInMonth; d++) {
-    const k = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    if (posted[k]) monthCount++;
-  }
-
-  // workdays estimate (Mon-Fri)
-  let workdays = 0;
-  for (let d = 1; d <= daysInMonth; d++) {
-    const dow = new Date(y, m, d).getDay();
-    if (dow !== 0 && dow !== 6) workdays++;
-  }
-  const pct = Math.min(Math.round((monthCount / workdays) * 100), 100);
-  const remain = Math.max(workdays - monthCount, 0);
-
-  $('stat-month').textContent = monthCount;
-  $('stat-pct').textContent = pct + '%';
-  $('stat-remain').textContent = remain;
-  $('pace-bar').style.width = pct + '%';
-  $('pace-note').textContent = remain > 0
-    ? `${remain} more posts to hit your 5×/week pace this month`
-    : monthCount >= workdays ? 'Goal reached for this month! 🎉' : 'You\'ve exceeded your goal! 🚀';
-
-  if (!calView) calView = { y, m };
-  renderCalendar();
+async function loadPosted(){
+  try{
+    const rows=await sbq('lch_posted?select=day');
+    posted={};(rows||[]).forEach(r=>posted[r.day]=true);
+  }catch{posted=ls('_posted',{});}
 }
 
-function toggleDay(k) {
-  const posted = getData.posted();
-  if (posted[k]) { delete posted[k]; showToast('Day unmarked'); }
-  else { posted[k] = true; showToast('✓ Logged!'); }
-  setData.posted(posted);
+async function toggleDay(k){
+  if(posted[k]){
+    delete posted[k];
+    try{await sbq('lch_posted?day=eq.'+k,{method:'DELETE'});syncBadge('ok','Synced');}
+    catch{lss('_posted',posted);}
+    toast('Day unmarked');
+  }else{
+    posted[k]=true;
+    await sbUpsert('lch_posted',{id:k,day:k,created:Date.now()});
+    toast('✓ Logged!');
+  }
   renderStreak();
 }
 
-function calPrev() { calView.m--; if (calView.m < 0) { calView.m = 11; calView.y--; } renderCalendar(); }
-function calNext() { calView.m++; if (calView.m > 11) { calView.m = 0; calView.y++; } renderCalendar(); }
-function calToday() { const n = new Date(); calView = { y: n.getFullYear(), m: n.getMonth() }; renderCalendar(); }
-
-function renderCalendar() {
-  if (!calView) return;
-  const { y, m } = calView;
-  $('cal-title').textContent = MONTHS[m] + ' ' + y;
-
-  $('cal-day-labels').innerHTML = DAYS_SHORT.map(d => `<div class="day-label">${d}</div>`).join('');
-
-  const posted = getData.posted();
-  const firstDow = new Date(y, m, 1).getDay();
-  const offset = firstDow === 0 ? 6 : firstDow - 1;
-  const daysInMonth = new Date(y, m + 1, 0).getDate();
-  const today = today_key();
-
-  let html = '';
-  for (let i = 0; i < offset; i++) html += '<div class="cal-cell empty"></div>';
-  for (let d = 1; d <= daysInMonth; d++) {
-    const k = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const isPosted = !!posted[k];
-    const isToday = k === today;
-    const cls = 'cal-cell' + (isPosted ? ' posted-cell' : '') + (!isPosted && isToday ? ' today-cell' : '');
-    html += `<button class="${cls}" onclick="toggleDay('${k}')" title="${k}">${d}</button>`;
+function renderStreak(){
+  const mon=monday(new Date());
+  let wk=0;
+  const chips=$('day-chips');chips.innerHTML='';
+  const today=todayK();
+  for(let i=0;i<7;i++){
+    const d=new Date(mon);d.setDate(mon.getDate()+i);
+    const k=dk(d),active=!!posted[k],isToday=k===today;
+    if(active)wk++;
+    const b=document.createElement('button');
+    b.className='day-chip'+(active?' active':'')+(isToday&&!active?' today':'');
+    b.textContent=DAYS[i];b.title=k;b.onclick=()=>toggleDay(k);
+    chips.appendChild(b);
   }
-  $('cal-grid').innerHTML = html;
+  $('streak-num').textContent=wk;
+  $('streak-msg').textContent=['Start strong today!','Good start — keep going!','Building momentum! 💪','Halfway — push on!','Nearly a perfect week!','You\'re on fire! 🔥','Perfect week! 🏆'][Math.min(wk,6)];
+  const now=new Date(),y=now.getFullYear(),m=now.getMonth();
+  const dim=new Date(y,m+1,0).getDate();
+  let mc=0;
+  for(let d=1;d<=dim;d++){const k=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;if(posted[k])mc++;}
+  let wd=0;for(let d=1;d<=dim;d++){const dow=new Date(y,m,d).getDay();if(dow&&dow<6)wd++;}
+  const pct=Math.min(Math.round((mc/wd)*100),100),rem=Math.max(wd-mc,0);
+  $('stat-month').textContent=mc;$('stat-pct').textContent=pct+'%';$('stat-remain').textContent=rem;
+  $('pace-bar').style.width=pct+'%';
+  $('pace-note').textContent=rem>0?`${rem} more posts to hit 5×/week pace`:mc>=wd?'Goal reached! 🎉':'Exceeded your goal! 🚀';
+  if(!calView)calView={y,m};
+  renderCal();
 }
 
-// ─── IDEAS BANK ───────────────────────────────────────────
-let ideaFilter = 'all';
+function calPrev(){calView.m--;if(calView.m<0){calView.m=11;calView.y--;}renderCal();}
+function calNext(){calView.m++;if(calView.m>11){calView.m=0;calView.y++;}renderCal();}
+function calToday(){const n=new Date();calView={y:n.getFullYear(),m:n.getMonth()};renderCal();}
 
-function catBadge(cat) {
-  const map = { 'AI': 'badge-ai', 'Marketing': 'badge-mkt', 'Personal Brand': 'badge-pb', 'News': 'badge-news' };
-  return `<span class="badge ${map[cat] || 'badge-idea'}">${cat}</span>`;
+function renderCal(){
+  const {y,m}=calView;
+  $('cal-title').textContent=MONTHS[m]+' '+y;
+  $('cal-day-labels').innerHTML=DAYS.map(d=>`<div class="day-label">${d}</div>`).join('');
+  const off=(new Date(y,m,1).getDay()||7)-1;
+  const dim=new Date(y,m+1,0).getDate();
+  const today=todayK();
+  let h='';
+  for(let i=0;i<off;i++)h+='<div class="cal-cell empty"></div>';
+  for(let d=1;d<=dim;d++){
+    const k=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const ip=!!posted[k],it=k===today;
+    h+=`<button class="cal-cell${ip?' posted-cell':it?' today-cell':''}" onclick="toggleDay('${k}')" title="${k}">${d}</button>`;
+  }
+  $('cal-grid').innerHTML=h;
 }
-function statusBadge(st) {
-  const map = { 'Idea': 'badge-idea', 'Draft': 'badge-draft', 'Posted': 'badge-posted' };
-  return `<span class="badge ${map[st] || 'badge-idea'}">${st}</span>`;
-}
 
-function renderIdeas() {
-  const ideas = getData.ideas();
-  const list = $('ideas-list');
-  if (!ideas.length) { list.innerHTML = '<div class="empty-state">No ideas yet — add your first one!</div>'; return; }
+// ─── IDEAS ────────────────────────────────────────────────
+let ideas=[];
+let ideaFilter='all';
+let editingId=null;
 
-  const filtered = ideas.filter(idea => {
-    if (ideaFilter === 'all') return true;
-    if (ideaFilter.startsWith('cat:')) return idea.category === ideaFilter.slice(4);
-    if (ideaFilter.startsWith('st:')) return idea.status === ideaFilter.slice(3);
+function catClass(c){return{'AI':'AI','Marketing':'Marketing','Personal Brand':'Personal','News':'News'}[c]||'Idea'}
+function stClass(s){return s||'Idea'}
+
+async function loadIdeas(){ideas=await sbAll('lch_ideas');}
+
+function renderIdeas(){
+  const list=$('ideas-list');
+  if(!ideas.length){list.innerHTML='<div class="empty-state">No ideas yet — add your first one!</div>';return;}
+  const f=ideas.filter(i=>{
+    if(ideaFilter==='all')return true;
+    if(ideaFilter.startsWith('cat:'))return i.category===ideaFilter.slice(4);
+    if(ideaFilter.startsWith('st:'))return i.status===ideaFilter.slice(3);
     return true;
   });
-
-  if (!filtered.length) { list.innerHTML = '<div class="empty-state">No ideas match this filter.</div>'; return; }
-
-  list.innerHTML = filtered.map(idea => {
-    const realIdx = ideas.indexOf(idea);
-    const isPosted = idea.status === 'Posted';
-    return `<div class="idea-card${isPosted ? ' is-posted' : ''}">
-      <div class="idea-title-row">
-        <div class="idea-title-text">${escHtml(idea.title)}</div>
-        <div class="idea-badges">${catBadge(idea.category)} ${statusBadge(idea.status)}</div>
+  if(!f.length){list.innerHTML='<div class="empty-state">No ideas match this filter.</div>';return;}
+  list.innerHTML=f.map(idea=>{
+    const links=(idea.links||'').split('\n').map(l=>l.trim()).filter(Boolean);
+    const linksHtml=links.length?`<div class="idea-links-section"><div class="text-xs text-muted" style="margin-bottom:4px;font-weight:500">LINKS</div>${links.map(l=>`<div class="idea-link-row">🔗 <a href="${esc(l)}" target="_blank" rel="noopener">${esc(l.length>70?l.slice(0,70)+'...':l)}</a></div>`).join('')}</div>`:'';
+    const draftHtml=idea.draft?`<div class="idea-draft-full">${esc(idea.draft)}</div>`:'<p class="text-xs text-muted" style="margin-bottom:8px">No draft text added yet.</p>';
+    return`<div class="idea-card${idea.status==='Posted'?' is-posted':''}" id="icard-${idea.id}">
+      <div class="idea-card-header" onclick="expandIdea('${idea.id}')">
+        <div style="flex:1;min-width:0">
+          <div class="idea-title-text">${esc(idea.title)}</div>
+          ${idea.source?`<div class="idea-source-tag">📎 ${esc(idea.source)}</div>`:''}
+        </div>
+        <div class="idea-badges-row">
+          <span class="badge badge-${catClass(idea.category)}">${esc(idea.category)}</span>
+          <span class="badge badge-${stClass(idea.status)}">${esc(idea.status)}</span>
+          <span class="expand-arrow" id="arr-${idea.id}">▼</span>
+        </div>
       </div>
-      ${idea.draft ? `<div class="idea-draft-preview">${escHtml(idea.draft.slice(0, 140))}${idea.draft.length > 140 ? '...' : ''}</div>` : ''}
-      ${idea.source ? `<div class="idea-source">📎 ${escHtml(idea.source)}</div>` : ''}
-      <div class="idea-actions">
-        ${!isPosted ? `<button class="btn btn-sm" onclick="advanceStatus(${realIdx})">${idea.status === 'Idea' ? '→ Draft' : '→ Mark Posted'}</button>` : ''}
-        <div class="spacer"></div>
-        <button class="btn btn-sm btn-danger" onclick="deleteIdea(${realIdx})" title="Delete">🗑</button>
+      <div class="idea-body" id="ibody-${idea.id}">
+        ${draftHtml}
+        ${linksHtml}
+        <div class="idea-actions">
+          ${idea.status!=='Posted'?`<button class="btn btn-sm" onclick="advanceIdea('${idea.id}')">${idea.status==='Idea'?'→ Move to Draft':'→ Mark as Posted'}</button>`:''}
+          <button class="btn btn-sm" onclick="openEdit('${idea.id}')">✏️ Edit</button>
+          <div class="spacer"></div>
+          <button class="btn btn-sm btn-danger" onclick="delIdea('${idea.id}')">🗑 Delete</button>
+        </div>
       </div>
     </div>`;
   }).join('');
 }
 
-function filterIdeas(el) {
-  ideaFilter = el.dataset.filter;
-  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+function expandIdea(id){
+  const body=$('ibody-'+id),arr=$('arr-'+id);
+  const open=body.classList.contains('open');
+  body.classList.toggle('open',!open);
+  arr.classList.toggle('open',!open);
+}
+
+function filterIdeas(el){
+  ideaFilter=el.dataset.filter;
+  document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));
   el.classList.add('active');
   renderIdeas();
 }
 
-function addIdea() {
-  const title = $('idea-title').value.trim();
-  if (!title) { showToast('Please enter a topic'); return; }
-  const ideas = getData.ideas();
-  ideas.unshift({
-    title,
-    draft: $('idea-draft').value.trim(),
-    source: $('idea-source').value.trim(),
-    category: $('idea-cat').value,
-    status: $('idea-status').value,
-    created: Date.now()
-  });
-  setData.ideas(ideas);
-  ['idea-title', 'idea-draft', 'idea-source'].forEach(id => $(id).value = '');
-  $('idea-status').value = 'Idea';
-  renderIdeas();
-  showToast('✓ Idea added!');
+async function addIdea(){
+  const t=$('idea-title').value.trim();
+  if(!t){toast('Please enter a topic');return;}
+  const idea={id:uuid(),title:t,draft:$('idea-draft').value.trim(),source:$('idea-source').value.trim(),category:$('idea-cat').value,links:$('idea-links').value.trim(),status:$('idea-status').value,created:Date.now()};
+  ideas.unshift(idea);renderIdeas();toast('✓ Idea added!');
+  ['idea-title','idea-draft','idea-source','idea-links'].forEach(id=>$(id).value='');
+  $('idea-status').value='Idea';
+  await sbUpsert('lch_ideas',idea);
 }
 
-function advanceStatus(i) {
-  const ideas = getData.ideas();
-  if (ideas[i].status === 'Idea') ideas[i].status = 'Draft';
-  else if (ideas[i].status === 'Draft') {
-    ideas[i].status = 'Posted';
-    const posted = getData.posted();
-    posted[today_key()] = true;
-    setData.posted(posted);
-    showToast('✓ Marked as Posted — logged today in your streak!');
+async function advanceIdea(id){
+  const idea=ideas.find(i=>i.id===id);if(!idea)return;
+  if(idea.status==='Idea'){idea.status='Draft';toast('✓ Moved to Draft!');}
+  else if(idea.status==='Draft'){
+    idea.status='Posted';
+    posted[todayK()]=true;
+    await sbUpsert('lch_posted',{id:todayK(),day:todayK(),created:Date.now()});
+    toast('✓ Posted! Today logged in your streak!');
   }
-  setData.ideas(ideas);
   renderIdeas();
+  await sbUpsert('lch_ideas',idea);
 }
 
-function deleteIdea(i) {
-  if (!confirm('Delete this idea?')) return;
-  const ideas = getData.ideas();
-  ideas.splice(i, 1);
-  setData.ideas(ideas);
-  renderIdeas();
-  showToast('Deleted');
+async function delIdea(id){
+  if(!confirm('Delete this idea?'))return;
+  ideas=ideas.filter(i=>i.id!==id);renderIdeas();toast('Deleted');
+  await sbDel('lch_ideas',id);
+}
+
+function openEdit(id){
+  const idea=ideas.find(i=>i.id===id);if(!idea)return;
+  editingId=id;
+  $('edit-title').value=idea.title||'';
+  $('edit-draft').value=idea.draft||'';
+  $('edit-cat').value=idea.category||'AI';
+  $('edit-status').value=idea.status||'Idea';
+  $('edit-source').value=idea.source||'';
+  $('edit-links').value=idea.links||'';
+  $('edit-modal').classList.add('open');
+}
+
+function closeModal(){$('edit-modal').classList.remove('open');editingId=null;}
+function handleModalClick(e){if(e.target===$('edit-modal'))closeModal();}
+
+async function saveEdit(){
+  if(!editingId)return;
+  const idea=ideas.find(i=>i.id===editingId);if(!idea)return;
+  idea.title=$('edit-title').value.trim();
+  idea.draft=$('edit-draft').value.trim();
+  idea.category=$('edit-cat').value;
+  idea.status=$('edit-status').value;
+  idea.source=$('edit-source').value.trim();
+  idea.links=$('edit-links').value.trim();
+  closeModal();renderIdeas();toast('✓ Changes saved!');
+  await sbUpsert('lch_ideas',idea);
 }
 
 // ─── AI GENERATOR ─────────────────────────────────────────
-let lastGenInput = '', lastGenTone = '';
+let lastInput='',lastTone='';
 
-function initGenerator() {
-  const key = getData.apiKey();
-  $('api-key-input').value = key ? '••••••••••••••••' : '';
-  updateApiStatus(!!key);
+function initGenerator(){
+  const k=ls('api_key','');
+  $('api-key-input').value=k?'••••••••••••••••':'';
+  $('api-status').textContent=k?'Key saved':'Not set';
+  $('api-status').className='api-status '+(k?'set':'unset');
 }
 
-function saveApiKey() {
-  const val = $('api-key-input').value.trim();
-  if (val && !val.startsWith('•')) {
-    setData.apiKey(val);
-    updateApiStatus(true);
-  }
+function saveApiKey(){
+  const v=$('api-key-input').value.trim();
+  if(v&&!v.startsWith('•')){lss('api_key',v);$('api-status').textContent='Key saved';$('api-status').className='api-status set';}
 }
 
-function clearApiKey() {
-  setData.apiKey('');
-  $('api-key-input').value = '';
-  updateApiStatus(false);
-  showToast('API key cleared');
+function clearApiKey(){lss('api_key','');$('api-key-input').value='';$('api-status').textContent='Not set';$('api-status').className='api-status unset';toast('API key cleared');}
+
+async function generatePost(){
+  const inp=$('gen-input').value.trim();if(!inp){toast('Enter a topic first');return;}
+  const key=ls('api_key','');if(!key){toast('Please enter your Claude API key above');return;}
+  const tone=$('gen-tone').value;lastInput=inp;lastTone=tone;
+  const btn=$('gen-btn'),out=$('gen-output');
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Generating...';
+  out.textContent='Writing your post...';out.classList.remove('has-content');
+  $('copy-btn').style.display='none';$('regen-btn').style.display='none';$('gen-save-row').style.display='none';
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,
+        system:`You are an expert LinkedIn content writer specializing in AI and marketing.\n\nWrite posts in this structure:\n1. Hook (1–2 sentences that stop the scroll)\n2. Insight (3–5 sentences of genuine value)\n3. CTA (1 sentence inviting engagement)\n\nRules: under 200 words, professional but conversational, max 3 hashtags at end, avoid hollow phrases like "game-changer" or "In today's world".${tone?'\nTone: '+tone:''}`,
+        messages:[{role:'user',content:'Write a LinkedIn post about: '+inp}]})});
+    if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.error?.message||'HTTP '+r.status);}
+    const d=await r.json();
+    const txt=d.content?.find(b=>b.type==='text')?.text||'No content returned.';
+    out.textContent=txt;out.classList.add('has-content');
+    $('copy-btn').style.display='';$('regen-btn').style.display='';$('gen-save-row').style.display='';
+  }catch(e){out.textContent='Error: '+e.message+'\n\nCheck your API key and try again.';}
+  btn.disabled=false;btn.innerHTML='✨ Generate post';
 }
 
-function updateApiStatus(set) {
-  const el = $('api-status');
-  if (set) { el.textContent = 'Key saved'; el.className = 'api-status set'; }
-  else { el.textContent = 'Not set'; el.className = 'api-status unset'; }
-}
+function regenerate(){$('gen-input').value=lastInput;$('gen-tone').value=lastTone;generatePost();}
+function copyPost(){navigator.clipboard.writeText($('gen-output').textContent).then(()=>toast('✓ Copied!')).catch(()=>toast('Select text manually to copy'));}
 
-async function generatePost() {
-  const inp = $('gen-input').value.trim();
-  if (!inp) { showToast('Enter a topic first'); return; }
-  const key = getData.apiKey();
-  if (!key) { showToast('Please enter your Claude API key above'); return; }
-  const tone = $('gen-tone').value;
-  lastGenInput = inp; lastGenTone = tone;
-
-  const btn = $('gen-btn');
-  const out = $('gen-output');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span> Generating...';
-  out.textContent = 'Writing your post...';
-  out.classList.remove('has-content');
-  $('copy-btn').style.display = 'none';
-  $('regen-btn').style.display = 'none';
-  $('gen-save-row').style.display = 'none';
-
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': key,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: `You are an expert LinkedIn content writer specializing in AI and marketing. Write LinkedIn posts in this exact structure:\n\n1. Hook (1–2 sentences that stop the scroll — surprising stat, bold claim, or intriguing question)\n2. Insight (3–5 sentences of genuine value — an observation, data point, contrarian take, or framework)\n3. CTA (1 sentence — a question that invites comments or a nudge to act)\n\nRules:\n- Under 200 words total\n- Professional but conversational — write like a smart practitioner, not a corporate press release\n- No hashtag spam — maximum 3 highly relevant hashtags at the very end\n- Avoid hollow phrases: "game-changer", "In today's world", "Let that sink in", "This is huge"\n- Write for founders, marketers, and AI practitioners${tone ? `\n- Tone: ${tone}` : ''}`,
-        messages: [{ role: 'user', content: `Write a LinkedIn post about: ${inp}` }]
-      })
-    });
-
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.error?.message || `HTTP ${res.status}`);
-    }
-
-    const data = await res.json();
-    const text = data.content?.find(b => b.type === 'text')?.text || 'No content returned.';
-    out.textContent = text;
-    out.classList.add('has-content');
-    $('copy-btn').style.display = '';
-    $('regen-btn').style.display = '';
-    $('gen-save-row').style.display = '';
-  } catch (e) {
-    out.textContent = `Error: ${e.message}\n\nCheck your API key and try again.`;
-    out.classList.remove('has-content');
-  }
-  btn.disabled = false;
-  btn.innerHTML = '✨ Generate post';
-}
-
-function regenerate() {
-  $('gen-input').value = lastGenInput;
-  $('gen-tone').value = lastGenTone;
-  generatePost();
-}
-
-function copyPost() {
-  const text = $('gen-output').textContent;
-  navigator.clipboard.writeText(text).then(() => showToast('✓ Copied!')).catch(() => showToast('Select text manually to copy'));
-}
-
-function saveToBank() {
-  const text = $('gen-output').textContent;
-  if (!text || !text.trim()) return;
-  const ideas = getData.ideas();
-  ideas.unshift({
-    title: lastGenInput.slice(0, 80) + (lastGenInput.length > 80 ? '...' : ''),
-    draft: text,
-    source: 'AI Generator',
-    category: 'AI',
-    status: 'Draft',
-    created: Date.now()
-  });
-  setData.ideas(ideas);
-  showToast('✓ Saved to ideas bank!');
+async function saveToBank(){
+  const txt=$('gen-output').textContent;if(!txt.trim())return;
+  const idea={id:uuid(),title:lastInput.slice(0,80)+(lastInput.length>80?'...':''),draft:txt,source:'AI Generator',category:'AI',links:'',status:'Draft',created:Date.now()};
+  ideas.unshift(idea);toast('✓ Saved to ideas bank!');
+  await sbUpsert('lch_ideas',idea);
 }
 
 // ─── INSPIRATION ──────────────────────────────────────────
-function renderCreators() {
-  const creators = getData.creators();
-  const list = $('insp-list');
-  $('insp-count').textContent = creators.length ? `${creators.length} creator${creators.length > 1 ? 's' : ''} saved` : '';
-  if (!creators.length) { list.innerHTML = '<div class="empty-state">No creators saved yet.</div>'; return; }
-  list.innerHTML = creators.map((c, i) => {
-    const initials = c.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
-    return `<div class="insp-card">
-      <div class="avatar">${initials}</div>
-      <div class="insp-info">
-        <div class="insp-name">${escHtml(c.name)}</div>
-        ${c.about ? `<div class="insp-about">${escHtml(c.about)}</div>` : ''}
-        ${c.url ? `<a href="${escHtml(c.url)}" class="insp-link" target="_blank" rel="noopener">↗ LinkedIn</a>` : ''}
+let creators=[];
+
+async function loadCreators(){creators=await sbAll('lch_creators');}
+
+function renderCreators(){
+  const list=$('insp-list');
+  if(!creators.length){list.innerHTML='<div class="empty-state">No creators saved yet.</div>';return;}
+  list.innerHTML=creators.map(c=>{
+    const initials=c.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    return`<div class="insp-card">
+      <div class="avatar">${esc(initials)}</div>
+      <div style="flex:1;min-width:0">
+        <div class="insp-name">${esc(c.name)}</div>
+        ${c.about?`<div class="insp-about">${esc(c.about)}</div>`:''}
+        ${c.url?`<a href="${esc(c.url)}" class="insp-link" target="_blank" rel="noopener">↗ LinkedIn</a>`:''}
       </div>
-      <button class="btn btn-sm btn-danger" onclick="deleteCreator(${i})" title="Remove">🗑</button>
+      <button class="btn btn-sm btn-danger" onclick="delCreator('${c.id}')">🗑</button>
     </div>`;
   }).join('');
 }
 
-function addCreator() {
-  const name = $('insp-name').value.trim();
-  if (!name) { showToast('Enter a name'); return; }
-  const creators = getData.creators();
-  creators.push({ name, url: $('insp-url').value.trim(), about: $('insp-about').value.trim() });
-  setData.creators(creators);
-  ['insp-name', 'insp-url', 'insp-about'].forEach(id => $(id).value = '');
+async function addCreator(){
+  const n=$('insp-name').value.trim();if(!n){toast('Enter a name');return;}
+  const c={id:uuid(),name:n,url:$('insp-url').value.trim(),about:$('insp-about').value.trim(),created:Date.now()};
+  creators.push(c);renderCreators();toast('✓ Creator added!');
+  ['insp-name','insp-url','insp-about'].forEach(id=>$(id).value='');
+  await sbUpsert('lch_creators',c);
+}
+
+async function delCreator(id){
+  creators=creators.filter(c=>c.id!==id);renderCreators();toast('Removed');
+  await sbDel('lch_creators',id);
+}
+
+// ─── Navigation ───────────────────────────────────────────
+function showSection(id,btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  $('sec-'+id).classList.add('active');
+  btn.classList.add('active');
+  if(id==='streak')renderStreak();
+  if(id==='ideas')renderIdeas();
+  if(id==='inspiration')renderCreators();
+  if(id==='generator')initGenerator();
+}
+
+// ─── Boot ─────────────────────────────────────────────────
+async function boot(){
+  syncBadge('mid','Connecting...');
+  try{
+    await Promise.all([
+      sbq('lch_posted?limit=1'),
+      sbq('lch_ideas?limit=1'),
+      sbq('lch_creators?limit=1')
+    ]);
+    syncBadge('ok','Synced');
+  }catch(e){
+    syncBadge('err','Offline mode');
+  }
+  await Promise.all([loadPosted(),loadIdeas(),loadCreators()]);
+  renderStreak();
+  renderIdeas();
   renderCreators();
-  showToast('✓ Creator added!');
 }
 
-function deleteCreator(i) {
-  const creators = getData.creators();
-  creators.splice(i, 1);
-  setData.creators(creators);
-  renderCreators();
-  showToast('Removed');
-}
-
-// ─── Security ─────────────────────────────────────────────
-function escHtml(str) {
-  if (!str) return '';
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
-
-// ─── Init ─────────────────────────────────────────────────
-renderStreak();
+boot();
 </script>
 </body>
 </html>
