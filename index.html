@@ -51,7 +51,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 .card-title{font-size:14px;font-weight:600;margin-bottom:1rem}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
 .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem}
-@media(max-width:640px){.grid2{grid-template-columns:1fr}.grid3{grid-template-columns:1fr 1fr}.nav-btn{padding:12px 8px;font-size:11px}}
+@media(max-width:640px){.grid2{grid-template-columns:1fr}.grid3{grid-template-columns:1fr 1fr}.nav-btn{padding:12px 8px;font-size:11px}.sticky-form{position:static!important;top:auto!important}.main{padding:1rem}.card{padding:1rem}}
 label{font-size:12px;font-weight:500;color:var(--text2);display:block;margin-bottom:5px}
 input,textarea,select{font-family:inherit;font-size:13px;color:var(--text);background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:8px 10px;width:100%;transition:border-color .15s;outline:none}
 input:focus,textarea:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(127,119,221,0.12)}
@@ -244,7 +244,7 @@ textarea{resize:vertical}
 <!-- IDEAS -->
 <div id="sec-ideas" class="section">
   <div class="grid2" style="align-items:start">
-    <div class="card" style="position:sticky;top:80px">
+    <div class="card sticky-form" style="position:sticky;top:80px">
       <div class="card-title">Add new idea</div>
       <div class="form-group"><label>Topic / title *</label><input id="idea-title" placeholder="e.g. How AI is reshaping email marketing"></div>
       <div class="form-group"><label>Draft text (optional)</label><textarea id="idea-draft" rows="4" placeholder="Jot down your draft, key points, or angle..."></textarea></div>
@@ -319,7 +319,7 @@ textarea{resize:vertical}
 <!-- INSPIRATION -->
 <div id="sec-inspiration" class="section">
   <div class="grid2" style="align-items:start">
-    <div class="card" style="position:sticky;top:80px">
+    <div class="card sticky-form" style="position:sticky;top:80px">
       <div class="card-title">Add creator</div>
       <div class="form-group"><label>Name *</label><input id="insp-name" placeholder="e.g. Neil Patel"></div>
       <div class="form-group"><label>LinkedIn URL</label><input id="insp-url" placeholder="https://linkedin.com/in/..."></div>
