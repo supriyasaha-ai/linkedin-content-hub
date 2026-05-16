@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LinkedIn Content Hub</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -42,8 +43,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 .nav-btn{padding:12px 18px;font-size:13px;font-weight:500;border:none;background:transparent;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s,border-color .15s;white-space:nowrap;font-family:inherit}
 .nav-btn:hover{color:var(--text)}
 .nav-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
-.setup-bar{background:var(--accent-light);border-bottom:1px solid var(--accent);padding:12px 1.5rem}
-.setup-bar-inner{max-width:980px;margin:0 auto}
 .migrate-bar{background:var(--yellow-bg);border-bottom:1px solid var(--yellow-cal);padding:10px 1.5rem;display:none}
 .migrate-bar-inner{max-width:980px;margin:0 auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .main{max-width:980px;margin:0 auto;padding:1.5rem}
@@ -103,10 +102,9 @@ textarea{resize:vertical}
 .stat-val{font-size:24px;font-weight:600}
 .cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;flex-wrap:wrap;gap:8px}
 .cal-title{font-size:14px;font-weight:600}
-.cal-nav{display:flex;align-items:center;gap:6px}
 .month-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
 .day-label{font-size:10px;font-weight:600;color:var(--text3);text-align:center;padding:4px 0;text-transform:uppercase}
-.cal-cell{aspect-ratio:1;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;border:1px solid var(--border);color:var(--text2);font-weight:500;transition:all .12s;background:transparent;font-family:inherit;flex-direction:column;gap:1px}
+.cal-cell{aspect-ratio:1;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;border:1px solid var(--border);color:var(--text2);font-weight:500;transition:all .12s;background:transparent;font-family:inherit}
 .cal-cell:hover{border-color:var(--accent);color:var(--accent)}
 .cal-cell.empty{border:none;cursor:default;pointer-events:none}
 .cal-cell.today-cell{border-color:var(--accent);color:var(--accent);font-weight:700}
@@ -157,9 +155,6 @@ textarea{resize:vertical}
 .cal-legend{display:flex;gap:12px;margin-bottom:10px}
 .legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2)}
 .legend-dot{width:10px;height:10px;border-radius:3px}
-.divider{border:none;border-top:1px solid var(--border);margin:1rem 0}
-.flex{display:flex}.items-center{align-items:center}.justify-between{justify-content:space-between}
-.gap-8{gap:8px}.mt-8{margin-top:8px}.mt-12{margin-top:12px}
 .text-sm{font-size:13px}.text-xs{font-size:12px}.text-muted{color:var(--text2)}.font-600{font-weight:600}.spacer{flex:1}
 .empty-state{padding:2rem 0;text-align:center;color:var(--text3);font-size:13px}
 .toast{position:fixed;bottom:24px;right:24px;background:#1a1a18;color:#f0efe9;padding:10px 16px;border-radius:var(--radius);font-size:13px;font-weight:500;opacity:0;transform:translateY(10px);transition:all .25s;pointer-events:none;z-index:999;box-shadow:0 4px 12px rgba(0,0,0,0.2);max-width:300px}
@@ -190,23 +185,9 @@ textarea{resize:vertical}
   </nav>
 </div>
 
-<!-- Notion key setup bar -->
-<div id="setup-bar" class="setup-bar" style="display:none">
-  <div class="setup-bar-inner">
-    <div style="font-size:13px;font-weight:600;color:var(--accent-text);margin-bottom:8px">🔗 Connect Notion to sync across all devices</div>
-    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-      <input type="password" id="notion-key-input" style="flex:1;min-width:200px;font-family:monospace;font-size:12px" placeholder="Paste your Notion integration token (secret_...)">
-      <button class="btn btn-primary btn-sm" onclick="saveNotionKey()">Connect</button>
-      <button class="btn btn-sm" onclick="document.getElementById('setup-bar').style.display='none'">Later</button>
-    </div>
-    <div style="font-size:11px;color:var(--accent-text);margin-top:6px">Get your token at notion.so/my-integrations → LinkedIn Hub integration</div>
-  </div>
-</div>
-
-<!-- Migration banner -->
 <div class="migrate-bar" id="migrate-bar">
   <div class="migrate-bar-inner">
-    <div style="flex:1;font-size:13px;font-weight:500;color:var(--yellow)">📦 You have existing ideas saved locally — migrate them to Notion for cross-device sync.</div>
+    <div style="flex:1;font-size:13px;font-weight:500;color:var(--yellow)">📦 You have existing ideas saved locally — migrate them to sync across all devices.</div>
     <button id="migrate-btn" class="btn btn-primary btn-sm" onclick="migrateLocalData()">Migrate my data →</button>
     <button class="btn btn-sm" onclick="document.getElementById('migrate-bar').style.display='none'">Dismiss</button>
   </div>
@@ -244,7 +225,7 @@ textarea{resize:vertical}
       <div class="cal-title" id="cal-title"></div>
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
         <button class="btn btn-sm btn-yellow" onclick="openScheduleModal()">+ Schedule post</button>
-        <div class="cal-nav">
+        <div style="display:flex;gap:6px">
           <button class="btn btn-sm" onclick="calPrev()">&#8249;</button>
           <button class="btn btn-sm" onclick="calToday()">Today</button>
           <button class="btn btn-sm" onclick="calNext()">&#8250;</button>
@@ -260,7 +241,7 @@ textarea{resize:vertical}
   </div>
 </div>
 
-<!-- IDEAS BANK -->
+<!-- IDEAS -->
 <div id="sec-ideas" class="section">
   <div class="grid2" style="align-items:start">
     <div class="card" style="position:sticky;top:80px">
@@ -281,7 +262,7 @@ textarea{resize:vertical}
     </div>
     <div>
       <div class="filter-bar">
-        <button class="filter-chip active" data-filter="all" onclick="filterIdeas(this)">All</button>
+        <button class="filter-chip active" data-filter="all" onclick="filterIdeas(this)">Ideas ✨</button>
         <button class="filter-chip" data-filter="cat:AI" onclick="filterIdeas(this)">AI</button>
         <button class="filter-chip" data-filter="cat:Marketing" onclick="filterIdeas(this)">Marketing</button>
         <button class="filter-chip" data-filter="cat:Personal Brand" onclick="filterIdeas(this)">Personal Brand</button>
@@ -295,7 +276,7 @@ textarea{resize:vertical}
   </div>
 </div>
 
-<!-- AI GENERATOR -->
+<!-- GENERATOR -->
 <div id="sec-generator" class="section">
   <div class="api-key-bar">
     <label>🔑 Claude API Key</label>
@@ -384,8 +365,8 @@ textarea{resize:vertical}
       <div class="modal-title">📅 Schedule a post</div>
       <button class="modal-close" onclick="closeModal('schedule-modal')">×</button>
     </div>
-    <div class="form-group"><label>Post title / topic *</label><input id="sched-title" placeholder="What are you posting about?"></div>
-    <div class="form-group"><label>Draft or notes (optional)</label><textarea id="sched-draft" rows="3" placeholder="Your draft or key points..."></textarea></div>
+    <div class="form-group"><label>Post title *</label><input id="sched-title" placeholder="What are you posting about?"></div>
+    <div class="form-group"><label>Draft (optional)</label><textarea id="sched-draft" rows="3" placeholder="Your draft or key points..."></textarea></div>
     <div class="grid2">
       <div class="form-group"><label>Date *</label><input type="date" id="sched-date"></div>
       <div class="form-group"><label>Time *</label><input type="time" id="sched-time" value="09:00"></div>
@@ -394,7 +375,7 @@ textarea{resize:vertical}
       <select id="sched-cat"><option value="AI">AI</option><option value="Marketing">Marketing</option><option value="Personal Brand">Personal Brand</option><option value="News">News</option></select>
     </div>
     <div style="background:var(--yellow-bg);border:1px solid var(--yellow-cal);border-radius:var(--radius);padding:10px;font-size:12px;color:var(--yellow);margin-bottom:12px">
-      ⚡ Shows as <strong>yellow</strong> on calendar. Auto-turns <strong>green</strong> after the scheduled time passes.
+      ⚡ Shows as <strong>yellow</strong> on calendar. Auto-turns <strong>green</strong> after scheduled time passes.
     </div>
     <div class="modal-actions">
       <button class="btn" onclick="closeModal('schedule-modal')">Cancel</button>
@@ -406,12 +387,11 @@ textarea{resize:vertical}
 <div class="toast" id="toast"></div>
 
 <script>
-// ─── Notion Config ────────────────────────────────────────
-const NOTION_PROXY = 'https://api.allorigins.win/raw?url=';
-const NOTION_IDEAS_DB = '3625360404be80629824f8c0cb12edee';
-const NOTION_POSTED_DB = '3625360404be807a87d0ca53b90d17e4';
-const NOTION_CREATORS_DB = '3625360404be80abb49ced19e951e660';
-const NOTION_VERSION = '2022-06-28';
+// ─── Supabase init using official JS library ──────────────
+const SB_URL = 'https://hkxwlyotfswofmegnxmv.supabase.co';
+const SB_KEY = 'sb_publishable_ioO0El5vb-8K4UEhKK5ZHg_XFyKd5oB';
+const { createClient } = supabase;
+const db = createClient(SB_URL, SB_KEY);
 
 const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -429,236 +409,76 @@ let toastT;
 function toast(msg,dur=2500){const el=$('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),dur);}
 function syncBadge(s,msg){const el=$('sync-badge');el.className='sync-status sync-'+(s==='ok'?'ok':s==='err'?'err':'mid');el.innerHTML=`<span class="dot"></span> ${msg}`;}
 function closeModal(id){$(id).classList.remove('open');}
-function getNotionKey(){return ls('notion_key','');}
 
 $('header-date').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
 
-// ─── Notion API via proxy ─────────────────────────────────
-async function notionReq(path, method='GET', body=null){
-  const key = getNotionKey();
-  if(!key) throw new Error('No Notion key');
-  const url = 'https://api.notion.com/v1/'+path;
-  const proxyUrl = NOTION_PROXY + encodeURIComponent(url);
-  const opts = {
-    method,
-    headers:{
-      'Authorization':'Bearer '+key,
-      'Notion-Version':NOTION_VERSION,
-      'Content-Type':'application/json'
-    }
-  };
-  if(body) opts.body = JSON.stringify(body);
-  const r = await fetch(proxyUrl, opts);
-  const txt = await r.text();
-  try{ return JSON.parse(txt); }catch{ throw new Error(txt); }
+// ─── DB helpers using Supabase JS client ──────────────────
+async function dbGetAll(table){
+  const {data,error}=await db.from(table).select('*').order('created',{ascending:false});
+  if(error) throw error;
+  return data||[];
 }
 
-async function notionQuery(dbId, filter=null){
-  const body = filter ? {filter} : {};
-  const res = await notionReq('databases/'+dbId+'/query','POST',body);
-  return res.results || [];
+async function dbUpsert(table,row){
+  const {error}=await db.from(table).upsert(row,{onConflict:'id'});
+  if(error) throw error;
 }
 
-async function notionCreate(dbId, props){
-  return notionReq('pages','POST',{parent:{database_id:dbId},properties:props});
-}
-
-async function notionUpdate(pageId, props){
-  return notionReq('pages/'+pageId,'PATCH',{properties:props});
-}
-
-async function notionDelete(pageId){
-  return notionReq('pages/'+pageId,'PATCH',{archived:true});
-}
-
-// ─── Notion property helpers ──────────────────────────────
-function nTitle(val){return {title:[{text:{content:val||''}}]}}
-function nText(val){return {rich_text:[{text:{content:val||''}}]}}
-function nSelect(val){return {select:{name:val||'Idea'}}}
-function nDate(val){return val?{date:{start:val}}:{date:null}}
-
-function gTitle(prop){return prop?.title?.[0]?.text?.content||''}
-function gText(prop){return prop?.rich_text?.[0]?.text?.content||''}
-function gSelect(prop){return prop?.select?.name||''}
-function gDate(prop){return prop?.date?.start||''}
-
-// ─── Notion key management ────────────────────────────────
-function saveNotionKey(){
-  const val = $('notion-key-input').value.trim();
-  if(!val){toast('Enter your Notion token');return;}
-  lss('notion_key', val);
-  $('setup-bar').style.display='none';
-  toast('✓ Notion connected! Loading your data...');
-  boot();
-}
-
-// ─── LOCAL DATA ───────────────────────────────────────────
-// All data stored locally, synced to Notion when key is set
-let posted={};
-let scheduled={};
-let ideas=[];
-let creators=[];
-let notionPageIds={ideas:{},posted:{},creators:{}};
-
-function loadLocal(){
-  posted = ls('posted',{});
-  scheduled = ls('scheduled',{});
-  ideas = ls('ideas_v2',[]);
-  creators = ls('creators_v2',[]);
-  notionPageIds = ls('notion_page_ids',{ideas:{},posted:{},creators:{}});
-}
-
-function saveLocal(){
-  lss('posted',posted);
-  lss('scheduled',scheduled);
-  lss('ideas_v2',ideas);
-  lss('creators_v2',creators);
-  lss('notion_page_ids',notionPageIds);
-}
-
-// ─── Notion sync ──────────────────────────────────────────
-async function syncToNotion(){
-  if(!getNotionKey()) return;
-  syncBadge('mid','Syncing...');
-  try{
-    // sync ideas
-    for(const idea of ideas){
-      const pid = notionPageIds.ideas[idea.id];
-      const props = {
-        'Name': nTitle(idea.title),
-        'Draft': nText(idea.draft),
-        'Source': nText(idea.source),
-        'Category': nSelect(idea.category),
-        'Status': nSelect(idea.status),
-        'Links': nText(idea.links),
-        'AppID': nText(idea.id)
-      };
-      if(pid){await notionUpdate(pid, props);}
-      else{const p=await notionCreate(NOTION_IDEAS_DB, props);notionPageIds.ideas[idea.id]=p.id;}
-    }
-    // sync posted days
-    for(const [day,type] of Object.entries(posted)){
-      const pid = notionPageIds.posted[day];
-      const props = {'Name':nTitle(day),'Type':nSelect(type),'AppID':nText(day)};
-      if(pid){await notionUpdate(pid,props);}
-      else{const p=await notionCreate(NOTION_POSTED_DB,props);notionPageIds.posted[day]=p.id;}
-    }
-    // sync creators
-    for(const c of creators){
-      const pid = notionPageIds.creators[c.id];
-      const props = {'Name':nTitle(c.name),'URL':nText(c.url),'About':nText(c.about),'AppID':nText(c.id)};
-      if(pid){await notionUpdate(pid,props);}
-      else{const p=await notionCreate(NOTION_CREATORS_DB,props);notionPageIds.creators[c.id]=p.id;}
-    }
-    saveLocal();
-    syncBadge('ok','Synced ✓');
-  }catch(e){
-    syncBadge('err','Sync failed');
-    console.error('Notion sync error:',e);
-  }
-}
-
-async function loadFromNotion(){
-  if(!getNotionKey()) return false;
-  syncBadge('mid','Loading...');
-  try{
-    // Load ideas
-    const ideaRows = await notionQuery(NOTION_IDEAS_DB);
-    if(ideaRows.length>0){
-      ideas=[];
-      for(const row of ideaRows){
-        if(row.archived) continue;
-        const appId = gText(row.properties['AppID']) || row.id;
-        ideas.push({
-          id: appId,
-          title: gTitle(row.properties['Name']),
-          draft: gText(row.properties['Draft']),
-          source: gText(row.properties['Source']),
-          category: gSelect(row.properties['Category'])||'AI',
-          status: gSelect(row.properties['Status'])||'Idea',
-          links: gText(row.properties['Links']),
-          created: Date.now()
-        });
-        notionPageIds.ideas[appId] = row.id;
-      }
-    }
-    // Load posted days
-    const postedRows = await notionQuery(NOTION_POSTED_DB);
-    if(postedRows.length>0){
-      posted={};
-      for(const row of postedRows){
-        if(row.archived) continue;
-        const day = gTitle(row.properties['Name']);
-        const type = gSelect(row.properties['Type'])||'posted';
-        if(day){ posted[day]=type; notionPageIds.posted[day]=row.id; }
-      }
-    }
-    // Load creators
-    const creatorRows = await notionQuery(NOTION_CREATORS_DB);
-    if(creatorRows.length>0){
-      creators=[];
-      for(const row of creatorRows){
-        if(row.archived) continue;
-        const appId = gText(row.properties['AppID']) || row.id;
-        creators.push({
-          id: appId,
-          name: gTitle(row.properties['Name']),
-          url: gText(row.properties['URL']),
-          about: gText(row.properties['About'])
-        });
-        notionPageIds.creators[appId] = row.id;
-      }
-    }
-    saveLocal();
-    syncBadge('ok','Synced ✓');
-    return true;
-  }catch(e){
-    syncBadge('err','Offline — using local data');
-    console.error('Notion load error:',e);
-    return false;
-  }
+async function dbDelete(table,id){
+  const {error}=await db.from(table).delete().eq('id',id);
+  if(error) throw error;
 }
 
 // ─── STREAK ───────────────────────────────────────────────
+let posted={};
+let scheduled={};
 let calView=null;
+
+async function loadPosted(){
+  try{
+    const rows=await dbGetAll('lch_posted');
+    posted={};
+    rows.forEach(r=>{posted[r.day]=r.type||'posted';});
+  }catch(e){posted=ls('_posted',{});}
+}
 
 async function toggleDay(k){
   if(posted[k]==='posted'){
     delete posted[k];
-    // Delete from Notion
-    if(notionPageIds.posted[k]){
-      try{await notionDelete(notionPageIds.posted[k]);delete notionPageIds.posted[k];}catch{}
-    }
+    try{await dbDelete('lch_posted',k);syncBadge('ok','Synced ✓');}
+    catch{lss('_posted',posted);}
     toast('Day unmarked');
   }else if(posted[k]==='scheduled'){
-    toast('This day has a scheduled post — mark complete by clicking it');
-    return;
+    toast('Scheduled post — click to mark complete');return;
   }else{
     posted[k]='posted';
+    try{await dbUpsert('lch_posted',{id:k,day:k,type:'posted',created:Date.now()});syncBadge('ok','Synced ✓');}
+    catch{syncBadge('err','Saved locally');lss('_posted',posted);}
     toast('✓ Logged!');
-    if(getNotionKey()){
-      try{
-        const props={'Name':nTitle(k),'Type':nSelect('posted'),'AppID':nText(k)};
-        const p=await notionCreate(NOTION_POSTED_DB,props);
-        notionPageIds.posted[k]=p.id;
-      }catch{}
-    }
   }
-  saveLocal();
   renderStreak();
 }
 
+function checkScheduledPosts(){
+  const now=new Date();
+  Object.entries(scheduled).forEach(([day,s])=>{
+    if(new Date(s.schedAt)<=now&&posted[day]!=='posted'){
+      posted[day]='posted';delete scheduled[day];
+      lss('_scheduled',scheduled);
+      dbUpsert('lch_posted',{id:day,day:day,type:'posted',created:Date.now()}).catch(()=>{});
+    }
+  });
+}
+
 function renderStreak(){
+  checkScheduledPosts();
   const mon=monday(new Date());
   let wk=0;
   const chips=$('day-chips');chips.innerHTML='';
   const today=todayK();
-  checkScheduledPosts();
   for(let i=0;i<7;i++){
     const d=new Date(mon);d.setDate(mon.getDate()+i);
-    const k=dk(d);
-    const isPosted=posted[k]==='posted';
-    const isToday=k===today;
+    const k=dk(d),isPosted=posted[k]==='posted',isToday=k===today;
     if(isPosted)wk++;
     const b=document.createElement('button');
     b.className='day-chip'+(isPosted?' active':'')+(isToday&&!isPosted?' today':'');
@@ -680,17 +500,6 @@ function renderStreak(){
   renderCal();
 }
 
-function checkScheduledPosts(){
-  const now=new Date();
-  Object.entries(scheduled).forEach(([day,sched])=>{
-    if(new Date(sched.schedAt)<=now&&posted[day]!=='posted'){
-      posted[day]='posted';
-      delete scheduled[day];
-      saveLocal();
-    }
-  });
-}
-
 function calPrev(){calView.m--;if(calView.m<0){calView.m=11;calView.y--;}renderCal();}
 function calNext(){calView.m++;if(calView.m>11){calView.m=0;calView.y++;}renderCal();}
 function calToday(){const n=new Date();calView={y:n.getFullYear(),m:n.getMonth()};renderCal();}
@@ -707,13 +516,8 @@ function renderCal(){
   for(let i=0;i<off;i++)h+='<div class="cal-cell empty"></div>';
   for(let d=1;d<=dim;d++){
     const k=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const isPosted=posted[k]==='posted';
-    const isSched=scheduled[k]&&posted[k]!=='posted';
-    const isToday=k===today;
-    let cls='cal-cell';
-    if(isPosted)cls+=' posted-cell';
-    else if(isSched)cls+=' scheduled-cell';
-    else if(isToday)cls+=' today-cell';
+    const isPosted=posted[k]==='posted',isSched=scheduled[k]&&posted[k]!=='posted',isToday=k===today;
+    let cls='cal-cell'+(isPosted?' posted-cell':isSched?' scheduled-cell':isToday?' today-cell':'');
     const ttl=isSched?`Scheduled: ${scheduled[k].title}`:isPosted?'Posted':'';
     h+=`<button class="${cls}" onclick="calCellClick('${k}')" title="${ttl}">${d}</button>`;
   }
@@ -722,12 +526,11 @@ function renderCal(){
 
 function calCellClick(k){
   if(scheduled[k]&&posted[k]!=='posted'){
-    if(confirm(`Scheduled: "${scheduled[k].title}"\n\nMark as posted now?`)){
+    if(confirm(`Scheduled: "${scheduled[k].title}"\nMark as posted now?`)){
       posted[k]='posted';delete scheduled[k];
-      saveLocal();renderStreak();toast('✓ Marked as posted!');
-      if(getNotionKey()){
-        try{notionCreate(NOTION_POSTED_DB,{'Name':nTitle(k),'Type':nSelect('posted'),'AppID':nText(k)}).then(p=>{notionPageIds.posted[k]=p.id;saveLocal();});}catch{}
-      }
+      lss('_scheduled',scheduled);
+      renderStreak();toast('✓ Marked as posted!');
+      dbUpsert('lch_posted',{id:k,day:k,type:'posted',created:Date.now()}).catch(()=>{});
     }
   }else{toggleDay(k);}
 }
@@ -740,37 +543,39 @@ function openScheduleModal(){
 }
 
 function saveSchedule(){
-  const title=$('sched-title').value.trim();
-  const date=$('sched-date').value;
-  const time=$('sched-time').value;
+  const title=$('sched-title').value.trim(),date=$('sched-date').value,time=$('sched-time').value;
   if(!title){toast('Enter a post title');return;}
   if(!date||!time){toast('Pick a date and time');return;}
   scheduled[date]={title,draft:$('sched-draft').value.trim(),category:$('sched-cat').value,schedAt:date+'T'+time+':00'};
   posted[date]='scheduled';
-  saveLocal();
-  closeModal('schedule-modal');
-  renderStreak();
+  lss('_scheduled',scheduled);
+  closeModal('schedule-modal');renderStreak();
   toast(`✓ Scheduled for ${date} at ${time}!`);
-  // Also add to ideas bank
+  dbUpsert('lch_posted',{id:date,day:date,type:'scheduled',created:Date.now()}).catch(()=>{});
   const idea={id:uuid(),title,draft:$('sched-draft').value.trim(),source:'Scheduled',category:$('sched-cat').value,links:'',status:'Draft',created:Date.now()};
-  ideas.unshift(idea);
-  renderIdeas();
-  if(getNotionKey()) syncToNotion();
+  ideas.unshift(idea);renderIdeas();
+  dbUpsert('lch_ideas',idea).catch(()=>{});
 }
 
 setInterval(()=>{checkScheduledPosts();renderCal();},60000);
 
 // ─── IDEAS ────────────────────────────────────────────────
+let ideas=[];
 let ideaFilter='all';
 let editingId=null;
 
 function catClass(c){return{'AI':'AI','Marketing':'Marketing','Personal Brand':'Personal','News':'News'}[c]||'Idea'}
 
+async function loadIdeas(){
+  try{ideas=await dbGetAll('lch_ideas');}
+  catch{ideas=ls('_ideas',[]);}
+}
+
 function renderIdeas(){
   const list=$('ideas-list');
   if(!ideas.length){list.innerHTML='<div class="empty-state">No ideas yet — add your first one!</div>';return;}
   const f=ideas.filter(i=>{
-    if(ideaFilter==='all')return true;
+    if(ideaFilter==='all')return i.status==='Idea';
     if(ideaFilter.startsWith('cat:'))return i.category===ideaFilter.slice(4);
     if(ideaFilter.startsWith('st:'))return i.status===ideaFilter.slice(3);
     return true;
@@ -826,49 +631,32 @@ async function addIdea(){
   const t=$('idea-title').value.trim();
   if(!t){toast('Please enter a topic');return;}
   const idea={id:uuid(),title:t,draft:$('idea-draft').value.trim(),source:$('idea-source').value.trim(),category:$('idea-cat').value,links:$('idea-links').value.trim(),status:$('idea-status').value,created:Date.now()};
-  ideas.unshift(idea);saveLocal();renderIdeas();toast('✓ Idea saved!');
+  ideas.unshift(idea);renderIdeas();
   ['idea-title','idea-draft','idea-source','idea-links'].forEach(id=>$(id).value='');
   $('idea-status').value='Idea';
-  if(getNotionKey()){
-    syncBadge('mid','Syncing...');
-    try{
-      const props={'Name':nTitle(idea.title),'Draft':nText(idea.draft),'Source':nText(idea.source),'Category':nSelect(idea.category),'Status':nSelect(idea.status),'Links':nText(idea.links),'AppID':nText(idea.id)};
-      const p=await notionCreate(NOTION_IDEAS_DB,props);
-      notionPageIds.ideas[idea.id]=p.id;saveLocal();
-      syncBadge('ok','Synced ✓');
-    }catch(e){syncBadge('err','Sync failed');}
-  }
+  try{await dbUpsert('lch_ideas',idea);syncBadge('ok','Synced ✓');toast('✓ Idea saved!');}
+  catch{syncBadge('err','Saved locally');lss('_ideas',ideas);toast('✓ Idea saved locally');}
 }
 
 async function quickStatus(id,newStatus){
   const idea=ideas.find(i=>i.id===id);if(!idea)return;
   idea.status=newStatus;
   if(newStatus==='Posted'){
-    posted[todayK()]='posted';saveLocal();
+    posted[todayK()]='posted';
+    try{await dbUpsert('lch_posted',{id:todayK(),day:todayK(),type:'posted',created:Date.now()});}catch{}
     toast('✓ Posted! Today logged in your streak!');
-    if(getNotionKey()){
-      try{
-        const props={'Name':nTitle(todayK()),'Type':nSelect('posted'),'AppID':nText(todayK())};
-        const p=await notionCreate(NOTION_POSTED_DB,props);
-        notionPageIds.posted[todayK()]=p.id;saveLocal();
-      }catch{}
-    }
+    renderStreak();
   }else{toast('✓ Moved to '+newStatus);}
-  saveLocal();renderIdeas();
-  if(getNotionKey()){
-    try{
-      const pid=notionPageIds.ideas[idea.id];
-      if(pid)await notionUpdate(pid,{'Status':nSelect(idea.status)});
-      syncBadge('ok','Synced ✓');
-    }catch{syncBadge('err','Sync failed');}
-  }
+  renderIdeas();
+  try{await dbUpsert('lch_ideas',idea);syncBadge('ok','Synced ✓');}
+  catch{syncBadge('err','Saved locally');lss('_ideas',ideas);}
 }
 
 async function delIdea(id){
   if(!confirm('Delete this idea?'))return;
-  const pid=notionPageIds.ideas[id];
-  ideas=ideas.filter(i=>i.id!==id);saveLocal();renderIdeas();toast('Deleted');
-  if(getNotionKey()&&pid){try{await notionDelete(pid);syncBadge('ok','Synced ✓');}catch{}}
+  ideas=ideas.filter(i=>i.id!==id);renderIdeas();toast('Deleted');
+  try{await dbDelete('lch_ideas',id);syncBadge('ok','Synced ✓');}
+  catch{syncBadge('err','Saved locally');lss('_ideas',ideas);}
 }
 
 function openEdit(id){
@@ -886,15 +674,9 @@ async function saveEdit(){
   idea.title=$('edit-title').value.trim();idea.draft=$('edit-draft').value.trim();
   idea.category=$('edit-cat').value;idea.status=$('edit-status').value;
   idea.source=$('edit-source').value.trim();idea.links=$('edit-links').value.trim();
-  closeModal('edit-modal');saveLocal();renderIdeas();toast('✓ Changes saved!');
-  if(getNotionKey()){
-    try{
-      const pid=notionPageIds.ideas[idea.id];
-      const props={'Name':nTitle(idea.title),'Draft':nText(idea.draft),'Source':nText(idea.source),'Category':nSelect(idea.category),'Status':nSelect(idea.status),'Links':nText(idea.links)};
-      if(pid)await notionUpdate(pid,props);
-      syncBadge('ok','Synced ✓');
-    }catch{syncBadge('err','Sync failed');}
-  }
+  closeModal('edit-modal');renderIdeas();
+  try{await dbUpsert('lch_ideas',idea);syncBadge('ok','Synced ✓');toast('✓ Changes saved!');}
+  catch{syncBadge('err','Saved locally');lss('_ideas',ideas);toast('✓ Saved locally');}
 }
 
 // ─── AI GENERATOR ─────────────────────────────────────────
@@ -920,7 +702,7 @@ async function generatePost(){
     const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',
       headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,
-        system:`You are an expert LinkedIn content writer specializing in AI and marketing.\n\nWrite posts in this structure:\n1. Hook (1–2 sentences that stop the scroll)\n2. Insight (3–5 sentences of genuine value)\n3. CTA (1 sentence inviting engagement)\n\nRules: under 200 words, professional but conversational, max 3 hashtags at end, avoid hollow phrases.${tone?'\nTone: '+tone:''}`,
+        system:`You are an expert LinkedIn content writer specializing in AI and marketing. Write posts in this structure:\n1. Hook (1-2 sentences)\n2. Insight (3-5 sentences of value)\n3. CTA (1 sentence)\nRules: under 200 words, professional but conversational, max 3 hashtags.${tone?'\nTone: '+tone:''}`,
         messages:[{role:'user',content:'Write a LinkedIn post about: '+inp}]})});
     if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.error?.message||'HTTP '+r.status);}
     const d=await r.json();
@@ -935,13 +717,18 @@ function copyPost(){navigator.clipboard.writeText($('gen-output').textContent).t
 async function saveToBank(){
   const txt=$('gen-output').textContent;if(!txt.trim())return;
   const idea={id:uuid(),title:lastInput.slice(0,80)+(lastInput.length>80?'...':''),draft:txt,source:'AI Generator',category:'AI',links:'',status:'Draft',created:Date.now()};
-  ideas.unshift(idea);saveLocal();toast('✓ Saved to ideas bank!');
-  if(getNotionKey()){
-    try{const p=await notionCreate(NOTION_IDEAS_DB,{'Name':nTitle(idea.title),'Draft':nText(idea.draft),'Source':nText(idea.source),'Category':nSelect(idea.category),'Status':nSelect(idea.status),'Links':nText(idea.links),'AppID':nText(idea.id)});notionPageIds.ideas[idea.id]=p.id;saveLocal();}catch{}
-  }
+  ideas.unshift(idea);toast('✓ Saved to ideas bank!');
+  try{await dbUpsert('lch_ideas',idea);}catch{lss('_ideas',ideas);}
 }
 
 // ─── INSPIRATION ──────────────────────────────────────────
+let creators=[];
+
+async function loadCreators(){
+  try{creators=await dbGetAll('lch_creators');}
+  catch{creators=ls('_creators',[]);}
+}
+
 function renderCreators(){
   const list=$('insp-list');
   if(!creators.length){list.innerHTML='<div class="empty-state">No creators saved yet.</div>';return;}
@@ -962,49 +749,54 @@ function renderCreators(){
 async function addCreator(){
   const n=$('insp-name').value.trim();if(!n){toast('Enter a name');return;}
   const c={id:uuid(),name:n,url:$('insp-url').value.trim(),about:$('insp-about').value.trim(),created:Date.now()};
-  creators.push(c);saveLocal();renderCreators();toast('✓ Creator saved!');
+  creators.push(c);renderCreators();
   ['insp-name','insp-url','insp-about'].forEach(id=>$(id).value='');
-  if(getNotionKey()){
-    try{const p=await notionCreate(NOTION_CREATORS_DB,{'Name':nTitle(c.name),'URL':nText(c.url),'About':nText(c.about),'AppID':nText(c.id)});notionPageIds.creators[c.id]=p.id;saveLocal();}catch{}
-  }
+  try{await dbUpsert('lch_creators',c);syncBadge('ok','Synced ✓');toast('✓ Creator saved!');}
+  catch{syncBadge('err','Saved locally');lss('_creators',creators);toast('✓ Saved locally');}
 }
 
 async function delCreator(id){
-  const pid=notionPageIds.creators[id];
-  creators=creators.filter(c=>c.id!==id);saveLocal();renderCreators();toast('Removed');
-  if(getNotionKey()&&pid){try{await notionDelete(pid);}catch{}}
+  creators=creators.filter(c=>c.id!==id);renderCreators();toast('Removed');
+  try{await dbDelete('lch_creators',id);syncBadge('ok','Synced ✓');}
+  catch{lss('_creators',creators);}
 }
 
 // ─── Migration ────────────────────────────────────────────
 async function migrateLocalData(){
   const btn=$('migrate-btn');
   btn.disabled=true;btn.textContent='Migrating...';
-  // Load old format data into new format
-  const oldIdeas=[...ls('ideas',[]),...ls('_lch_ideas',[]),...ls('ideas_v2',[])];
-  const seen=new Set(ideas.map(i=>i.id));
-  for(const idea of oldIdeas){
-    if(!idea.id)idea.id=uuid();
-    if(seen.has(idea.id))continue;seen.add(idea.id);
-    ideas.unshift({id:idea.id,title:idea.title||'',draft:idea.draft||'',source:idea.source||'',category:idea.category||'AI',links:idea.links||'',status:idea.status||'Idea',created:idea.created||Date.now()});
+  let count=0;
+  try{
+    const allIdeas=[...ls('ideas',[]),...ls('_lch_ideas',[]),...ls('ideas_v2',[]),...ls('_ideas',[])];
+    const seen=new Set(ideas.map(i=>i.id));
+    for(const idea of allIdeas){
+      if(!idea.id)idea.id=uuid();
+      if(seen.has(idea.id))continue;seen.add(idea.id);
+      const row={id:idea.id,title:idea.title||'',draft:idea.draft||'',source:idea.source||'',category:idea.category||'AI',links:idea.links||'',status:idea.status||'Idea',created:idea.created||Date.now()};
+      await dbUpsert('lch_ideas',row);ideas.unshift(row);count++;
+    }
+    const oldPosted={...ls('posted_days',{}),...ls('_posted',{})};
+    for(const day of Object.keys(oldPosted)){
+      if(!posted[day]){posted[day]='posted';await dbUpsert('lch_posted',{id:day,day:day,type:'posted',created:Date.now()});count++;}
+    }
+    const allCreators=[...ls('creators',[]),...ls('_lch_creators',[]),...ls('creators_v2',[]),...ls('_creators',[])];
+    const seenC=new Set(creators.map(c=>c.id));
+    for(const c of allCreators){
+      if(!c.id)c.id=uuid();
+      if(seenC.has(c.id))continue;seenC.add(c.id);
+      const row={id:c.id,name:c.name||'',url:c.url||'',about:c.about||'',created:c.created||Date.now()};
+      await dbUpsert('lch_creators',row);creators.push(row);count++;
+    }
+    renderIdeas();renderCreators();renderStreak();
+    lss('migrated',true);
+    $('migrate-bar').style.display='none';
+    syncBadge('ok','Synced ✓');
+    toast('✓ Migrated '+count+' items! All devices now in sync.',4000);
+  }catch(e){
+    btn.disabled=false;btn.textContent='Retry migration';
+    toast('Migration error — try again');
+    console.error(e);
   }
-  const oldPosted={...ls('posted_days',{}),...ls('_posted',{})};
-  Object.keys(oldPosted).forEach(day=>{if(!posted[day])posted[day]='posted';});
-  const oldCreators=[...ls('creators',[]),...ls('_lch_creators',[]),...ls('creators_v2',[])];
-  const seenC=new Set(creators.map(c=>c.id));
-  for(const c of oldCreators){
-    if(!c.id)c.id=uuid();
-    if(seenC.has(c.id))continue;seenC.add(c.id);
-    creators.push({id:c.id,name:c.name||'',url:c.url||'',about:c.about||''});
-  }
-  saveLocal();renderIdeas();renderCreators();renderStreak();
-  if(getNotionKey()){
-    btn.textContent='Syncing to Notion...';
-    await syncToNotion();
-  }
-  lss('migrated',true);
-  $('migrate-bar').style.display='none';
-  btn.disabled=false;
-  toast('✓ Migration complete! All data saved.',3000);
 }
 
 // ─── Navigation ───────────────────────────────────────────
@@ -1020,28 +812,24 @@ function showSection(id,btn){
 
 // ─── Boot ─────────────────────────────────────────────────
 async function boot(){
-  loadLocal();
-  const key=getNotionKey();
-  if(!key){
-    syncBadge('err','Not connected');
-    $('setup-bar').style.display='block';
-    renderStreak();renderIdeas();renderCreators();
-    return;
+  syncBadge('mid','Connecting...');
+  scheduled=ls('_scheduled',{});
+  try{
+    const {error}=await db.from('lch_ideas').select('id').limit(1);
+    if(error)throw error;
+    syncBadge('ok','Synced ✓');
+    await Promise.all([loadPosted(),loadIdeas(),loadCreators()]);
+  }catch(e){
+    syncBadge('err','Offline — using local data');
+    posted=ls('_posted',{});
+    ideas=ls('_ideas',[]);
+    creators=ls('_creators',[]);
   }
-  const loaded = await loadFromNotion();
-  if(!loaded){
-    // Use local data
-    renderStreak();renderIdeas();renderCreators();
-  } else {
-    renderStreak();renderIdeas();renderCreators();
-  }
-  // Show migration banner if old local data exists
+  renderStreak();renderIdeas();renderCreators();
   if(!ls('migrated',false)){
     const hasOld=ls('ideas',[]).length>0||ls('_lch_ideas',[]).length>0||Object.keys(ls('posted_days',{})).length>0||ls('creators',[]).length>0;
     if(hasOld)$('migrate-bar').style.display='block';
   }
-  // Auto-sync every 5 minutes
-  setInterval(syncToNotion, 300000);
 }
 
 boot();
