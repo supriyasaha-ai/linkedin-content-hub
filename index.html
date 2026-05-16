@@ -12,7 +12,9 @@
   --border:rgba(0,0,0,0.12);--border2:rgba(0,0,0,0.2);
   --accent:#7F77DD;--accent-dark:#534AB7;--accent-light:#EEEDFE;--accent-text:#3C3489;
   --radius:8px;--radius-lg:12px;--shadow:0 1px 3px rgba(0,0,0,0.08);
-  --green:#27500A;--green-bg:#EAF3DE;--red:#A32D2D;--red-bg:#FCEBEB;
+  --green:#27500A;--green-bg:#EAF3DE;--green-cal:#4CAF50;
+  --yellow:#633806;--yellow-bg:#FFF8E1;--yellow-cal:#FFC107;
+  --red:#A32D2D;--red-bg:#FCEBEB;
 }
 @media(prefers-color-scheme:dark){
   :root{
@@ -20,7 +22,9 @@
     --text:#f0efe9;--text2:#9b9b97;--text3:#6b6b67;
     --border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.18);
     --accent:#9F99E8;--accent-dark:#CECBF6;--accent-light:#26215C;--accent-text:#CECBF6;
-    --green:#C0DD97;--green-bg:#173404;--red:#F7C1C1;--red-bg:#501313;
+    --green:#C0DD97;--green-bg:#173404;--green-cal:#4CAF50;
+    --yellow:#FAC775;--yellow-bg:#2C1F00;--yellow-cal:#FFC107;
+    --red:#F7C1C1;--red-bg:#501313;
   }
 }
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg3);color:var(--text);min-height:100vh;font-size:15px;line-height:1.6}
@@ -38,17 +42,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 .nav-btn{padding:12px 18px;font-size:13px;font-weight:500;border:none;background:transparent;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s,border-color .15s;white-space:nowrap;font-family:inherit}
 .nav-btn:hover{color:var(--text)}
 .nav-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+.migrate-bar{background:var(--accent-light);border-bottom:1px solid var(--accent);padding:10px 1.5rem;display:none}
+.migrate-bar-inner{max-width:980px;margin:0 auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .main{max-width:980px;margin:0 auto;padding:1.5rem}
 .section{display:none}.section.active{display:block}
 .card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;box-shadow:var(--shadow)}
 .card-title{font-size:14px;font-weight:600;margin-bottom:1rem}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
 .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem}
-@media(max-width:640px){
-  .grid2{grid-template-columns:1fr}
-  .grid3{grid-template-columns:1fr 1fr}
-  .nav-btn{padding:12px 10px;font-size:12px}
-}
+@media(max-width:640px){.grid2{grid-template-columns:1fr}.grid3{grid-template-columns:1fr 1fr}.nav-btn{padding:12px 8px;font-size:11px}}
 label{font-size:12px;font-weight:500;color:var(--text2);display:block;margin-bottom:5px}
 input,textarea,select{font-family:inherit;font-size:13px;color:var(--text);background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:8px 10px;width:100%;transition:border-color .15s;outline:none}
 input:focus,textarea:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(127,119,221,0.12)}
@@ -61,6 +63,10 @@ textarea{resize:vertical}
 .btn-primary:hover{background:var(--accent-dark);border-color:var(--accent-dark)}
 .btn-danger{color:var(--red);border-color:rgba(163,45,45,0.2)}
 .btn-danger:hover{background:var(--red-bg)}
+.btn-green{background:var(--green-cal);color:white;border-color:var(--green-cal)}
+.btn-green:hover{background:#388E3C;border-color:#388E3C}
+.btn-yellow{background:var(--yellow-cal);color:#333;border-color:var(--yellow-cal)}
+.btn-yellow:hover{background:#FFB300;border-color:#FFB300}
 .btn-sm{padding:5px 10px;font-size:12px}
 .btn-full{width:100%;justify-content:center}
 .btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
@@ -72,6 +78,7 @@ textarea{resize:vertical}
 .badge-Idea{background:#F1EFE8;color:#444441}
 .badge-Draft{background:#E6F1FB;color:#0C447C}
 .badge-Posted{background:#EAF3DE;color:#27500A}
+.badge-Scheduled{background:#FFF8E1;color:#633806}
 @media(prefers-color-scheme:dark){
   .badge-AI{background:#26215C;color:#CECBF6}
   .badge-Marketing{background:#04342C;color:#9FE1CB}
@@ -80,6 +87,7 @@ textarea{resize:vertical}
   .badge-Idea{background:#2C2C2A;color:#D3D1C7}
   .badge-Draft{background:#042C53;color:#B5D4F4}
   .badge-Posted{background:#173404;color:#C0DD97}
+  .badge-Scheduled{background:#2C1F00;color:#FAC775}
 }
 .filter-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem}
 .filter-chip{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:500;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;font-family:inherit;transition:all .15s}
@@ -89,32 +97,38 @@ textarea{resize:vertical}
 .day-chip{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--border2);background:transparent;font-size:11px;font-weight:600;cursor:pointer;color:var(--text2);font-family:inherit;transition:all .15s;display:flex;align-items:center;justify-content:center}
 .day-chip:hover{border-color:var(--accent);color:var(--accent)}
 .day-chip.today{border-color:var(--accent);color:var(--accent)}
-.day-chip.active{background:var(--accent);border-color:var(--accent);color:white}
+.day-chip.active{background:var(--green-cal);border-color:var(--green-cal);color:white}
 .streak-big{font-size:48px;font-weight:700;line-height:1}
 .streak-msg{font-size:13px;color:var(--accent);font-weight:500;margin-top:6px}
 .stat-card{background:var(--bg2);border-radius:var(--radius);padding:1rem;text-align:center}
 .stat-label{font-size:11px;color:var(--text2);font-weight:500;margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em}
 .stat-val{font-size:24px;font-weight:600}
-.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem}
 .cal-title{font-size:14px;font-weight:600}
 .cal-nav{display:flex;align-items:center;gap:6px}
 .month-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
 .day-label{font-size:10px;font-weight:600;color:var(--text3);text-align:center;padding:4px 0;text-transform:uppercase}
-.cal-cell{aspect-ratio:1;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;border:1px solid var(--border);color:var(--text2);font-weight:500;transition:all .12s;background:transparent;font-family:inherit}
+.cal-cell{aspect-ratio:1;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;border:1px solid var(--border);color:var(--text2);font-weight:500;transition:all .12s;background:transparent;font-family:inherit;flex-direction:column;gap:1px}
 .cal-cell:hover{border-color:var(--accent);color:var(--accent)}
 .cal-cell.empty{border:none;cursor:default;pointer-events:none}
 .cal-cell.today-cell{border-color:var(--accent);color:var(--accent);font-weight:700}
-.cal-cell.posted-cell{background:var(--accent);border-color:var(--accent);color:white}
+.cal-cell.posted-cell{background:var(--green-cal);border-color:var(--green-cal);color:white}
+.cal-cell.scheduled-cell{background:var(--yellow-cal);border-color:var(--yellow-cal);color:#333}
+.cal-cell .cell-dot{width:4px;height:4px;border-radius:50%;background:currentColor;opacity:.7}
 .pace-bar-track{height:6px;background:var(--bg3);border-radius:3px;margin:8px 0;overflow:hidden}
-.pace-bar-fill{height:100%;background:var(--accent);border-radius:3px;transition:width .4s ease}
+.pace-bar-fill{height:100%;background:var(--green-cal);border-radius:3px;transition:width .4s ease}
+/* Schedule modal */
+.sched-bar{background:var(--yellow-bg);border:1px solid var(--yellow-cal);border-radius:var(--radius);padding:10px;margin-bottom:10px;display:none}
+.sched-bar.open{display:block}
+/* Idea cards */
 .idea-card{border:1px solid var(--border);border-radius:var(--radius);background:var(--bg);transition:border-color .15s,box-shadow .15s;margin-bottom:8px;overflow:hidden}
 .idea-card:hover{border-color:var(--border2);box-shadow:var(--shadow)}
-.idea-card.is-posted{opacity:.6}
+.idea-card.is-posted{opacity:.55}
 .idea-card-header{padding:12px;cursor:pointer;display:flex;align-items:flex-start;gap:8px;user-select:none}
 .idea-card-header:hover{background:var(--bg2)}
 .idea-title-text{font-size:13px;font-weight:600;flex:1;line-height:1.4}
 .idea-source-tag{font-size:11px;color:var(--text3);margin-top:2px}
-.idea-badges-row{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.idea-badges-row{display:flex;align-items:center;gap:5px;flex-shrink:0;flex-wrap:wrap}
 .expand-arrow{font-size:11px;color:var(--text3);transition:transform .2s}
 .expand-arrow.open{transform:rotate(180deg)}
 .idea-body{display:none;border-top:1px solid var(--border);padding:12px}
@@ -124,14 +138,15 @@ textarea{resize:vertical}
 .idea-link-row{display:flex;align-items:center;gap:6px;padding:3px 0;font-size:12px}
 .idea-link-row a{color:var(--accent);text-decoration:none;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .idea-link-row a:hover{text-decoration:underline}
-.idea-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:4px}
+/* Quick status buttons row */
+.quick-status{display:flex;gap:6px;align-items:center;padding:10px 12px;border-top:1px solid var(--border);background:var(--bg2);flex-wrap:wrap}
+.quick-label{font-size:11px;color:var(--text3);font-weight:500;margin-right:2px}
+.idea-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:8px}
+/* Inspiration */
 .insp-card{border:1px solid var(--border);border-radius:var(--radius);padding:12px;margin-bottom:8px;background:var(--bg);display:flex;align-items:center;gap:12px;transition:border-color .15s}
 .insp-card:hover{border-color:var(--border2)}
 .avatar{width:38px;height:38px;border-radius:50%;background:var(--accent-light);color:var(--accent-text);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.insp-name{font-size:13px;font-weight:600}
-.insp-about{font-size:12px;color:var(--text2)}
-.insp-link{font-size:12px;color:var(--accent);text-decoration:none}
-.insp-link:hover{text-decoration:underline}
+/* Generator */
 .api-key-bar{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:12px;margin-bottom:1rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .api-key-bar label{margin:0;white-space:nowrap;font-size:12px;font-weight:500}
 .api-status{font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px}
@@ -141,14 +156,19 @@ textarea{resize:vertical}
 .gen-output.has-content{color:var(--text)}
 .spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle}
 @keyframes spin{to{transform:rotate(360deg)}}
+/* Modal */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;display:none;align-items:center;justify-content:center;padding:1rem}
 .modal-overlay.open{display:flex}
-.modal{background:var(--bg);border-radius:var(--radius-lg);padding:1.5rem;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3)}
+.modal{background:var(--bg);border-radius:var(--radius-lg);padding:1.5rem;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3)}
 .modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
 .modal-title{font-size:15px;font-weight:600}
 .modal-close{background:none;border:none;cursor:pointer;font-size:22px;color:var(--text2);line-height:1;padding:2px 6px;border-radius:4px}
-.modal-close:hover{background:var(--bg2);color:var(--text)}
+.modal-close:hover{background:var(--bg2)}
 .modal-actions{display:flex;gap:8px;margin-top:1.25rem;justify-content:flex-end}
+/* Cal legend */
+.cal-legend{display:flex;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2)}
+.legend-dot{width:10px;height:10px;border-radius:3px}
 .divider{border:none;border-top:1px solid var(--border);margin:1rem 0}
 .flex{display:flex}.items-center{align-items:center}.justify-between{justify-content:space-between}
 .gap-6{gap:6px}.gap-8{gap:8px}.mt-8{margin-top:8px}.mt-12{margin-top:12px}
@@ -182,6 +202,15 @@ textarea{resize:vertical}
   </nav>
 </div>
 
+<!-- Migration banner -->
+<div class="migrate-bar" id="migrate-bar">
+  <div class="migrate-bar-inner">
+    <div style="flex:1;font-size:13px;color:var(--accent-text);font-weight:500">📦 You have existing ideas saved locally — migrate them to Supabase so they sync across all your devices.</div>
+    <button id="migrate-btn" class="btn btn-primary btn-sm" onclick="migrateLocalData()">Migrate my data →</button>
+    <button class="btn btn-sm" onclick="document.getElementById('migrate-bar').style.display='none'">Dismiss</button>
+  </div>
+</div>
+
 <main class="main">
 
 <!-- STREAK -->
@@ -212,11 +241,18 @@ textarea{resize:vertical}
   <div class="card">
     <div class="cal-header">
       <div class="cal-title" id="cal-title"></div>
-      <div class="cal-nav">
-        <button class="btn btn-sm" onclick="calPrev()">&#8249;</button>
-        <button class="btn btn-sm" onclick="calToday()">Today</button>
-        <button class="btn btn-sm" onclick="calNext()">&#8250;</button>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button class="btn btn-sm btn-yellow" onclick="openScheduleModal()">+ Schedule post</button>
+        <div class="cal-nav">
+          <button class="btn btn-sm" onclick="calPrev()">&#8249;</button>
+          <button class="btn btn-sm" onclick="calToday()">Today</button>
+          <button class="btn btn-sm" onclick="calNext()">&#8250;</button>
+        </div>
       </div>
+    </div>
+    <div class="cal-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--green-cal)"></div> Posted</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--yellow-cal)"></div> Scheduled</div>
     </div>
     <div class="month-grid" id="cal-day-labels"></div>
     <div class="month-grid" style="margin-top:4px" id="cal-grid"></div>
@@ -233,18 +269,12 @@ textarea{resize:vertical}
       <div class="grid2">
         <div class="form-group"><label>Inspiration source</label><input id="idea-source" placeholder="Person or URL"></div>
         <div class="form-group"><label>Category</label>
-          <select id="idea-cat">
-            <option value="AI">AI</option>
-            <option value="Marketing">Marketing</option>
-            <option value="Personal Brand">Personal Brand</option>
-            <option value="News">News</option>
-          </select>
+          <select id="idea-cat"><option value="AI">AI</option><option value="Marketing">Marketing</option><option value="Personal Brand">Personal Brand</option><option value="News">News</option></select>
         </div>
       </div>
       <div class="form-group">
         <label>Reference links (optional)</label>
-        <textarea id="idea-links" rows="2" placeholder="Paste one link per line — LinkedIn posts, articles, screenshots..."></textarea>
-        <div class="text-xs text-muted" style="margin-top:4px">Each link becomes clickable inside the idea card</div>
+        <textarea id="idea-links" rows="2" placeholder="One link per line — LinkedIn posts, articles..."></textarea>
       </div>
       <div class="form-group"><label>Status</label>
         <select id="idea-status"><option value="Idea">Idea</option><option value="Draft">Draft</option></select>
@@ -275,14 +305,12 @@ textarea{resize:vertical}
     <span id="api-status" class="api-status unset">Not set</span>
     <button class="btn btn-sm" onclick="clearApiKey()">Clear</button>
   </div>
-  <div class="text-xs text-muted" style="margin-bottom:1rem;line-height:1.6">
-    Stored only in your browser's localStorage — never shared. Get yours at <strong>console.anthropic.com</strong>
-  </div>
+  <div class="text-xs text-muted" style="margin-bottom:1rem;line-height:1.6">Stored only in your browser's localStorage. Get yours at <strong>console.anthropic.com</strong></div>
   <div class="grid2" style="align-items:start">
     <div class="card">
       <div class="card-title">Write your post</div>
       <div class="form-group"><label>Topic or inspiration snippet *</label>
-        <textarea id="gen-input" rows="5" placeholder="e.g. AI agents are replacing marketing coordinators — what does this mean for teams?"></textarea>
+        <textarea id="gen-input" rows="5" placeholder="e.g. AI agents are replacing marketing coordinators..."></textarea>
       </div>
       <div class="form-group"><label>Tone</label>
         <select id="gen-tone">
@@ -328,38 +356,53 @@ textarea{resize:vertical}
 </main>
 
 <!-- Edit Modal -->
-<div class="modal-overlay" id="edit-modal" onclick="handleModalClick(event)">
+<div class="modal-overlay" id="edit-modal" onclick="if(event.target===this)closeModal('edit-modal')">
   <div class="modal">
     <div class="modal-header">
       <div class="modal-title">Edit idea</div>
-      <button class="modal-close" onclick="closeModal()">×</button>
+      <button class="modal-close" onclick="closeModal('edit-modal')">×</button>
     </div>
     <div class="form-group"><label>Topic / title</label><input id="edit-title"></div>
     <div class="form-group"><label>Draft text</label><textarea id="edit-draft" rows="6"></textarea></div>
     <div class="grid2">
       <div class="form-group"><label>Category</label>
-        <select id="edit-cat">
-          <option value="AI">AI</option>
-          <option value="Marketing">Marketing</option>
-          <option value="Personal Brand">Personal Brand</option>
-          <option value="News">News</option>
-        </select>
+        <select id="edit-cat"><option value="AI">AI</option><option value="Marketing">Marketing</option><option value="Personal Brand">Personal Brand</option><option value="News">News</option></select>
       </div>
       <div class="form-group"><label>Status</label>
-        <select id="edit-status">
-          <option value="Idea">Idea</option>
-          <option value="Draft">Draft</option>
-          <option value="Posted">Posted</option>
-        </select>
+        <select id="edit-status"><option value="Idea">Idea</option><option value="Draft">Draft</option><option value="Posted">Posted</option></select>
       </div>
     </div>
     <div class="form-group"><label>Inspiration source</label><input id="edit-source"></div>
-    <div class="form-group"><label>Reference links</label>
-      <textarea id="edit-links" rows="3" placeholder="One link per line"></textarea>
+    <div class="form-group"><label>Reference links</label><textarea id="edit-links" rows="3" placeholder="One link per line"></textarea></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('edit-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEdit()">Save changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- Schedule Modal -->
+<div class="modal-overlay" id="schedule-modal" onclick="if(event.target===this)closeModal('schedule-modal')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">📅 Schedule a post</div>
+      <button class="modal-close" onclick="closeModal('schedule-modal')">×</button>
+    </div>
+    <div class="form-group"><label>Post title / topic *</label><input id="sched-title" placeholder="What are you posting about?"></div>
+    <div class="form-group"><label>Draft or notes (optional)</label><textarea id="sched-draft" rows="3" placeholder="Your draft text or key points..."></textarea></div>
+    <div class="grid2">
+      <div class="form-group"><label>Date *</label><input type="date" id="sched-date"></div>
+      <div class="form-group"><label>Time *</label><input type="time" id="sched-time" value="09:00"></div>
+    </div>
+    <div class="form-group"><label>Category</label>
+      <select id="sched-cat"><option value="AI">AI</option><option value="Marketing">Marketing</option><option value="Personal Brand">Personal Brand</option><option value="News">News</option></select>
+    </div>
+    <div style="background:var(--yellow-bg);border:1px solid var(--yellow-cal);border-radius:var(--radius);padding:10px;font-size:12px;color:var(--yellow);margin-bottom:12px">
+      ⚡ This will show as <strong>yellow (scheduled)</strong> on your calendar. It automatically turns <strong>green (posted)</strong> after the scheduled time passes.
     </div>
     <div class="modal-actions">
-      <button class="btn" onclick="closeModal()">Cancel</button>
-      <button class="btn btn-primary" onclick="saveEdit()">Save changes</button>
+      <button class="btn" onclick="closeModal('schedule-modal')">Cancel</button>
+      <button class="btn btn-yellow" onclick="saveSchedule()">Schedule post</button>
     </div>
   </div>
 </div>
@@ -367,19 +410,14 @@ textarea{resize:vertical}
 <div class="toast" id="toast"></div>
 
 <script>
-// ─── Supabase config ──────────────────────────────────────
+// ─── Config ───────────────────────────────────────────────
 const SB_URL = 'https://hkxwlyotfswofmegnxmv.supabase.co';
-const SB_KEY = 'sb_publishable_ioO0El5vb-8K4UEhKK5ZHg_XFyKd5oB';
-const SB_H = {
-  'Content-Type':'application/json',
-  'apikey': SB_KEY,
-  'Authorization': 'Bearer ' + SB_KEY
-};
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhreHdseW90ZnN3b2ZtZWdueG12Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5MDk5ODgsImV4cCI6MjA5NDQ4NTk4OH0.DksEbmyNK7PozidKRn72lotdxgeWFduijNbHejLrLLg';
+const SB_H = {'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY};
 
-// ─── Utils ────────────────────────────────────────────────
-const $ = id => document.getElementById(id);
 const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const $ = id => document.getElementById(id);
 
 function ls(k,d){try{const v=localStorage.getItem(k);return v!==null?JSON.parse(v):d}catch{return d}}
 function lss(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}
@@ -389,21 +427,14 @@ function dk(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0
 function todayK(){return dk(new Date())}
 function monday(d){const t=new Date(d),day=t.getDay(),diff=t.getDate()-day+(day===0?-6:1);return new Date(t.setDate(diff))}
 
-let toastTimer;
-function toast(msg,dur=2500){
-  const el=$('toast');el.textContent=msg;el.classList.add('show');
-  clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),dur);
-}
-
-function syncBadge(state,msg){
-  const el=$('sync-badge');
-  el.className='sync-status sync-'+(state==='ok'?'ok':state==='err'?'err':'mid');
-  el.innerHTML=`<span class="dot"></span> ${msg}`;
-}
+let toastT;
+function toast(msg,dur=2500){const el=$('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),dur);}
+function syncBadge(s,msg){const el=$('sync-badge');el.className='sync-status sync-'+(s==='ok'?'ok':s==='err'?'err':'mid');el.innerHTML=`<span class="dot"></span> ${msg}`;}
+function closeModal(id){$(id).classList.remove('open');}
 
 $('header-date').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
 
-// ─── Supabase helpers ─────────────────────────────────────
+// ─── Supabase ─────────────────────────────────────────────
 async function sbq(path,opts={}){
   const r=await fetch(SB_URL+'/rest/v1/'+path,{headers:{...SB_H,...(opts.headers||{})}, ...opts});
   if(!r.ok){const t=await r.text();throw new Error(t);}
@@ -411,57 +442,62 @@ async function sbq(path,opts={}){
   const ct=r.headers.get('content-type')||'';
   return ct.includes('json')?r.json():null;
 }
-
-async function sbAll(table){
-  try{
-    const d=await sbq(table+'?order=created.desc');
-    return d||[];
-  }catch{return ls('_'+table,[]);}
+async function sbAll(table,extra=''){
+  try{const d=await sbq(table+'?order=created.desc'+extra);return d||[];}
+  catch{return ls('_'+table,[]);}
 }
-
 async function sbUpsert(table,row){
-  try{
-    await sbq(table,{method:'POST',body:JSON.stringify(row),headers:{'Prefer':'resolution=merge-duplicates,return=minimal'}});
-    syncBadge('ok','Synced');
-  }catch{
-    syncBadge('err','Offline — saved locally');
-    const arr=ls('_'+table,[]);
-    const i=arr.findIndex(r=>r.id===row.id);
-    if(i>=0)arr[i]=row;else arr.unshift(row);
-    lss('_'+table,arr);
-  }
+  try{await sbq(table,{method:'POST',body:JSON.stringify(row),headers:{'Prefer':'resolution=merge-duplicates,return=minimal'}});syncBadge('ok','Synced');}
+  catch{syncBadge('err','Offline — saved locally');const arr=ls('_'+table,[]);const i=arr.findIndex(r=>r.id===row.id);if(i>=0)arr[i]=row;else arr.unshift(row);lss('_'+table,arr);}
 }
-
 async function sbDel(table,id){
-  try{
-    await sbq(table+'?id=eq.'+encodeURIComponent(id),{method:'DELETE'});
-    syncBadge('ok','Synced');
-  }catch{
-    syncBadge('err','Offline — saved locally');
-    lss('_'+table,ls('_'+table,[]).filter(r=>r.id!==id));
-  }
+  try{await sbq(table+'?id=eq.'+encodeURIComponent(id),{method:'DELETE'});syncBadge('ok','Synced');}
+  catch{syncBadge('err','Offline');lss('_'+table,ls('_'+table,[]).filter(r=>r.id!==id));}
 }
 
 // ─── STREAK ───────────────────────────────────────────────
-let posted={};
+let posted={};   // {dateKey: 'posted'|'scheduled'}
+let scheduled={};// {dateKey: {title, datetime, id}}
 let calView=null;
 
 async function loadPosted(){
   try{
-    const rows=await sbq('lch_posted?select=day');
-    posted={};(rows||[]).forEach(r=>posted[r.day]=true);
+    const rows=await sbq('lch_posted?select=day,type');
+    posted={};scheduled={};
+    (rows||[]).forEach(r=>{
+      posted[r.day]=r.type||'posted';
+    });
   }catch{posted=ls('_posted',{});}
 }
 
+async function loadScheduled(){
+  try{
+    const rows=await sbq('lch_scheduled?order=sched_at.asc');
+    scheduled={};
+    (rows||[]).forEach(r=>{
+      const day=r.sched_at.split('T')[0];
+      scheduled[day]=r;
+      // Auto-flip to posted if time has passed
+      if(new Date(r.sched_at)<=new Date()&&posted[day]!=='posted'){
+        posted[day]='posted';
+        sbUpsert('lch_posted',{id:day,day:day,type:'posted',created:Date.now()});
+      }
+    });
+  }catch{}
+}
+
 async function toggleDay(k){
-  if(posted[k]){
+  if(posted[k]==='posted'){
     delete posted[k];
     try{await sbq('lch_posted?day=eq.'+k,{method:'DELETE'});syncBadge('ok','Synced');}
     catch{lss('_posted',posted);}
     toast('Day unmarked');
+  }else if(posted[k]==='scheduled'){
+    toast('This day has a scheduled post — edit or delete it from the schedule modal');
+    return;
   }else{
-    posted[k]=true;
-    await sbUpsert('lch_posted',{id:k,day:k,created:Date.now()});
+    posted[k]='posted';
+    await sbUpsert('lch_posted',{id:k,day:k,type:'posted',created:Date.now()});
     toast('✓ Logged!');
   }
   renderStreak();
@@ -474,10 +510,12 @@ function renderStreak(){
   const today=todayK();
   for(let i=0;i<7;i++){
     const d=new Date(mon);d.setDate(mon.getDate()+i);
-    const k=dk(d),active=!!posted[k],isToday=k===today;
-    if(active)wk++;
+    const k=dk(d);
+    const isPosted=posted[k]==='posted';
+    const isToday=k===today;
+    if(isPosted)wk++;
     const b=document.createElement('button');
-    b.className='day-chip'+(active?' active':'')+(isToday&&!active?' today':'');
+    b.className='day-chip'+(isPosted?' active':'')+(isToday&&!isPosted?' today':'');
     b.textContent=DAYS[i];b.title=k;b.onclick=()=>toggleDay(k);
     chips.appendChild(b);
   }
@@ -486,7 +524,7 @@ function renderStreak(){
   const now=new Date(),y=now.getFullYear(),m=now.getMonth();
   const dim=new Date(y,m+1,0).getDate();
   let mc=0;
-  for(let d=1;d<=dim;d++){const k=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;if(posted[k])mc++;}
+  for(let d=1;d<=dim;d++){const k=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;if(posted[k]==='posted')mc++;}
   let wd=0;for(let d=1;d<=dim;d++){const dow=new Date(y,m,d).getDay();if(dow&&dow<6)wd++;}
   const pct=Math.min(Math.round((mc/wd)*100),100),rem=Math.max(wd-mc,0);
   $('stat-month').textContent=mc;$('stat-pct').textContent=pct+'%';$('stat-remain').textContent=rem;
@@ -494,6 +532,18 @@ function renderStreak(){
   $('pace-note').textContent=rem>0?`${rem} more posts to hit 5×/week pace`:mc>=wd?'Goal reached! 🎉':'Exceeded your goal! 🚀';
   if(!calView)calView={y,m};
   renderCal();
+  // Auto-check scheduled posts every render
+  checkScheduledPosts();
+}
+
+function checkScheduledPosts(){
+  const now=new Date();
+  Object.entries(scheduled).forEach(([day,sched])=>{
+    if(new Date(sched.sched_at)<=now&&posted[day]!=='posted'){
+      posted[day]='posted';
+      sbUpsert('lch_posted',{id:day,day:day,type:'posted',created:Date.now()});
+    }
+  });
 }
 
 function calPrev(){calView.m--;if(calView.m<0){calView.m=11;calView.y--;}renderCal();}
@@ -501,6 +551,7 @@ function calNext(){calView.m++;if(calView.m>11){calView.m=0;calView.y++;}renderC
 function calToday(){const n=new Date();calView={y:n.getFullYear(),m:n.getMonth()};renderCal();}
 
 function renderCal(){
+  if(!calView)return;
   const {y,m}=calView;
   $('cal-title').textContent=MONTHS[m]+' '+y;
   $('cal-day-labels').innerHTML=DAYS.map(d=>`<div class="day-label">${d}</div>`).join('');
@@ -511,11 +562,68 @@ function renderCal(){
   for(let i=0;i<off;i++)h+='<div class="cal-cell empty"></div>';
   for(let d=1;d<=dim;d++){
     const k=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const ip=!!posted[k],it=k===today;
-    h+=`<button class="cal-cell${ip?' posted-cell':it?' today-cell':''}" onclick="toggleDay('${k}')" title="${k}">${d}</button>`;
+    const isPosted=posted[k]==='posted';
+    const isSched=scheduled[k]&&posted[k]!=='posted';
+    const isToday=k===today;
+    let cls='cal-cell';
+    if(isPosted)cls+=' posted-cell';
+    else if(isSched)cls+=' scheduled-cell';
+    else if(isToday)cls+=' today-cell';
+    const title=isSched?`Scheduled: ${scheduled[k].title}`:isPosted?'Posted':'';
+    h+=`<button class="${cls}" onclick="calCellClick('${k}')" title="${title}">${d}${isSched?'<span class="cell-dot"></span>':''}</button>`;
   }
   $('cal-grid').innerHTML=h;
 }
+
+function calCellClick(k){
+  if(scheduled[k]&&posted[k]!=='posted'){
+    if(confirm(`Scheduled: "${scheduled[k].title}"\n\nMark as posted now?`)){
+      posted[k]='posted';
+      delete scheduled[k];
+      sbUpsert('lch_posted',{id:k,day:k,type:'posted',created:Date.now()});
+      renderStreak();toast('✓ Marked as posted!');
+    }
+  }else{
+    toggleDay(k);
+  }
+}
+
+// ─── Schedule modal ───────────────────────────────────────
+function openScheduleModal(){
+  // default to tomorrow
+  const tom=new Date();tom.setDate(tom.getDate()+1);
+  $('sched-date').value=dk(tom);
+  $('sched-time').value='09:00';
+  $('sched-title').value='';
+  $('sched-draft').value='';
+  $('schedule-modal').classList.add('open');
+}
+
+async function saveSchedule(){
+  const title=$('sched-title').value.trim();
+  const date=$('sched-date').value;
+  const time=$('sched-time').value;
+  if(!title){toast('Enter a post title');return;}
+  if(!date||!time){toast('Pick a date and time');return;}
+  const schedAt=date+'T'+time+':00';
+  const id='sched-'+date;
+  const row={id,day:date,sched_at:schedAt,title,draft:$('sched-draft').value.trim(),category:$('sched-cat').value,created:Date.now()};
+  scheduled[date]=row;
+  // Mark in posted as scheduled type
+  posted[date]='scheduled';
+  await sbUpsert('lch_posted',{id:date,day:date,type:'scheduled',created:Date.now()});
+  try{await sbUpsert('lch_scheduled',row);}catch{}
+  closeModal('schedule-modal');
+  renderStreak();
+  toast(`✓ Scheduled for ${date} at ${time}!`);
+  // Also add to ideas bank
+  const idea={id:uuid(),title,draft:$('sched-draft').value.trim(),source:'Scheduled',category:$('sched-cat').value,links:'',status:'Draft',created:Date.now()};
+  ideas.unshift(idea);
+  await sbUpsert('lch_ideas',idea);
+}
+
+// Auto-check every minute
+setInterval(()=>{checkScheduledPosts();renderCal();},60000);
 
 // ─── IDEAS ────────────────────────────────────────────────
 let ideas=[];
@@ -523,7 +631,6 @@ let ideaFilter='all';
 let editingId=null;
 
 function catClass(c){return{'AI':'AI','Marketing':'Marketing','Personal Brand':'Personal','News':'News'}[c]||'Idea'}
-function stClass(s){return s||'Idea'}
 
 async function loadIdeas(){ideas=await sbAll('lch_ideas');}
 
@@ -539,9 +646,14 @@ function renderIdeas(){
   if(!f.length){list.innerHTML='<div class="empty-state">No ideas match this filter.</div>';return;}
   list.innerHTML=f.map(idea=>{
     const links=(idea.links||'').split('\n').map(l=>l.trim()).filter(Boolean);
-    const linksHtml=links.length?`<div class="idea-links-section"><div class="text-xs text-muted" style="margin-bottom:4px;font-weight:500">LINKS</div>${links.map(l=>`<div class="idea-link-row">🔗 <a href="${esc(l)}" target="_blank" rel="noopener">${esc(l.length>70?l.slice(0,70)+'...':l)}</a></div>`).join('')}</div>`:'';
+    const linksHtml=links.length?`<div class="idea-links-section"><div class="text-xs text-muted" style="margin-bottom:4px;font-weight:500">LINKS</div>${links.map(l=>`<div class="idea-link-row">🔗 <a href="${esc(l)}" target="_blank" rel="noopener">${esc(l.length>65?l.slice(0,65)+'...':l)}</a></div>`).join('')}</div>`:'';
     const draftHtml=idea.draft?`<div class="idea-draft-full">${esc(idea.draft)}</div>`:'<p class="text-xs text-muted" style="margin-bottom:8px">No draft text added yet.</p>';
-    return`<div class="idea-card${idea.status==='Posted'?' is-posted':''}" id="icard-${idea.id}">
+    const isPosted=idea.status==='Posted';
+    // Quick status buttons
+    let quickBtns='';
+    if(idea.status==='Idea') quickBtns=`<button class="btn btn-sm" onclick="quickStatus('${idea.id}','Draft')">→ Draft</button>`;
+    if(idea.status==='Draft') quickBtns=`<button class="btn btn-sm" onclick="quickStatus('${idea.id}','Idea')">← Idea</button><button class="btn btn-sm btn-green" onclick="quickStatus('${idea.id}','Posted')">✓ Mark Posted</button>`;
+    return`<div class="idea-card${isPosted?' is-posted':''}" id="icard-${idea.id}">
       <div class="idea-card-header" onclick="expandIdea('${idea.id}')">
         <div style="flex:1;min-width:0">
           <div class="idea-title-text">${esc(idea.title)}</div>
@@ -549,15 +661,15 @@ function renderIdeas(){
         </div>
         <div class="idea-badges-row">
           <span class="badge badge-${catClass(idea.category)}">${esc(idea.category)}</span>
-          <span class="badge badge-${stClass(idea.status)}">${esc(idea.status)}</span>
+          <span class="badge badge-${idea.status}">${esc(idea.status)}</span>
           <span class="expand-arrow" id="arr-${idea.id}">▼</span>
         </div>
       </div>
+      ${quickBtns?`<div class="quick-status"><span class="quick-label">MOVE TO:</span>${quickBtns}</div>`:''}
       <div class="idea-body" id="ibody-${idea.id}">
         ${draftHtml}
         ${linksHtml}
         <div class="idea-actions">
-          ${idea.status!=='Posted'?`<button class="btn btn-sm" onclick="advanceIdea('${idea.id}')">${idea.status==='Idea'?'→ Move to Draft':'→ Mark as Posted'}</button>`:''}
           <button class="btn btn-sm" onclick="openEdit('${idea.id}')">✏️ Edit</button>
           <div class="spacer"></div>
           <button class="btn btn-sm btn-danger" onclick="delIdea('${idea.id}')">🗑 Delete</button>
@@ -565,6 +677,20 @@ function renderIdeas(){
       </div>
     </div>`;
   }).join('');
+}
+
+async function quickStatus(id,newStatus){
+  const idea=ideas.find(i=>i.id===id);if(!idea)return;
+  idea.status=newStatus;
+  if(newStatus==='Posted'){
+    posted[todayK()]='posted';
+    await sbUpsert('lch_posted',{id:todayK(),day:todayK(),type:'posted',created:Date.now()});
+    toast('✓ Posted! Today logged in your streak!');
+  }else{
+    toast('✓ Moved to '+newStatus);
+  }
+  renderIdeas();
+  await sbUpsert('lch_ideas',idea);
 }
 
 function expandIdea(id){
@@ -591,19 +717,6 @@ async function addIdea(){
   await sbUpsert('lch_ideas',idea);
 }
 
-async function advanceIdea(id){
-  const idea=ideas.find(i=>i.id===id);if(!idea)return;
-  if(idea.status==='Idea'){idea.status='Draft';toast('✓ Moved to Draft!');}
-  else if(idea.status==='Draft'){
-    idea.status='Posted';
-    posted[todayK()]=true;
-    await sbUpsert('lch_posted',{id:todayK(),day:todayK(),created:Date.now()});
-    toast('✓ Posted! Today logged in your streak!');
-  }
-  renderIdeas();
-  await sbUpsert('lch_ideas',idea);
-}
-
 async function delIdea(id){
   if(!confirm('Delete this idea?'))return;
   ideas=ideas.filter(i=>i.id!==id);renderIdeas();toast('Deleted');
@@ -613,28 +726,19 @@ async function delIdea(id){
 function openEdit(id){
   const idea=ideas.find(i=>i.id===id);if(!idea)return;
   editingId=id;
-  $('edit-title').value=idea.title||'';
-  $('edit-draft').value=idea.draft||'';
-  $('edit-cat').value=idea.category||'AI';
-  $('edit-status').value=idea.status||'Idea';
-  $('edit-source').value=idea.source||'';
-  $('edit-links').value=idea.links||'';
+  $('edit-title').value=idea.title||'';$('edit-draft').value=idea.draft||'';
+  $('edit-cat').value=idea.category||'AI';$('edit-status').value=idea.status||'Idea';
+  $('edit-source').value=idea.source||'';$('edit-links').value=idea.links||'';
   $('edit-modal').classList.add('open');
 }
-
-function closeModal(){$('edit-modal').classList.remove('open');editingId=null;}
-function handleModalClick(e){if(e.target===$('edit-modal'))closeModal();}
 
 async function saveEdit(){
   if(!editingId)return;
   const idea=ideas.find(i=>i.id===editingId);if(!idea)return;
-  idea.title=$('edit-title').value.trim();
-  idea.draft=$('edit-draft').value.trim();
-  idea.category=$('edit-cat').value;
-  idea.status=$('edit-status').value;
-  idea.source=$('edit-source').value.trim();
-  idea.links=$('edit-links').value.trim();
-  closeModal();renderIdeas();toast('✓ Changes saved!');
+  idea.title=$('edit-title').value.trim();idea.draft=$('edit-draft').value.trim();
+  idea.category=$('edit-cat').value;idea.status=$('edit-status').value;
+  idea.source=$('edit-source').value.trim();idea.links=$('edit-links').value.trim();
+  closeModal('edit-modal');renderIdeas();toast('✓ Changes saved!');
   await sbUpsert('lch_ideas',idea);
 }
 
@@ -647,12 +751,7 @@ function initGenerator(){
   $('api-status').textContent=k?'Key saved':'Not set';
   $('api-status').className='api-status '+(k?'set':'unset');
 }
-
-function saveApiKey(){
-  const v=$('api-key-input').value.trim();
-  if(v&&!v.startsWith('•')){lss('api_key',v);$('api-status').textContent='Key saved';$('api-status').className='api-status set';}
-}
-
+function saveApiKey(){const v=$('api-key-input').value.trim();if(v&&!v.startsWith('•')){lss('api_key',v);$('api-status').textContent='Key saved';$('api-status').className='api-status set';}}
 function clearApiKey(){lss('api_key','');$('api-key-input').value='';$('api-status').textContent='Not set';$('api-status').className='api-status unset';toast('API key cleared');}
 
 async function generatePost(){
@@ -667,7 +766,7 @@ async function generatePost(){
     const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',
       headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,
-        system:`You are an expert LinkedIn content writer specializing in AI and marketing.\n\nWrite posts in this structure:\n1. Hook (1–2 sentences that stop the scroll)\n2. Insight (3–5 sentences of genuine value)\n3. CTA (1 sentence inviting engagement)\n\nRules: under 200 words, professional but conversational, max 3 hashtags at end, avoid hollow phrases like "game-changer" or "In today's world".${tone?'\nTone: '+tone:''}`,
+        system:`You are an expert LinkedIn content writer specializing in AI and marketing.\n\nWrite posts in this structure:\n1. Hook (1–2 sentences that stop the scroll)\n2. Insight (3–5 sentences of genuine value)\n3. CTA (1 sentence inviting engagement)\n\nRules: under 200 words, professional but conversational, max 3 hashtags at end, avoid hollow phrases.${tone?'\nTone: '+tone:''}`,
         messages:[{role:'user',content:'Write a LinkedIn post about: '+inp}]})});
     if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.error?.message||'HTTP '+r.status);}
     const d=await r.json();
@@ -677,10 +776,8 @@ async function generatePost(){
   }catch(e){out.textContent='Error: '+e.message+'\n\nCheck your API key and try again.';}
   btn.disabled=false;btn.innerHTML='✨ Generate post';
 }
-
 function regenerate(){$('gen-input').value=lastInput;$('gen-tone').value=lastTone;generatePost();}
 function copyPost(){navigator.clipboard.writeText($('gen-output').textContent).then(()=>toast('✓ Copied!')).catch(()=>toast('Select text manually to copy'));}
-
 async function saveToBank(){
   const txt=$('gen-output').textContent;if(!txt.trim())return;
   const idea={id:uuid(),title:lastInput.slice(0,80)+(lastInput.length>80?'...':''),draft:txt,source:'AI Generator',category:'AI',links:'',status:'Draft',created:Date.now()};
@@ -690,9 +787,7 @@ async function saveToBank(){
 
 // ─── INSPIRATION ──────────────────────────────────────────
 let creators=[];
-
 async function loadCreators(){creators=await sbAll('lch_creators');}
-
 function renderCreators(){
   const list=$('insp-list');
   if(!creators.length){list.innerHTML='<div class="empty-state">No creators saved yet.</div>';return;}
@@ -701,15 +796,14 @@ function renderCreators(){
     return`<div class="insp-card">
       <div class="avatar">${esc(initials)}</div>
       <div style="flex:1;min-width:0">
-        <div class="insp-name">${esc(c.name)}</div>
-        ${c.about?`<div class="insp-about">${esc(c.about)}</div>`:''}
-        ${c.url?`<a href="${esc(c.url)}" class="insp-link" target="_blank" rel="noopener">↗ LinkedIn</a>`:''}
+        <div style="font-size:13px;font-weight:600">${esc(c.name)}</div>
+        ${c.about?`<div style="font-size:12px;color:var(--text2)">${esc(c.about)}</div>`:''}
+        ${c.url?`<a href="${esc(c.url)}" style="font-size:12px;color:var(--accent);text-decoration:none" target="_blank" rel="noopener">↗ LinkedIn</a>`:''}
       </div>
       <button class="btn btn-sm btn-danger" onclick="delCreator('${c.id}')">🗑</button>
     </div>`;
   }).join('');
 }
-
 async function addCreator(){
   const n=$('insp-name').value.trim();if(!n){toast('Enter a name');return;}
   const c={id:uuid(),name:n,url:$('insp-url').value.trim(),about:$('insp-about').value.trim(),created:Date.now()};
@@ -717,18 +811,57 @@ async function addCreator(){
   ['insp-name','insp-url','insp-about'].forEach(id=>$(id).value='');
   await sbUpsert('lch_creators',c);
 }
-
 async function delCreator(id){
   creators=creators.filter(c=>c.id!==id);renderCreators();toast('Removed');
   await sbDel('lch_creators',id);
+}
+
+// ─── Migration ────────────────────────────────────────────
+async function migrateLocalData(){
+  const btn=$('migrate-btn');
+  btn.disabled=true;btn.textContent='Migrating...';
+  let count=0;
+  try{
+    // ideas (both key formats)
+    const localIdeas=[...ls('ideas',[]),...ls('_lch_ideas',[])];
+    const seen=new Set();
+    for(const idea of localIdeas){
+      if(!idea.id)idea.id=uuid();
+      if(seen.has(idea.id))continue;seen.add(idea.id);
+      if(!idea.created)idea.created=Date.now();
+      if(!idea.links)idea.links='';
+      await sbUpsert('lch_ideas',idea);count++;
+    }
+    // posted days
+    const localPosted={...ls('posted_days',{}),...ls('_posted',{})};
+    for(const day of Object.keys(localPosted)){
+      await sbUpsert('lch_posted',{id:day,day:day,type:'posted',created:Date.now()});count++;
+    }
+    // creators
+    const localCreators=[...ls('creators',[]),...ls('_lch_creators',[])];
+    const seenC=new Set();
+    for(const c of localCreators){
+      if(!c.id)c.id=uuid();
+      if(seenC.has(c.id))continue;seenC.add(c.id);
+      if(!c.created)c.created=Date.now();
+      await sbUpsert('lch_creators',c);count++;
+    }
+    await Promise.all([loadPosted(),loadScheduled(),loadIdeas(),loadCreators()]);
+    renderStreak();renderIdeas();renderCreators();
+    $('migrate-bar').style.display='none';
+    lss('migrated',true);
+    toast('✓ Migrated '+count+' items! Everything synced across devices.',4000);
+  }catch(e){
+    btn.disabled=false;btn.textContent='Retry migration';
+    toast('Migration error: '+e.message);
+  }
 }
 
 // ─── Navigation ───────────────────────────────────────────
 function showSection(id,btn){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  $('sec-'+id).classList.add('active');
-  btn.classList.add('active');
+  $('sec-'+id).classList.add('active');btn.classList.add('active');
   if(id==='streak')renderStreak();
   if(id==='ideas')renderIdeas();
   if(id==='inspiration')renderCreators();
@@ -738,20 +871,25 @@ function showSection(id,btn){
 // ─── Boot ─────────────────────────────────────────────────
 async function boot(){
   syncBadge('mid','Connecting...');
+  let connected=false;
   try{
-    await Promise.all([
-      sbq('lch_posted?limit=1'),
-      sbq('lch_ideas?limit=1'),
-      sbq('lch_creators?limit=1')
-    ]);
-    syncBadge('ok','Synced');
-  }catch(e){
-    syncBadge('err','Offline mode');
+    await Promise.all([sbq('lch_posted?limit=1'),sbq('lch_ideas?limit=1'),sbq('lch_creators?limit=1')]);
+    syncBadge('ok','Synced');connected=true;
+  }catch{syncBadge('err','Offline mode');}
+
+  // Create scheduled table if needed (silent)
+  try{await sbq('lch_scheduled?limit=1');}catch{
+    try{await fetch(SB_URL+'/rest/v1/lch_scheduled',{method:'HEAD',headers:SB_H});}catch{}
   }
-  await Promise.all([loadPosted(),loadIdeas(),loadCreators()]);
-  renderStreak();
-  renderIdeas();
-  renderCreators();
+
+  await Promise.all([loadPosted(),loadScheduled(),loadIdeas(),loadCreators()]);
+  renderStreak();renderIdeas();renderCreators();
+
+  // Show migration banner if local data exists
+  if(connected&&!ls('migrated',false)){
+    const hasLocal=ls('ideas',[]).length>0||Object.keys(ls('posted_days',{})).length>0||ls('creators',[]).length>0||ls('_lch_ideas',[]).length>0;
+    if(hasLocal)$('migrate-bar').style.display='block';
+  }
 }
 
 boot();
