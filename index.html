@@ -42,7 +42,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 .nav-btn{padding:12px 18px;font-size:13px;font-weight:500;border:none;background:transparent;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s,border-color .15s;white-space:nowrap;font-family:inherit}
 .nav-btn:hover{color:var(--text)}
 .nav-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
-.migrate-bar{background:var(--accent-light);border-bottom:1px solid var(--accent);padding:10px 1.5rem;display:none}
+.setup-bar{background:var(--accent-light);border-bottom:1px solid var(--accent);padding:12px 1.5rem}
+.setup-bar-inner{max-width:980px;margin:0 auto}
+.migrate-bar{background:var(--yellow-bg);border-bottom:1px solid var(--yellow-cal);padding:10px 1.5rem;display:none}
 .migrate-bar-inner{max-width:980px;margin:0 auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .main{max-width:980px;margin:0 auto;padding:1.5rem}
 .section{display:none}.section.active{display:block}
@@ -64,9 +66,9 @@ textarea{resize:vertical}
 .btn-danger{color:var(--red);border-color:rgba(163,45,45,0.2)}
 .btn-danger:hover{background:var(--red-bg)}
 .btn-green{background:var(--green-cal);color:white;border-color:var(--green-cal)}
-.btn-green:hover{background:#388E3C;border-color:#388E3C}
+.btn-green:hover{background:#388E3C}
 .btn-yellow{background:var(--yellow-cal);color:#333;border-color:var(--yellow-cal)}
-.btn-yellow:hover{background:#FFB300;border-color:#FFB300}
+.btn-yellow:hover{background:#FFB300}
 .btn-sm{padding:5px 10px;font-size:12px}
 .btn-full{width:100%;justify-content:center}
 .btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
@@ -80,14 +82,10 @@ textarea{resize:vertical}
 .badge-Posted{background:#EAF3DE;color:#27500A}
 .badge-Scheduled{background:#FFF8E1;color:#633806}
 @media(prefers-color-scheme:dark){
-  .badge-AI{background:#26215C;color:#CECBF6}
-  .badge-Marketing{background:#04342C;color:#9FE1CB}
-  .badge-Personal{background:#4B1528;color:#F4C0D1}
-  .badge-News{background:#412402;color:#FAC775}
-  .badge-Idea{background:#2C2C2A;color:#D3D1C7}
-  .badge-Draft{background:#042C53;color:#B5D4F4}
-  .badge-Posted{background:#173404;color:#C0DD97}
-  .badge-Scheduled{background:#2C1F00;color:#FAC775}
+  .badge-AI{background:#26215C;color:#CECBF6}.badge-Marketing{background:#04342C;color:#9FE1CB}
+  .badge-Personal{background:#4B1528;color:#F4C0D1}.badge-News{background:#412402;color:#FAC775}
+  .badge-Idea{background:#2C2C2A;color:#D3D1C7}.badge-Draft{background:#042C53;color:#B5D4F4}
+  .badge-Posted{background:#173404;color:#C0DD97}.badge-Scheduled{background:#2C1F00;color:#FAC775}
 }
 .filter-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem}
 .filter-chip{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:500;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;font-family:inherit;transition:all .15s}
@@ -103,7 +101,7 @@ textarea{resize:vertical}
 .stat-card{background:var(--bg2);border-radius:var(--radius);padding:1rem;text-align:center}
 .stat-label{font-size:11px;color:var(--text2);font-weight:500;margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em}
 .stat-val{font-size:24px;font-weight:600}
-.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem}
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;flex-wrap:wrap;gap:8px}
 .cal-title{font-size:14px;font-weight:600}
 .cal-nav{display:flex;align-items:center;gap:6px}
 .month-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
@@ -114,13 +112,8 @@ textarea{resize:vertical}
 .cal-cell.today-cell{border-color:var(--accent);color:var(--accent);font-weight:700}
 .cal-cell.posted-cell{background:var(--green-cal);border-color:var(--green-cal);color:white}
 .cal-cell.scheduled-cell{background:var(--yellow-cal);border-color:var(--yellow-cal);color:#333}
-.cal-cell .cell-dot{width:4px;height:4px;border-radius:50%;background:currentColor;opacity:.7}
 .pace-bar-track{height:6px;background:var(--bg3);border-radius:3px;margin:8px 0;overflow:hidden}
 .pace-bar-fill{height:100%;background:var(--green-cal);border-radius:3px;transition:width .4s ease}
-/* Schedule modal */
-.sched-bar{background:var(--yellow-bg);border:1px solid var(--yellow-cal);border-radius:var(--radius);padding:10px;margin-bottom:10px;display:none}
-.sched-bar.open{display:block}
-/* Idea cards */
 .idea-card{border:1px solid var(--border);border-radius:var(--radius);background:var(--bg);transition:border-color .15s,box-shadow .15s;margin-bottom:8px;overflow:hidden}
 .idea-card:hover{border-color:var(--border2);box-shadow:var(--shadow)}
 .idea-card.is-posted{opacity:.55}
@@ -138,15 +131,12 @@ textarea{resize:vertical}
 .idea-link-row{display:flex;align-items:center;gap:6px;padding:3px 0;font-size:12px}
 .idea-link-row a{color:var(--accent);text-decoration:none;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .idea-link-row a:hover{text-decoration:underline}
-/* Quick status buttons row */
-.quick-status{display:flex;gap:6px;align-items:center;padding:10px 12px;border-top:1px solid var(--border);background:var(--bg2);flex-wrap:wrap}
-.quick-label{font-size:11px;color:var(--text3);font-weight:500;margin-right:2px}
+.quick-status{display:flex;gap:6px;align-items:center;padding:8px 12px;border-top:1px solid var(--border);background:var(--bg2);flex-wrap:wrap}
+.quick-label{font-size:11px;color:var(--text3);font-weight:500}
 .idea-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:8px}
-/* Inspiration */
 .insp-card{border:1px solid var(--border);border-radius:var(--radius);padding:12px;margin-bottom:8px;background:var(--bg);display:flex;align-items:center;gap:12px;transition:border-color .15s}
 .insp-card:hover{border-color:var(--border2)}
 .avatar{width:38px;height:38px;border-radius:50%;background:var(--accent-light);color:var(--accent-text);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-/* Generator */
 .api-key-bar{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:12px;margin-bottom:1rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .api-key-bar label{margin:0;white-space:nowrap;font-size:12px;font-weight:500}
 .api-status{font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px}
@@ -156,7 +146,6 @@ textarea{resize:vertical}
 .gen-output.has-content{color:var(--text)}
 .spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle}
 @keyframes spin{to{transform:rotate(360deg)}}
-/* Modal */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;display:none;align-items:center;justify-content:center;padding:1rem}
 .modal-overlay.open{display:flex}
 .modal{background:var(--bg);border-radius:var(--radius-lg);padding:1.5rem;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3)}
@@ -165,13 +154,12 @@ textarea{resize:vertical}
 .modal-close{background:none;border:none;cursor:pointer;font-size:22px;color:var(--text2);line-height:1;padding:2px 6px;border-radius:4px}
 .modal-close:hover{background:var(--bg2)}
 .modal-actions{display:flex;gap:8px;margin-top:1.25rem;justify-content:flex-end}
-/* Cal legend */
-.cal-legend{display:flex;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+.cal-legend{display:flex;gap:12px;margin-bottom:10px}
 .legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2)}
 .legend-dot{width:10px;height:10px;border-radius:3px}
 .divider{border:none;border-top:1px solid var(--border);margin:1rem 0}
 .flex{display:flex}.items-center{align-items:center}.justify-between{justify-content:space-between}
-.gap-6{gap:6px}.gap-8{gap:8px}.mt-8{margin-top:8px}.mt-12{margin-top:12px}
+.gap-8{gap:8px}.mt-8{margin-top:8px}.mt-12{margin-top:12px}
 .text-sm{font-size:13px}.text-xs{font-size:12px}.text-muted{color:var(--text2)}.font-600{font-weight:600}.spacer{flex:1}
 .empty-state{padding:2rem 0;text-align:center;color:var(--text3);font-size:13px}
 .toast{position:fixed;bottom:24px;right:24px;background:#1a1a18;color:#f0efe9;padding:10px 16px;border-radius:var(--radius);font-size:13px;font-weight:500;opacity:0;transform:translateY(10px);transition:all .25s;pointer-events:none;z-index:999;box-shadow:0 4px 12px rgba(0,0,0,0.2);max-width:300px}
@@ -202,10 +190,23 @@ textarea{resize:vertical}
   </nav>
 </div>
 
+<!-- Notion key setup bar -->
+<div id="setup-bar" class="setup-bar" style="display:none">
+  <div class="setup-bar-inner">
+    <div style="font-size:13px;font-weight:600;color:var(--accent-text);margin-bottom:8px">🔗 Connect Notion to sync across all devices</div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <input type="password" id="notion-key-input" style="flex:1;min-width:200px;font-family:monospace;font-size:12px" placeholder="Paste your Notion integration token (secret_...)">
+      <button class="btn btn-primary btn-sm" onclick="saveNotionKey()">Connect</button>
+      <button class="btn btn-sm" onclick="document.getElementById('setup-bar').style.display='none'">Later</button>
+    </div>
+    <div style="font-size:11px;color:var(--accent-text);margin-top:6px">Get your token at notion.so/my-integrations → LinkedIn Hub integration</div>
+  </div>
+</div>
+
 <!-- Migration banner -->
 <div class="migrate-bar" id="migrate-bar">
   <div class="migrate-bar-inner">
-    <div style="flex:1;font-size:13px;color:var(--accent-text);font-weight:500">📦 You have existing ideas saved locally — migrate them to Supabase so they sync across all your devices.</div>
+    <div style="flex:1;font-size:13px;font-weight:500;color:var(--yellow)">📦 You have existing ideas saved locally — migrate them to Notion for cross-device sync.</div>
     <button id="migrate-btn" class="btn btn-primary btn-sm" onclick="migrateLocalData()">Migrate my data →</button>
     <button class="btn btn-sm" onclick="document.getElementById('migrate-bar').style.display='none'">Dismiss</button>
   </div>
@@ -241,7 +242,7 @@ textarea{resize:vertical}
   <div class="card">
     <div class="cal-header">
       <div class="cal-title" id="cal-title"></div>
-      <div style="display:flex;align-items:center;gap:8px">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
         <button class="btn btn-sm btn-yellow" onclick="openScheduleModal()">+ Schedule post</button>
         <div class="cal-nav">
           <button class="btn btn-sm" onclick="calPrev()">&#8249;</button>
@@ -272,10 +273,7 @@ textarea{resize:vertical}
           <select id="idea-cat"><option value="AI">AI</option><option value="Marketing">Marketing</option><option value="Personal Brand">Personal Brand</option><option value="News">News</option></select>
         </div>
       </div>
-      <div class="form-group">
-        <label>Reference links (optional)</label>
-        <textarea id="idea-links" rows="2" placeholder="One link per line — LinkedIn posts, articles..."></textarea>
-      </div>
+      <div class="form-group"><label>Reference links (optional)</label><textarea id="idea-links" rows="2" placeholder="One link per line"></textarea></div>
       <div class="form-group"><label>Status</label>
         <select id="idea-status"><option value="Idea">Idea</option><option value="Draft">Draft</option></select>
       </div>
@@ -305,13 +303,11 @@ textarea{resize:vertical}
     <span id="api-status" class="api-status unset">Not set</span>
     <button class="btn btn-sm" onclick="clearApiKey()">Clear</button>
   </div>
-  <div class="text-xs text-muted" style="margin-bottom:1rem;line-height:1.6">Stored only in your browser's localStorage. Get yours at <strong>console.anthropic.com</strong></div>
+  <div class="text-xs text-muted" style="margin-bottom:1rem;line-height:1.6">Stored only in your browser. Get yours at <strong>console.anthropic.com</strong></div>
   <div class="grid2" style="align-items:start">
     <div class="card">
       <div class="card-title">Write your post</div>
-      <div class="form-group"><label>Topic or inspiration snippet *</label>
-        <textarea id="gen-input" rows="5" placeholder="e.g. AI agents are replacing marketing coordinators..."></textarea>
-      </div>
+      <div class="form-group"><label>Topic or inspiration snippet *</label><textarea id="gen-input" rows="5" placeholder="e.g. AI agents are replacing marketing coordinators..."></textarea></div>
       <div class="form-group"><label>Tone</label>
         <select id="gen-tone">
           <option value="">Default — professional but conversational</option>
@@ -389,7 +385,7 @@ textarea{resize:vertical}
       <button class="modal-close" onclick="closeModal('schedule-modal')">×</button>
     </div>
     <div class="form-group"><label>Post title / topic *</label><input id="sched-title" placeholder="What are you posting about?"></div>
-    <div class="form-group"><label>Draft or notes (optional)</label><textarea id="sched-draft" rows="3" placeholder="Your draft text or key points..."></textarea></div>
+    <div class="form-group"><label>Draft or notes (optional)</label><textarea id="sched-draft" rows="3" placeholder="Your draft or key points..."></textarea></div>
     <div class="grid2">
       <div class="form-group"><label>Date *</label><input type="date" id="sched-date"></div>
       <div class="form-group"><label>Time *</label><input type="time" id="sched-time" value="09:00"></div>
@@ -398,7 +394,7 @@ textarea{resize:vertical}
       <select id="sched-cat"><option value="AI">AI</option><option value="Marketing">Marketing</option><option value="Personal Brand">Personal Brand</option><option value="News">News</option></select>
     </div>
     <div style="background:var(--yellow-bg);border:1px solid var(--yellow-cal);border-radius:var(--radius);padding:10px;font-size:12px;color:var(--yellow);margin-bottom:12px">
-      ⚡ This will show as <strong>yellow (scheduled)</strong> on your calendar. It automatically turns <strong>green (posted)</strong> after the scheduled time passes.
+      ⚡ Shows as <strong>yellow</strong> on calendar. Auto-turns <strong>green</strong> after the scheduled time passes.
     </div>
     <div class="modal-actions">
       <button class="btn" onclick="closeModal('schedule-modal')">Cancel</button>
@@ -410,10 +406,12 @@ textarea{resize:vertical}
 <div class="toast" id="toast"></div>
 
 <script>
-// ─── Config ───────────────────────────────────────────────
-const SB_URL = 'https://hkxwlyotfswofmegnxmv.supabase.co';
-const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhreHdseW90ZnN3b2ZtZWdueG12Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5MDk5ODgsImV4cCI6MjA5NDQ4NTk4OH0.DksEbmyNK7PozidKRn72lotdxgeWFduijNbHejLrLLg';
-const SB_H = {'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY};
+// ─── Notion Config ────────────────────────────────────────
+const NOTION_PROXY = 'https://api.allorigins.win/raw?url=';
+const NOTION_IDEAS_DB = '3625360404be80629824f8c0cb12edee';
+const NOTION_POSTED_DB = '3625360404be807a87d0ca53b90d17e4';
+const NOTION_CREATORS_DB = '3625360404be80abb49ced19e951e660';
+const NOTION_VERSION = '2022-06-28';
 
 const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -431,75 +429,222 @@ let toastT;
 function toast(msg,dur=2500){const el=$('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),dur);}
 function syncBadge(s,msg){const el=$('sync-badge');el.className='sync-status sync-'+(s==='ok'?'ok':s==='err'?'err':'mid');el.innerHTML=`<span class="dot"></span> ${msg}`;}
 function closeModal(id){$(id).classList.remove('open');}
+function getNotionKey(){return ls('notion_key','');}
 
 $('header-date').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
 
-// ─── Supabase ─────────────────────────────────────────────
-async function sbq(path,opts={}){
-  const r=await fetch(SB_URL+'/rest/v1/'+path,{headers:{...SB_H,...(opts.headers||{})}, ...opts});
-  if(!r.ok){const t=await r.text();throw new Error(t);}
-  if(r.status===204)return null;
-  const ct=r.headers.get('content-type')||'';
-  return ct.includes('json')?r.json():null;
+// ─── Notion API via proxy ─────────────────────────────────
+async function notionReq(path, method='GET', body=null){
+  const key = getNotionKey();
+  if(!key) throw new Error('No Notion key');
+  const url = 'https://api.notion.com/v1/'+path;
+  const proxyUrl = NOTION_PROXY + encodeURIComponent(url);
+  const opts = {
+    method,
+    headers:{
+      'Authorization':'Bearer '+key,
+      'Notion-Version':NOTION_VERSION,
+      'Content-Type':'application/json'
+    }
+  };
+  if(body) opts.body = JSON.stringify(body);
+  const r = await fetch(proxyUrl, opts);
+  const txt = await r.text();
+  try{ return JSON.parse(txt); }catch{ throw new Error(txt); }
 }
-async function sbAll(table,extra=''){
-  try{const d=await sbq(table+'?order=created.desc'+extra);return d||[];}
-  catch{return ls('_'+table,[]);}
+
+async function notionQuery(dbId, filter=null){
+  const body = filter ? {filter} : {};
+  const res = await notionReq('databases/'+dbId+'/query','POST',body);
+  return res.results || [];
 }
-async function sbUpsert(table,row){
-  try{await sbq(table,{method:'POST',body:JSON.stringify(row),headers:{'Prefer':'resolution=merge-duplicates,return=minimal'}});syncBadge('ok','Synced');}
-  catch{syncBadge('err','Offline — saved locally');const arr=ls('_'+table,[]);const i=arr.findIndex(r=>r.id===row.id);if(i>=0)arr[i]=row;else arr.unshift(row);lss('_'+table,arr);}
+
+async function notionCreate(dbId, props){
+  return notionReq('pages','POST',{parent:{database_id:dbId},properties:props});
 }
-async function sbDel(table,id){
-  try{await sbq(table+'?id=eq.'+encodeURIComponent(id),{method:'DELETE'});syncBadge('ok','Synced');}
-  catch{syncBadge('err','Offline');lss('_'+table,ls('_'+table,[]).filter(r=>r.id!==id));}
+
+async function notionUpdate(pageId, props){
+  return notionReq('pages/'+pageId,'PATCH',{properties:props});
+}
+
+async function notionDelete(pageId){
+  return notionReq('pages/'+pageId,'PATCH',{archived:true});
+}
+
+// ─── Notion property helpers ──────────────────────────────
+function nTitle(val){return {title:[{text:{content:val||''}}]}}
+function nText(val){return {rich_text:[{text:{content:val||''}}]}}
+function nSelect(val){return {select:{name:val||'Idea'}}}
+function nDate(val){return val?{date:{start:val}}:{date:null}}
+
+function gTitle(prop){return prop?.title?.[0]?.text?.content||''}
+function gText(prop){return prop?.rich_text?.[0]?.text?.content||''}
+function gSelect(prop){return prop?.select?.name||''}
+function gDate(prop){return prop?.date?.start||''}
+
+// ─── Notion key management ────────────────────────────────
+function saveNotionKey(){
+  const val = $('notion-key-input').value.trim();
+  if(!val){toast('Enter your Notion token');return;}
+  lss('notion_key', val);
+  $('setup-bar').style.display='none';
+  toast('✓ Notion connected! Loading your data...');
+  boot();
+}
+
+// ─── LOCAL DATA ───────────────────────────────────────────
+// All data stored locally, synced to Notion when key is set
+let posted={};
+let scheduled={};
+let ideas=[];
+let creators=[];
+let notionPageIds={ideas:{},posted:{},creators:{}};
+
+function loadLocal(){
+  posted = ls('posted',{});
+  scheduled = ls('scheduled',{});
+  ideas = ls('ideas_v2',[]);
+  creators = ls('creators_v2',[]);
+  notionPageIds = ls('notion_page_ids',{ideas:{},posted:{},creators:{}});
+}
+
+function saveLocal(){
+  lss('posted',posted);
+  lss('scheduled',scheduled);
+  lss('ideas_v2',ideas);
+  lss('creators_v2',creators);
+  lss('notion_page_ids',notionPageIds);
+}
+
+// ─── Notion sync ──────────────────────────────────────────
+async function syncToNotion(){
+  if(!getNotionKey()) return;
+  syncBadge('mid','Syncing...');
+  try{
+    // sync ideas
+    for(const idea of ideas){
+      const pid = notionPageIds.ideas[idea.id];
+      const props = {
+        'Name': nTitle(idea.title),
+        'Draft': nText(idea.draft),
+        'Source': nText(idea.source),
+        'Category': nSelect(idea.category),
+        'Status': nSelect(idea.status),
+        'Links': nText(idea.links),
+        'AppID': nText(idea.id)
+      };
+      if(pid){await notionUpdate(pid, props);}
+      else{const p=await notionCreate(NOTION_IDEAS_DB, props);notionPageIds.ideas[idea.id]=p.id;}
+    }
+    // sync posted days
+    for(const [day,type] of Object.entries(posted)){
+      const pid = notionPageIds.posted[day];
+      const props = {'Name':nTitle(day),'Type':nSelect(type),'AppID':nText(day)};
+      if(pid){await notionUpdate(pid,props);}
+      else{const p=await notionCreate(NOTION_POSTED_DB,props);notionPageIds.posted[day]=p.id;}
+    }
+    // sync creators
+    for(const c of creators){
+      const pid = notionPageIds.creators[c.id];
+      const props = {'Name':nTitle(c.name),'URL':nText(c.url),'About':nText(c.about),'AppID':nText(c.id)};
+      if(pid){await notionUpdate(pid,props);}
+      else{const p=await notionCreate(NOTION_CREATORS_DB,props);notionPageIds.creators[c.id]=p.id;}
+    }
+    saveLocal();
+    syncBadge('ok','Synced ✓');
+  }catch(e){
+    syncBadge('err','Sync failed');
+    console.error('Notion sync error:',e);
+  }
+}
+
+async function loadFromNotion(){
+  if(!getNotionKey()) return false;
+  syncBadge('mid','Loading...');
+  try{
+    // Load ideas
+    const ideaRows = await notionQuery(NOTION_IDEAS_DB);
+    if(ideaRows.length>0){
+      ideas=[];
+      for(const row of ideaRows){
+        if(row.archived) continue;
+        const appId = gText(row.properties['AppID']) || row.id;
+        ideas.push({
+          id: appId,
+          title: gTitle(row.properties['Name']),
+          draft: gText(row.properties['Draft']),
+          source: gText(row.properties['Source']),
+          category: gSelect(row.properties['Category'])||'AI',
+          status: gSelect(row.properties['Status'])||'Idea',
+          links: gText(row.properties['Links']),
+          created: Date.now()
+        });
+        notionPageIds.ideas[appId] = row.id;
+      }
+    }
+    // Load posted days
+    const postedRows = await notionQuery(NOTION_POSTED_DB);
+    if(postedRows.length>0){
+      posted={};
+      for(const row of postedRows){
+        if(row.archived) continue;
+        const day = gTitle(row.properties['Name']);
+        const type = gSelect(row.properties['Type'])||'posted';
+        if(day){ posted[day]=type; notionPageIds.posted[day]=row.id; }
+      }
+    }
+    // Load creators
+    const creatorRows = await notionQuery(NOTION_CREATORS_DB);
+    if(creatorRows.length>0){
+      creators=[];
+      for(const row of creatorRows){
+        if(row.archived) continue;
+        const appId = gText(row.properties['AppID']) || row.id;
+        creators.push({
+          id: appId,
+          name: gTitle(row.properties['Name']),
+          url: gText(row.properties['URL']),
+          about: gText(row.properties['About'])
+        });
+        notionPageIds.creators[appId] = row.id;
+      }
+    }
+    saveLocal();
+    syncBadge('ok','Synced ✓');
+    return true;
+  }catch(e){
+    syncBadge('err','Offline — using local data');
+    console.error('Notion load error:',e);
+    return false;
+  }
 }
 
 // ─── STREAK ───────────────────────────────────────────────
-let posted={};   // {dateKey: 'posted'|'scheduled'}
-let scheduled={};// {dateKey: {title, datetime, id}}
 let calView=null;
-
-async function loadPosted(){
-  try{
-    const rows=await sbq('lch_posted?select=day,type');
-    posted={};scheduled={};
-    (rows||[]).forEach(r=>{
-      posted[r.day]=r.type||'posted';
-    });
-  }catch{posted=ls('_posted',{});}
-}
-
-async function loadScheduled(){
-  try{
-    const rows=await sbq('lch_scheduled?order=sched_at.asc');
-    scheduled={};
-    (rows||[]).forEach(r=>{
-      const day=r.sched_at.split('T')[0];
-      scheduled[day]=r;
-      // Auto-flip to posted if time has passed
-      if(new Date(r.sched_at)<=new Date()&&posted[day]!=='posted'){
-        posted[day]='posted';
-        sbUpsert('lch_posted',{id:day,day:day,type:'posted',created:Date.now()});
-      }
-    });
-  }catch{}
-}
 
 async function toggleDay(k){
   if(posted[k]==='posted'){
     delete posted[k];
-    try{await sbq('lch_posted?day=eq.'+k,{method:'DELETE'});syncBadge('ok','Synced');}
-    catch{lss('_posted',posted);}
+    // Delete from Notion
+    if(notionPageIds.posted[k]){
+      try{await notionDelete(notionPageIds.posted[k]);delete notionPageIds.posted[k];}catch{}
+    }
     toast('Day unmarked');
   }else if(posted[k]==='scheduled'){
-    toast('This day has a scheduled post — edit or delete it from the schedule modal');
+    toast('This day has a scheduled post — mark complete by clicking it');
     return;
   }else{
     posted[k]='posted';
-    await sbUpsert('lch_posted',{id:k,day:k,type:'posted',created:Date.now()});
     toast('✓ Logged!');
+    if(getNotionKey()){
+      try{
+        const props={'Name':nTitle(k),'Type':nSelect('posted'),'AppID':nText(k)};
+        const p=await notionCreate(NOTION_POSTED_DB,props);
+        notionPageIds.posted[k]=p.id;
+      }catch{}
+    }
   }
+  saveLocal();
   renderStreak();
 }
 
@@ -508,6 +653,7 @@ function renderStreak(){
   let wk=0;
   const chips=$('day-chips');chips.innerHTML='';
   const today=todayK();
+  checkScheduledPosts();
   for(let i=0;i<7;i++){
     const d=new Date(mon);d.setDate(mon.getDate()+i);
     const k=dk(d);
@@ -532,16 +678,15 @@ function renderStreak(){
   $('pace-note').textContent=rem>0?`${rem} more posts to hit 5×/week pace`:mc>=wd?'Goal reached! 🎉':'Exceeded your goal! 🚀';
   if(!calView)calView={y,m};
   renderCal();
-  // Auto-check scheduled posts every render
-  checkScheduledPosts();
 }
 
 function checkScheduledPosts(){
   const now=new Date();
   Object.entries(scheduled).forEach(([day,sched])=>{
-    if(new Date(sched.sched_at)<=now&&posted[day]!=='posted'){
+    if(new Date(sched.schedAt)<=now&&posted[day]!=='posted'){
       posted[day]='posted';
-      sbUpsert('lch_posted',{id:day,day:day,type:'posted',created:Date.now()});
+      delete scheduled[day];
+      saveLocal();
     }
   });
 }
@@ -569,8 +714,8 @@ function renderCal(){
     if(isPosted)cls+=' posted-cell';
     else if(isSched)cls+=' scheduled-cell';
     else if(isToday)cls+=' today-cell';
-    const title=isSched?`Scheduled: ${scheduled[k].title}`:isPosted?'Posted':'';
-    h+=`<button class="${cls}" onclick="calCellClick('${k}')" title="${title}">${d}${isSched?'<span class="cell-dot"></span>':''}</button>`;
+    const ttl=isSched?`Scheduled: ${scheduled[k].title}`:isPosted?'Posted':'';
+    h+=`<button class="${cls}" onclick="calCellClick('${k}')" title="${ttl}">${d}</button>`;
   }
   $('cal-grid').innerHTML=h;
 }
@@ -578,61 +723,48 @@ function renderCal(){
 function calCellClick(k){
   if(scheduled[k]&&posted[k]!=='posted'){
     if(confirm(`Scheduled: "${scheduled[k].title}"\n\nMark as posted now?`)){
-      posted[k]='posted';
-      delete scheduled[k];
-      sbUpsert('lch_posted',{id:k,day:k,type:'posted',created:Date.now()});
-      renderStreak();toast('✓ Marked as posted!');
+      posted[k]='posted';delete scheduled[k];
+      saveLocal();renderStreak();toast('✓ Marked as posted!');
+      if(getNotionKey()){
+        try{notionCreate(NOTION_POSTED_DB,{'Name':nTitle(k),'Type':nSelect('posted'),'AppID':nText(k)}).then(p=>{notionPageIds.posted[k]=p.id;saveLocal();});}catch{}
+      }
     }
-  }else{
-    toggleDay(k);
-  }
+  }else{toggleDay(k);}
 }
 
-// ─── Schedule modal ───────────────────────────────────────
 function openScheduleModal(){
-  // default to tomorrow
   const tom=new Date();tom.setDate(tom.getDate()+1);
-  $('sched-date').value=dk(tom);
-  $('sched-time').value='09:00';
-  $('sched-title').value='';
-  $('sched-draft').value='';
+  $('sched-date').value=dk(tom);$('sched-time').value='09:00';
+  $('sched-title').value='';$('sched-draft').value='';
   $('schedule-modal').classList.add('open');
 }
 
-async function saveSchedule(){
+function saveSchedule(){
   const title=$('sched-title').value.trim();
   const date=$('sched-date').value;
   const time=$('sched-time').value;
   if(!title){toast('Enter a post title');return;}
   if(!date||!time){toast('Pick a date and time');return;}
-  const schedAt=date+'T'+time+':00';
-  const id='sched-'+date;
-  const row={id,day:date,sched_at:schedAt,title,draft:$('sched-draft').value.trim(),category:$('sched-cat').value,created:Date.now()};
-  scheduled[date]=row;
-  // Mark in posted as scheduled type
+  scheduled[date]={title,draft:$('sched-draft').value.trim(),category:$('sched-cat').value,schedAt:date+'T'+time+':00'};
   posted[date]='scheduled';
-  await sbUpsert('lch_posted',{id:date,day:date,type:'scheduled',created:Date.now()});
-  try{await sbUpsert('lch_scheduled',row);}catch{}
+  saveLocal();
   closeModal('schedule-modal');
   renderStreak();
   toast(`✓ Scheduled for ${date} at ${time}!`);
   // Also add to ideas bank
   const idea={id:uuid(),title,draft:$('sched-draft').value.trim(),source:'Scheduled',category:$('sched-cat').value,links:'',status:'Draft',created:Date.now()};
   ideas.unshift(idea);
-  await sbUpsert('lch_ideas',idea);
+  renderIdeas();
+  if(getNotionKey()) syncToNotion();
 }
 
-// Auto-check every minute
 setInterval(()=>{checkScheduledPosts();renderCal();},60000);
 
 // ─── IDEAS ────────────────────────────────────────────────
-let ideas=[];
 let ideaFilter='all';
 let editingId=null;
 
 function catClass(c){return{'AI':'AI','Marketing':'Marketing','Personal Brand':'Personal','News':'News'}[c]||'Idea'}
-
-async function loadIdeas(){ideas=await sbAll('lch_ideas');}
 
 function renderIdeas(){
   const list=$('ideas-list');
@@ -649,10 +781,9 @@ function renderIdeas(){
     const linksHtml=links.length?`<div class="idea-links-section"><div class="text-xs text-muted" style="margin-bottom:4px;font-weight:500">LINKS</div>${links.map(l=>`<div class="idea-link-row">🔗 <a href="${esc(l)}" target="_blank" rel="noopener">${esc(l.length>65?l.slice(0,65)+'...':l)}</a></div>`).join('')}</div>`:'';
     const draftHtml=idea.draft?`<div class="idea-draft-full">${esc(idea.draft)}</div>`:'<p class="text-xs text-muted" style="margin-bottom:8px">No draft text added yet.</p>';
     const isPosted=idea.status==='Posted';
-    // Quick status buttons
     let quickBtns='';
-    if(idea.status==='Idea') quickBtns=`<button class="btn btn-sm" onclick="quickStatus('${idea.id}','Draft')">→ Draft</button>`;
-    if(idea.status==='Draft') quickBtns=`<button class="btn btn-sm" onclick="quickStatus('${idea.id}','Idea')">← Idea</button><button class="btn btn-sm btn-green" onclick="quickStatus('${idea.id}','Posted')">✓ Mark Posted</button>`;
+    if(idea.status==='Idea')quickBtns=`<button class="btn btn-sm" onclick="quickStatus('${idea.id}','Draft')">→ Draft</button>`;
+    if(idea.status==='Draft')quickBtns=`<button class="btn btn-sm" onclick="quickStatus('${idea.id}','Idea')">← Idea</button><button class="btn btn-sm btn-green" onclick="quickStatus('${idea.id}','Posted')">✓ Mark Posted</button>`;
     return`<div class="idea-card${isPosted?' is-posted':''}" id="icard-${idea.id}">
       <div class="idea-card-header" onclick="expandIdea('${idea.id}')">
         <div style="flex:1;min-width:0">
@@ -679,48 +810,65 @@ function renderIdeas(){
   }).join('');
 }
 
-async function quickStatus(id,newStatus){
-  const idea=ideas.find(i=>i.id===id);if(!idea)return;
-  idea.status=newStatus;
-  if(newStatus==='Posted'){
-    posted[todayK()]='posted';
-    await sbUpsert('lch_posted',{id:todayK(),day:todayK(),type:'posted',created:Date.now()});
-    toast('✓ Posted! Today logged in your streak!');
-  }else{
-    toast('✓ Moved to '+newStatus);
-  }
-  renderIdeas();
-  await sbUpsert('lch_ideas',idea);
-}
-
 function expandIdea(id){
   const body=$('ibody-'+id),arr=$('arr-'+id);
   const open=body.classList.contains('open');
-  body.classList.toggle('open',!open);
-  arr.classList.toggle('open',!open);
+  body.classList.toggle('open',!open);arr.classList.toggle('open',!open);
 }
 
 function filterIdeas(el){
   ideaFilter=el.dataset.filter;
   document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));
-  el.classList.add('active');
-  renderIdeas();
+  el.classList.add('active');renderIdeas();
 }
 
 async function addIdea(){
   const t=$('idea-title').value.trim();
   if(!t){toast('Please enter a topic');return;}
   const idea={id:uuid(),title:t,draft:$('idea-draft').value.trim(),source:$('idea-source').value.trim(),category:$('idea-cat').value,links:$('idea-links').value.trim(),status:$('idea-status').value,created:Date.now()};
-  ideas.unshift(idea);renderIdeas();toast('✓ Idea added!');
+  ideas.unshift(idea);saveLocal();renderIdeas();toast('✓ Idea saved!');
   ['idea-title','idea-draft','idea-source','idea-links'].forEach(id=>$(id).value='');
   $('idea-status').value='Idea';
-  await sbUpsert('lch_ideas',idea);
+  if(getNotionKey()){
+    syncBadge('mid','Syncing...');
+    try{
+      const props={'Name':nTitle(idea.title),'Draft':nText(idea.draft),'Source':nText(idea.source),'Category':nSelect(idea.category),'Status':nSelect(idea.status),'Links':nText(idea.links),'AppID':nText(idea.id)};
+      const p=await notionCreate(NOTION_IDEAS_DB,props);
+      notionPageIds.ideas[idea.id]=p.id;saveLocal();
+      syncBadge('ok','Synced ✓');
+    }catch(e){syncBadge('err','Sync failed');}
+  }
+}
+
+async function quickStatus(id,newStatus){
+  const idea=ideas.find(i=>i.id===id);if(!idea)return;
+  idea.status=newStatus;
+  if(newStatus==='Posted'){
+    posted[todayK()]='posted';saveLocal();
+    toast('✓ Posted! Today logged in your streak!');
+    if(getNotionKey()){
+      try{
+        const props={'Name':nTitle(todayK()),'Type':nSelect('posted'),'AppID':nText(todayK())};
+        const p=await notionCreate(NOTION_POSTED_DB,props);
+        notionPageIds.posted[todayK()]=p.id;saveLocal();
+      }catch{}
+    }
+  }else{toast('✓ Moved to '+newStatus);}
+  saveLocal();renderIdeas();
+  if(getNotionKey()){
+    try{
+      const pid=notionPageIds.ideas[idea.id];
+      if(pid)await notionUpdate(pid,{'Status':nSelect(idea.status)});
+      syncBadge('ok','Synced ✓');
+    }catch{syncBadge('err','Sync failed');}
+  }
 }
 
 async function delIdea(id){
   if(!confirm('Delete this idea?'))return;
-  ideas=ideas.filter(i=>i.id!==id);renderIdeas();toast('Deleted');
-  await sbDel('lch_ideas',id);
+  const pid=notionPageIds.ideas[id];
+  ideas=ideas.filter(i=>i.id!==id);saveLocal();renderIdeas();toast('Deleted');
+  if(getNotionKey()&&pid){try{await notionDelete(pid);syncBadge('ok','Synced ✓');}catch{}}
 }
 
 function openEdit(id){
@@ -738,13 +886,19 @@ async function saveEdit(){
   idea.title=$('edit-title').value.trim();idea.draft=$('edit-draft').value.trim();
   idea.category=$('edit-cat').value;idea.status=$('edit-status').value;
   idea.source=$('edit-source').value.trim();idea.links=$('edit-links').value.trim();
-  closeModal('edit-modal');renderIdeas();toast('✓ Changes saved!');
-  await sbUpsert('lch_ideas',idea);
+  closeModal('edit-modal');saveLocal();renderIdeas();toast('✓ Changes saved!');
+  if(getNotionKey()){
+    try{
+      const pid=notionPageIds.ideas[idea.id];
+      const props={'Name':nTitle(idea.title),'Draft':nText(idea.draft),'Source':nText(idea.source),'Category':nSelect(idea.category),'Status':nSelect(idea.status),'Links':nText(idea.links)};
+      if(pid)await notionUpdate(pid,props);
+      syncBadge('ok','Synced ✓');
+    }catch{syncBadge('err','Sync failed');}
+  }
 }
 
 // ─── AI GENERATOR ─────────────────────────────────────────
 let lastInput='',lastTone='';
-
 function initGenerator(){
   const k=ls('api_key','');
   $('api-key-input').value=k?'••••••••••••••••':'';
@@ -777,17 +931,17 @@ async function generatePost(){
   btn.disabled=false;btn.innerHTML='✨ Generate post';
 }
 function regenerate(){$('gen-input').value=lastInput;$('gen-tone').value=lastTone;generatePost();}
-function copyPost(){navigator.clipboard.writeText($('gen-output').textContent).then(()=>toast('✓ Copied!')).catch(()=>toast('Select text manually to copy'));}
+function copyPost(){navigator.clipboard.writeText($('gen-output').textContent).then(()=>toast('✓ Copied!')).catch(()=>toast('Select text manually'));}
 async function saveToBank(){
   const txt=$('gen-output').textContent;if(!txt.trim())return;
   const idea={id:uuid(),title:lastInput.slice(0,80)+(lastInput.length>80?'...':''),draft:txt,source:'AI Generator',category:'AI',links:'',status:'Draft',created:Date.now()};
-  ideas.unshift(idea);toast('✓ Saved to ideas bank!');
-  await sbUpsert('lch_ideas',idea);
+  ideas.unshift(idea);saveLocal();toast('✓ Saved to ideas bank!');
+  if(getNotionKey()){
+    try{const p=await notionCreate(NOTION_IDEAS_DB,{'Name':nTitle(idea.title),'Draft':nText(idea.draft),'Source':nText(idea.source),'Category':nSelect(idea.category),'Status':nSelect(idea.status),'Links':nText(idea.links),'AppID':nText(idea.id)});notionPageIds.ideas[idea.id]=p.id;saveLocal();}catch{}
+  }
 }
 
 // ─── INSPIRATION ──────────────────────────────────────────
-let creators=[];
-async function loadCreators(){creators=await sbAll('lch_creators');}
 function renderCreators(){
   const list=$('insp-list');
   if(!creators.length){list.innerHTML='<div class="empty-state">No creators saved yet.</div>';return;}
@@ -804,57 +958,53 @@ function renderCreators(){
     </div>`;
   }).join('');
 }
+
 async function addCreator(){
   const n=$('insp-name').value.trim();if(!n){toast('Enter a name');return;}
   const c={id:uuid(),name:n,url:$('insp-url').value.trim(),about:$('insp-about').value.trim(),created:Date.now()};
-  creators.push(c);renderCreators();toast('✓ Creator added!');
+  creators.push(c);saveLocal();renderCreators();toast('✓ Creator saved!');
   ['insp-name','insp-url','insp-about'].forEach(id=>$(id).value='');
-  await sbUpsert('lch_creators',c);
+  if(getNotionKey()){
+    try{const p=await notionCreate(NOTION_CREATORS_DB,{'Name':nTitle(c.name),'URL':nText(c.url),'About':nText(c.about),'AppID':nText(c.id)});notionPageIds.creators[c.id]=p.id;saveLocal();}catch{}
+  }
 }
+
 async function delCreator(id){
-  creators=creators.filter(c=>c.id!==id);renderCreators();toast('Removed');
-  await sbDel('lch_creators',id);
+  const pid=notionPageIds.creators[id];
+  creators=creators.filter(c=>c.id!==id);saveLocal();renderCreators();toast('Removed');
+  if(getNotionKey()&&pid){try{await notionDelete(pid);}catch{}}
 }
 
 // ─── Migration ────────────────────────────────────────────
 async function migrateLocalData(){
   const btn=$('migrate-btn');
   btn.disabled=true;btn.textContent='Migrating...';
-  let count=0;
-  try{
-    // ideas (both key formats)
-    const localIdeas=[...ls('ideas',[]),...ls('_lch_ideas',[])];
-    const seen=new Set();
-    for(const idea of localIdeas){
-      if(!idea.id)idea.id=uuid();
-      if(seen.has(idea.id))continue;seen.add(idea.id);
-      if(!idea.created)idea.created=Date.now();
-      if(!idea.links)idea.links='';
-      await sbUpsert('lch_ideas',idea);count++;
-    }
-    // posted days
-    const localPosted={...ls('posted_days',{}),...ls('_posted',{})};
-    for(const day of Object.keys(localPosted)){
-      await sbUpsert('lch_posted',{id:day,day:day,type:'posted',created:Date.now()});count++;
-    }
-    // creators
-    const localCreators=[...ls('creators',[]),...ls('_lch_creators',[])];
-    const seenC=new Set();
-    for(const c of localCreators){
-      if(!c.id)c.id=uuid();
-      if(seenC.has(c.id))continue;seenC.add(c.id);
-      if(!c.created)c.created=Date.now();
-      await sbUpsert('lch_creators',c);count++;
-    }
-    await Promise.all([loadPosted(),loadScheduled(),loadIdeas(),loadCreators()]);
-    renderStreak();renderIdeas();renderCreators();
-    $('migrate-bar').style.display='none';
-    lss('migrated',true);
-    toast('✓ Migrated '+count+' items! Everything synced across devices.',4000);
-  }catch(e){
-    btn.disabled=false;btn.textContent='Retry migration';
-    toast('Migration error: '+e.message);
+  // Load old format data into new format
+  const oldIdeas=[...ls('ideas',[]),...ls('_lch_ideas',[]),...ls('ideas_v2',[])];
+  const seen=new Set(ideas.map(i=>i.id));
+  for(const idea of oldIdeas){
+    if(!idea.id)idea.id=uuid();
+    if(seen.has(idea.id))continue;seen.add(idea.id);
+    ideas.unshift({id:idea.id,title:idea.title||'',draft:idea.draft||'',source:idea.source||'',category:idea.category||'AI',links:idea.links||'',status:idea.status||'Idea',created:idea.created||Date.now()});
   }
+  const oldPosted={...ls('posted_days',{}),...ls('_posted',{})};
+  Object.keys(oldPosted).forEach(day=>{if(!posted[day])posted[day]='posted';});
+  const oldCreators=[...ls('creators',[]),...ls('_lch_creators',[]),...ls('creators_v2',[])];
+  const seenC=new Set(creators.map(c=>c.id));
+  for(const c of oldCreators){
+    if(!c.id)c.id=uuid();
+    if(seenC.has(c.id))continue;seenC.add(c.id);
+    creators.push({id:c.id,name:c.name||'',url:c.url||'',about:c.about||''});
+  }
+  saveLocal();renderIdeas();renderCreators();renderStreak();
+  if(getNotionKey()){
+    btn.textContent='Syncing to Notion...';
+    await syncToNotion();
+  }
+  lss('migrated',true);
+  $('migrate-bar').style.display='none';
+  btn.disabled=false;
+  toast('✓ Migration complete! All data saved.',3000);
 }
 
 // ─── Navigation ───────────────────────────────────────────
@@ -870,26 +1020,28 @@ function showSection(id,btn){
 
 // ─── Boot ─────────────────────────────────────────────────
 async function boot(){
-  syncBadge('mid','Connecting...');
-  let connected=false;
-  try{
-    await Promise.all([sbq('lch_posted?limit=1'),sbq('lch_ideas?limit=1'),sbq('lch_creators?limit=1')]);
-    syncBadge('ok','Synced');connected=true;
-  }catch{syncBadge('err','Offline mode');}
-
-  // Create scheduled table if needed (silent)
-  try{await sbq('lch_scheduled?limit=1');}catch{
-    try{await fetch(SB_URL+'/rest/v1/lch_scheduled',{method:'HEAD',headers:SB_H});}catch{}
+  loadLocal();
+  const key=getNotionKey();
+  if(!key){
+    syncBadge('err','Not connected');
+    $('setup-bar').style.display='block';
+    renderStreak();renderIdeas();renderCreators();
+    return;
   }
-
-  await Promise.all([loadPosted(),loadScheduled(),loadIdeas(),loadCreators()]);
-  renderStreak();renderIdeas();renderCreators();
-
-  // Show migration banner if local data exists
-  if(connected&&!ls('migrated',false)){
-    const hasLocal=ls('ideas',[]).length>0||Object.keys(ls('posted_days',{})).length>0||ls('creators',[]).length>0||ls('_lch_ideas',[]).length>0;
-    if(hasLocal)$('migrate-bar').style.display='block';
+  const loaded = await loadFromNotion();
+  if(!loaded){
+    // Use local data
+    renderStreak();renderIdeas();renderCreators();
+  } else {
+    renderStreak();renderIdeas();renderCreators();
   }
+  // Show migration banner if old local data exists
+  if(!ls('migrated',false)){
+    const hasOld=ls('ideas',[]).length>0||ls('_lch_ideas',[]).length>0||Object.keys(ls('posted_days',{})).length>0||ls('creators',[]).length>0;
+    if(hasOld)$('migrate-bar').style.display='block';
+  }
+  // Auto-sync every 5 minutes
+  setInterval(syncToNotion, 300000);
 }
 
 boot();
