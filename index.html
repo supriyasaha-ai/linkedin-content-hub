@@ -4,57 +4,64 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LinkedIn Content Hub</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#ffffff;--bg2:#f7f7f5;--bg3:#f0efe9;
   --text:#1a1a18;--text2:#6b6b67;--text3:#9b9b97;
-  --border:rgba(0,0,0,0.12);--border2:rgba(0,0,0,0.2);
+  --border:rgba(0,0,0,0.10);--border2:rgba(0,0,0,0.18);
   --accent:#7F77DD;--accent-dark:#534AB7;--accent-light:#EEEDFE;--accent-text:#3C3489;
-  --radius:8px;--radius-lg:12px;--shadow:0 1px 3px rgba(0,0,0,0.08);
+  --radius:8px;--radius-lg:14px;--shadow:0 1px 4px rgba(0,0,0,0.07);
   --green:#27500A;--green-bg:#EAF3DE;--green-cal:#4CAF50;
   --yellow:#633806;--yellow-bg:#FFF8E1;--yellow-cal:#FFC107;
   --red:#A32D2D;--red-bg:#FCEBEB;
+  --blue:#0C447C;--blue-bg:#E6F1FB;
 }
 @media(prefers-color-scheme:dark){
   :root{
     --bg:#1c1c1a;--bg2:#242422;--bg3:#2c2c2a;
     --text:#f0efe9;--text2:#9b9b97;--text3:#6b6b67;
-    --border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.18);
+    --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.15);
     --accent:#9F99E8;--accent-dark:#CECBF6;--accent-light:#26215C;--accent-text:#CECBF6;
     --green:#C0DD97;--green-bg:#173404;--green-cal:#4CAF50;
     --yellow:#FAC775;--yellow-bg:#2C1F00;--yellow-cal:#FFC107;
     --red:#F7C1C1;--red-bg:#501313;
+    --blue:#B5D4F4;--blue-bg:#042C53;
   }
 }
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg3);color:var(--text);min-height:100vh;font-size:15px;line-height:1.6}
 .header{background:var(--bg);border-bottom:1px solid var(--border);padding:0 1.5rem;position:sticky;top:0;z-index:100}
-.header-inner{max-width:980px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:56px}
+.header-inner{max-width:1000px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:56px}
 .logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px}
-.logo-icon{width:28px;height:28px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;color:white;font-size:13px;font-weight:800}
-.sync-status{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;display:flex;align-items:center;gap:5px}
+.logo-icon{width:30px;height:30px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:white;font-size:14px;font-weight:800}
+.sync-pill{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;display:flex;align-items:center;gap:5px;transition:all .3s}
 .sync-ok{background:var(--green-bg);color:var(--green)}
 .sync-err{background:var(--red-bg);color:var(--red)}
 .sync-mid{background:var(--bg2);color:var(--text2)}
-.dot{width:6px;height:6px;border-radius:50%;background:currentColor;display:inline-block}
-.nav-wrap{background:var(--bg);border-bottom:1px solid var(--border);padding:0 1.5rem}
-.nav{max-width:980px;margin:0 auto;display:flex;gap:2px}
-.nav-btn{padding:12px 18px;font-size:13px;font-weight:500;border:none;background:transparent;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s,border-color .15s;white-space:nowrap;font-family:inherit}
+.dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
+.nav-wrap{background:var(--bg);border-bottom:1px solid var(--border);padding:0 1.5rem;overflow-x:auto}
+.nav{max-width:1000px;margin:0 auto;display:flex;gap:0;min-width:max-content}
+.nav-btn{padding:12px 16px;font-size:13px;font-weight:500;border:none;background:transparent;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s,border-color .15s;white-space:nowrap;font-family:inherit}
 .nav-btn:hover{color:var(--text)}
 .nav-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
-.migrate-bar{background:var(--yellow-bg);border-bottom:1px solid var(--yellow-cal);padding:10px 1.5rem;display:none}
-.migrate-bar-inner{max-width:980px;margin:0 auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.main{max-width:980px;margin:0 auto;padding:1.5rem}
+.main{max-width:1000px;margin:0 auto;padding:1.25rem 1.5rem}
 .section{display:none}.section.active{display:block}
 .card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;box-shadow:var(--shadow)}
-.card-title{font-size:14px;font-weight:600;margin-bottom:1rem}
+.card-title{font-size:14px;font-weight:600;margin-bottom:1rem;color:var(--text)}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
 .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem}
-@media(max-width:640px){.grid2{grid-template-columns:1fr}.grid3{grid-template-columns:1fr 1fr}.nav-btn{padding:12px 8px;font-size:11px}.sticky-form{position:static!important;top:auto!important}.main{padding:1rem}.card{padding:1rem}}
+.grid4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:.75rem}
+@media(max-width:700px){
+  .grid2{grid-template-columns:1fr}
+  .grid3{grid-template-columns:1fr 1fr}
+  .grid4{grid-template-columns:1fr 1fr}
+  .nav-btn{padding:12px 10px;font-size:11px}
+  .main{padding:1rem}
+  .sticky-form{position:static!important;top:auto!important}
+}
 label{font-size:12px;font-weight:500;color:var(--text2);display:block;margin-bottom:5px}
 input,textarea,select{font-family:inherit;font-size:13px;color:var(--text);background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:8px 10px;width:100%;transition:border-color .15s;outline:none}
-input:focus,textarea:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(127,119,221,0.12)}
+input:focus,textarea:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(127,119,221,0.1)}
 textarea{resize:vertical}
 .form-group{margin-bottom:12px}
 .btn{font-family:inherit;font-size:13px;font-weight:500;cursor:pointer;border-radius:var(--radius);padding:8px 14px;border:1px solid var(--border2);background:transparent;color:var(--text);transition:background .15s,transform .1s;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
@@ -79,12 +86,11 @@ textarea{resize:vertical}
 .badge-Idea{background:#F1EFE8;color:#444441}
 .badge-Draft{background:#E6F1FB;color:#0C447C}
 .badge-Posted{background:#EAF3DE;color:#27500A}
-.badge-Scheduled{background:#FFF8E1;color:#633806}
 @media(prefers-color-scheme:dark){
   .badge-AI{background:#26215C;color:#CECBF6}.badge-Marketing{background:#04342C;color:#9FE1CB}
   .badge-Personal{background:#4B1528;color:#F4C0D1}.badge-News{background:#412402;color:#FAC775}
   .badge-Idea{background:#2C2C2A;color:#D3D1C7}.badge-Draft{background:#042C53;color:#B5D4F4}
-  .badge-Posted{background:#173404;color:#C0DD97}.badge-Scheduled{background:#2C1F00;color:#FAC775}
+  .badge-Posted{background:#173404;color:#C0DD97}
 }
 .filter-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem}
 .filter-chip{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:500;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;font-family:inherit;transition:all .15s}
@@ -95,11 +101,13 @@ textarea{resize:vertical}
 .day-chip:hover{border-color:var(--accent);color:var(--accent)}
 .day-chip.today{border-color:var(--accent);color:var(--accent)}
 .day-chip.active{background:var(--green-cal);border-color:var(--green-cal);color:white}
-.streak-big{font-size:48px;font-weight:700;line-height:1}
+.streak-big{font-size:52px;font-weight:700;line-height:1}
 .streak-msg{font-size:13px;color:var(--accent);font-weight:500;margin-top:6px}
 .stat-card{background:var(--bg2);border-radius:var(--radius);padding:1rem;text-align:center}
-.stat-label{font-size:11px;color:var(--text2);font-weight:500;margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em}
-.stat-val{font-size:24px;font-weight:600}
+.stat-label{font-size:10px;color:var(--text2);font-weight:600;margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em}
+.stat-val{font-size:26px;font-weight:700}
+.pace-bar-track{height:6px;background:var(--bg3);border-radius:3px;margin:8px 0;overflow:hidden}
+.pace-bar-fill{height:100%;background:var(--green-cal);border-radius:3px;transition:width .5s ease}
 .cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;flex-wrap:wrap;gap:8px}
 .cal-title{font-size:14px;font-weight:600}
 .month-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
@@ -110,17 +118,18 @@ textarea{resize:vertical}
 .cal-cell.today-cell{border-color:var(--accent);color:var(--accent);font-weight:700}
 .cal-cell.posted-cell{background:var(--green-cal);border-color:var(--green-cal);color:white}
 .cal-cell.scheduled-cell{background:var(--yellow-cal);border-color:var(--yellow-cal);color:#333}
-.pace-bar-track{height:6px;background:var(--bg3);border-radius:3px;margin:8px 0;overflow:hidden}
-.pace-bar-fill{height:100%;background:var(--green-cal);border-radius:3px;transition:width .4s ease}
+.cal-legend{display:flex;gap:12px;margin-bottom:10px}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2)}
+.legend-dot{width:10px;height:10px;border-radius:3px}
 .idea-card{border:1px solid var(--border);border-radius:var(--radius);background:var(--bg);transition:border-color .15s,box-shadow .15s;margin-bottom:8px;overflow:hidden}
 .idea-card:hover{border-color:var(--border2);box-shadow:var(--shadow)}
-.idea-card.is-posted{opacity:.55}
+.idea-card.is-posted{opacity:.5}
 .idea-card-header{padding:12px;cursor:pointer;display:flex;align-items:flex-start;gap:8px;user-select:none}
 .idea-card-header:hover{background:var(--bg2)}
 .idea-title-text{font-size:13px;font-weight:600;flex:1;line-height:1.4}
 .idea-source-tag{font-size:11px;color:var(--text3);margin-top:2px}
 .idea-badges-row{display:flex;align-items:center;gap:5px;flex-shrink:0;flex-wrap:wrap}
-.expand-arrow{font-size:11px;color:var(--text3);transition:transform .2s}
+.expand-arrow{font-size:11px;color:var(--text3);transition:transform .2s;flex-shrink:0}
 .expand-arrow.open{transform:rotate(180deg)}
 .idea-body{display:none;border-top:1px solid var(--border);padding:12px}
 .idea-body.open{display:block}
@@ -132,9 +141,32 @@ textarea{resize:vertical}
 .quick-status{display:flex;gap:6px;align-items:center;padding:8px 12px;border-top:1px solid var(--border);background:var(--bg2);flex-wrap:wrap}
 .quick-label{font-size:11px;color:var(--text3);font-weight:500}
 .idea-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:8px}
-.insp-card{border:1px solid var(--border);border-radius:var(--radius);padding:12px;margin-bottom:8px;background:var(--bg);display:flex;align-items:center;gap:12px;transition:border-color .15s}
-.insp-card:hover{border-color:var(--border2)}
+/* Performance */
+.perf-card{border:1px solid var(--border);border-radius:var(--radius);padding:12px;margin-bottom:8px;background:var(--bg)}
+.perf-title{font-size:13px;font-weight:600;margin-bottom:4px}
+.perf-meta{font-size:12px;color:var(--text2);margin-bottom:8px}
+.perf-stats{display:flex;gap:12px;flex-wrap:wrap}
+.perf-stat{text-align:center}
+.perf-stat-val{font-size:18px;font-weight:700;color:var(--text)}
+.perf-stat-lbl{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.04em}
+.eng-bar{height:4px;border-radius:2px;background:var(--accent);margin-top:6px;transition:width .5s}
+/* Insight cards */
+.insight-card{border-radius:var(--radius);padding:12px;margin-bottom:8px}
+.insight-card.purple{background:var(--accent-light);border:1px solid var(--accent)}
+.insight-card.green{background:var(--green-bg);border:1px solid var(--green-cal)}
+.insight-card.yellow{background:var(--yellow-bg);border:1px solid var(--yellow-cal)}
+.insight-card.blue{background:var(--blue-bg);border:1px solid var(--blue)}
+.insight-title{font-size:12px;font-weight:700;margin-bottom:4px}
+.insight-text{font-size:12px;line-height:1.5}
+/* Chart bars */
+.chart-bar-wrap{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.chart-bar-label{font-size:12px;color:var(--text2);width:80px;flex-shrink:0;text-align:right}
+.chart-bar-track{flex:1;height:20px;background:var(--bg2);border-radius:4px;overflow:hidden}
+.chart-bar-fill{height:100%;background:var(--accent);border-radius:4px;display:flex;align-items:center;justify-content:flex-end;padding-right:6px;font-size:11px;font-weight:600;color:white;transition:width .6s ease;min-width:2px}
+/* Insp */
+.insp-card{border:1px solid var(--border);border-radius:var(--radius);padding:12px;margin-bottom:8px;background:var(--bg);display:flex;align-items:center;gap:12px}
 .avatar{width:38px;height:38px;border-radius:50%;background:var(--accent-light);color:var(--accent-text);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+/* Generator */
 .api-key-bar{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:12px;margin-bottom:1rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .api-key-bar label{margin:0;white-space:nowrap;font-size:12px;font-weight:500}
 .api-status{font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px}
@@ -144,21 +176,22 @@ textarea{resize:vertical}
 .gen-output.has-content{color:var(--text)}
 .spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle}
 @keyframes spin{to{transform:rotate(360deg)}}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;display:none;align-items:center;justify-content:center;padding:1rem}
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:200;display:none;align-items:center;justify-content:center;padding:1rem}
 .modal-overlay.open{display:flex}
-.modal{background:var(--bg);border-radius:var(--radius-lg);padding:1.5rem;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3)}
+.modal{background:var(--bg);border-radius:var(--radius-lg);padding:1.5rem;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.25)}
 .modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
 .modal-title{font-size:15px;font-weight:600}
 .modal-close{background:none;border:none;cursor:pointer;font-size:22px;color:var(--text2);line-height:1;padding:2px 6px;border-radius:4px}
 .modal-close:hover{background:var(--bg2)}
 .modal-actions{display:flex;gap:8px;margin-top:1.25rem;justify-content:flex-end}
-.cal-legend{display:flex;gap:12px;margin-bottom:10px}
-.legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2)}
-.legend-dot{width:10px;height:10px;border-radius:3px}
+.divider{border:none;border-top:1px solid var(--border);margin:1rem 0}
 .text-sm{font-size:13px}.text-xs{font-size:12px}.text-muted{color:var(--text2)}.font-600{font-weight:600}.spacer{flex:1}
 .empty-state{padding:2rem 0;text-align:center;color:var(--text3);font-size:13px}
-.toast{position:fixed;bottom:24px;right:24px;background:#1a1a18;color:#f0efe9;padding:10px 16px;border-radius:var(--radius);font-size:13px;font-weight:500;opacity:0;transform:translateY(10px);transition:all .25s;pointer-events:none;z-index:999;box-shadow:0 4px 12px rgba(0,0,0,0.2);max-width:300px}
+.mt-8{margin-top:8px}.mt-12{margin-top:12px}.mt-16{margin-top:16px}
+.toast{position:fixed;bottom:24px;right:24px;background:#1a1a18;color:#f0efe9;padding:10px 16px;border-radius:var(--radius);font-size:13px;font-weight:500;opacity:0;transform:translateY(10px);transition:all .25s;pointer-events:none;z-index:999;box-shadow:0 4px 16px rgba(0,0,0,0.2);max-width:300px}
 .toast.show{opacity:1;transform:translateY(0)}
+.loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,0.8);z-index:300;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;color:var(--text2)}
 </style>
 </head>
 <body>
@@ -169,8 +202,8 @@ textarea{resize:vertical}
       <div class="logo-icon">Li</div>
       LinkedIn Content Hub
     </div>
-    <div style="display:flex;align-items:center;gap:12px">
-      <div id="sync-badge" class="sync-status sync-mid"><span class="dot"></span> Connecting...</div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <div id="sync-badge" class="sync-pill sync-mid"><span class="dot"></span> Connecting...</div>
       <div style="font-size:12px;color:var(--text2)" id="header-date"></div>
     </div>
   </div>
@@ -180,17 +213,10 @@ textarea{resize:vertical}
   <nav class="nav">
     <button class="nav-btn active" onclick="showSection('streak',this)">🔥 Streak</button>
     <button class="nav-btn" onclick="showSection('ideas',this)">💡 Ideas Bank</button>
+    <button class="nav-btn" onclick="showSection('performance',this)">📊 Performance</button>
     <button class="nav-btn" onclick="showSection('generator',this)">✨ AI Generator</button>
     <button class="nav-btn" onclick="showSection('inspiration',this)">👥 Inspiration</button>
   </nav>
-</div>
-
-<div class="migrate-bar" id="migrate-bar">
-  <div class="migrate-bar-inner">
-    <div style="flex:1;font-size:13px;font-weight:500;color:var(--yellow)">📦 You have existing ideas saved locally — migrate them to sync across all devices.</div>
-    <button id="migrate-btn" class="btn btn-primary btn-sm" onclick="migrateLocalData()">Migrate my data →</button>
-    <button class="btn btn-sm" onclick="document.getElementById('migrate-bar').style.display='none'">Dismiss</button>
-  </div>
 </div>
 
 <main class="main">
@@ -203,7 +229,7 @@ textarea{resize:vertical}
       <div style="display:flex;align-items:flex-end;gap:12px;margin-bottom:1.25rem">
         <div class="streak-big" id="streak-num">0</div>
         <div>
-          <div style="font-size:13px;color:var(--text2)">/7 days posted</div>
+          <div class="text-sm text-muted">/7 days posted</div>
           <div class="streak-msg" id="streak-msg"></div>
         </div>
       </div>
@@ -214,7 +240,7 @@ textarea{resize:vertical}
       <div class="grid3" style="margin-bottom:12px">
         <div class="stat-card"><div class="stat-label">Posted</div><div class="stat-val" id="stat-month">0</div></div>
         <div class="stat-card"><div class="stat-label">Goal %</div><div class="stat-val" id="stat-pct">0%</div></div>
-        <div class="stat-card"><div class="stat-label">Remaining</div><div class="stat-val" id="stat-remain">0</div></div>
+        <div class="stat-card"><div class="stat-label">Left</div><div class="stat-val" id="stat-remain">0</div></div>
       </div>
       <div class="pace-bar-track"><div class="pace-bar-fill" id="pace-bar" style="width:0%"></div></div>
       <div class="text-xs text-muted" id="pace-note" style="margin-top:4px"></div>
@@ -225,7 +251,7 @@ textarea{resize:vertical}
       <div class="cal-title" id="cal-title"></div>
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
         <button class="btn btn-sm btn-yellow" onclick="openScheduleModal()">+ Schedule post</button>
-        <div style="display:flex;gap:6px">
+        <div style="display:flex;gap:4px">
           <button class="btn btn-sm" onclick="calPrev()">&#8249;</button>
           <button class="btn btn-sm" onclick="calToday()">Today</button>
           <button class="btn btn-sm" onclick="calNext()">&#8250;</button>
@@ -244,17 +270,17 @@ textarea{resize:vertical}
 <!-- IDEAS -->
 <div id="sec-ideas" class="section">
   <div class="grid2" style="align-items:start">
-    <div class="card sticky-form" style="position:sticky;top:80px">
+    <div class="card sticky-form" style="position:sticky;top:70px">
       <div class="card-title">Add new idea</div>
       <div class="form-group"><label>Topic / title *</label><input id="idea-title" placeholder="e.g. How AI is reshaping email marketing"></div>
-      <div class="form-group"><label>Draft text (optional)</label><textarea id="idea-draft" rows="4" placeholder="Jot down your draft, key points, or angle..."></textarea></div>
+      <div class="form-group"><label>Draft text (optional)</label><textarea id="idea-draft" rows="3" placeholder="Key points, angle, or full draft..."></textarea></div>
       <div class="grid2">
-        <div class="form-group"><label>Inspiration source</label><input id="idea-source" placeholder="Person or URL"></div>
+        <div class="form-group"><label>Source</label><input id="idea-source" placeholder="Person or URL"></div>
         <div class="form-group"><label>Category</label>
           <select id="idea-cat"><option value="AI">AI</option><option value="Marketing">Marketing</option><option value="Personal Brand">Personal Brand</option><option value="News">News</option></select>
         </div>
       </div>
-      <div class="form-group"><label>Reference links (optional)</label><textarea id="idea-links" rows="2" placeholder="One link per line"></textarea></div>
+      <div class="form-group"><label>Reference links</label><textarea id="idea-links" rows="2" placeholder="One link per line"></textarea></div>
       <div class="form-group"><label>Status</label>
         <select id="idea-status"><option value="Idea">Idea</option><option value="Draft">Draft</option></select>
       </div>
@@ -262,12 +288,11 @@ textarea{resize:vertical}
     </div>
     <div>
       <div class="filter-bar">
-        <button class="filter-chip active" data-filter="all" onclick="filterIdeas(this)">Ideas ✨</button>
+        <button class="filter-chip active" data-filter="all" onclick="filterIdeas(this)">Ideas only</button>
         <button class="filter-chip" data-filter="cat:AI" onclick="filterIdeas(this)">AI</button>
         <button class="filter-chip" data-filter="cat:Marketing" onclick="filterIdeas(this)">Marketing</button>
         <button class="filter-chip" data-filter="cat:Personal Brand" onclick="filterIdeas(this)">Personal Brand</button>
         <button class="filter-chip" data-filter="cat:News" onclick="filterIdeas(this)">News</button>
-        <button class="filter-chip" data-filter="st:Idea" onclick="filterIdeas(this)">Idea</button>
         <button class="filter-chip" data-filter="st:Draft" onclick="filterIdeas(this)">Draft</button>
         <button class="filter-chip" data-filter="st:Posted" onclick="filterIdeas(this)">Posted</button>
       </div>
@@ -276,19 +301,46 @@ textarea{resize:vertical}
   </div>
 </div>
 
+<!-- PERFORMANCE -->
+<div id="sec-performance" class="section">
+  <div class="grid2" style="align-items:start;margin-bottom:1rem">
+    <div class="card sticky-form" style="position:sticky;top:70px">
+      <div class="card-title">Log a post</div>
+      <div class="form-group"><label>Post title *</label><input id="perf-title" placeholder="What did you post about?"></div>
+      <div class="form-group"><label>Date posted *</label><input type="date" id="perf-date"></div>
+      <div class="form-group"><label>Category</label>
+        <select id="perf-cat"><option value="AI">AI</option><option value="Marketing">Marketing</option><option value="Personal Brand">Personal Brand</option><option value="News">News</option></select>
+      </div>
+      <div class="grid3">
+        <div class="form-group"><label>👁 Impressions</label><input type="number" id="perf-impressions" placeholder="0" min="0"></div>
+        <div class="form-group"><label>❤️ Likes</label><input type="number" id="perf-likes" placeholder="0" min="0"></div>
+        <div class="form-group"><label>💬 Comments</label><input type="number" id="perf-comments" placeholder="0" min="0"></div>
+      </div>
+      <div class="text-xs text-muted" style="margin-bottom:12px;line-height:1.5">Find these numbers on LinkedIn — click any post → view stats. Takes 30 seconds per post.</div>
+      <button class="btn btn-primary btn-full" onclick="addPerformance()">+ Log post</button>
+    </div>
+    <div>
+      <div id="insights-section"></div>
+    </div>
+  </div>
+  <div class="card" style="margin-bottom:1rem">
+    <div class="card-title">Your posts</div>
+    <div id="perf-list"></div>
+  </div>
+</div>
+
 <!-- GENERATOR -->
 <div id="sec-generator" class="section">
   <div class="api-key-bar">
     <label>🔑 Claude API Key</label>
-    <input type="password" id="api-key-input" style="flex:1;min-width:180px;font-family:monospace" placeholder="sk-ant-..." autocomplete="off" oninput="saveApiKey()">
+    <input type="password" id="api-key-input" style="flex:1;min-width:180px;font-family:monospace" placeholder="sk-ant-... (optional — get free credits at console.anthropic.com)" autocomplete="off" oninput="saveApiKey()">
     <span id="api-status" class="api-status unset">Not set</span>
     <button class="btn btn-sm" onclick="clearApiKey()">Clear</button>
   </div>
-  <div class="text-xs text-muted" style="margin-bottom:1rem;line-height:1.6">Stored only in your browser. Get yours at <strong>console.anthropic.com</strong></div>
   <div class="grid2" style="align-items:start">
     <div class="card">
-      <div class="card-title">Write your post</div>
-      <div class="form-group"><label>Topic or inspiration snippet *</label><textarea id="gen-input" rows="5" placeholder="e.g. AI agents are replacing marketing coordinators..."></textarea></div>
+      <div class="card-title">Generate a post</div>
+      <div class="form-group"><label>Topic or inspiration *</label><textarea id="gen-input" rows="4" placeholder="e.g. AI agents are replacing marketing coordinators — what does this mean for teams?"></textarea></div>
       <div class="form-group"><label>Tone</label>
         <select id="gen-tone">
           <option value="">Default — professional but conversational</option>
@@ -299,6 +351,9 @@ textarea{resize:vertical}
         </select>
       </div>
       <button class="btn btn-primary btn-full" id="gen-btn" onclick="generatePost()">✨ Generate post</button>
+      <div style="margin-top:10px;padding:10px;background:var(--bg2);border-radius:var(--radius);font-size:12px;color:var(--text2);line-height:1.5">
+        No API key? <strong>Ask me directly in chat</strong> — paste your topic and I'll write the post for you. Then copy it here.
+      </div>
     </div>
     <div class="card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
@@ -310,7 +365,7 @@ textarea{resize:vertical}
       </div>
       <div class="gen-output" id="gen-output">Your generated post will appear here...</div>
       <div id="gen-save-row" style="display:none;margin-top:12px">
-        <button class="btn btn-full" onclick="saveToBank()">↓ Save to ideas bank as draft</button>
+        <button class="btn btn-full" onclick="saveToBank()">↓ Save to ideas bank</button>
       </div>
     </div>
   </div>
@@ -319,11 +374,11 @@ textarea{resize:vertical}
 <!-- INSPIRATION -->
 <div id="sec-inspiration" class="section">
   <div class="grid2" style="align-items:start">
-    <div class="card sticky-form" style="position:sticky;top:80px">
+    <div class="card sticky-form" style="position:sticky;top:70px">
       <div class="card-title">Add creator</div>
       <div class="form-group"><label>Name *</label><input id="insp-name" placeholder="e.g. Neil Patel"></div>
       <div class="form-group"><label>LinkedIn URL</label><input id="insp-url" placeholder="https://linkedin.com/in/..."></div>
-      <div class="form-group"><label>What they post about</label><input id="insp-about" placeholder="e.g. SEO, content marketing, AI tools"></div>
+      <div class="form-group"><label>What they post about</label><input id="insp-about" placeholder="e.g. AI tools, content strategy"></div>
       <button class="btn btn-primary btn-full" onclick="addCreator()">+ Add creator</button>
     </div>
     <div id="insp-list"></div>
@@ -340,7 +395,7 @@ textarea{resize:vertical}
       <button class="modal-close" onclick="closeModal('edit-modal')">×</button>
     </div>
     <div class="form-group"><label>Topic / title</label><input id="edit-title"></div>
-    <div class="form-group"><label>Draft text</label><textarea id="edit-draft" rows="6"></textarea></div>
+    <div class="form-group"><label>Draft text</label><textarea id="edit-draft" rows="5"></textarea></div>
     <div class="grid2">
       <div class="form-group"><label>Category</label>
         <select id="edit-cat"><option value="AI">AI</option><option value="Marketing">Marketing</option><option value="Personal Brand">Personal Brand</option><option value="News">News</option></select>
@@ -349,8 +404,8 @@ textarea{resize:vertical}
         <select id="edit-status"><option value="Idea">Idea</option><option value="Draft">Draft</option><option value="Posted">Posted</option></select>
       </div>
     </div>
-    <div class="form-group"><label>Inspiration source</label><input id="edit-source"></div>
-    <div class="form-group"><label>Reference links</label><textarea id="edit-links" rows="3" placeholder="One link per line"></textarea></div>
+    <div class="form-group"><label>Source</label><input id="edit-source"></div>
+    <div class="form-group"><label>Reference links</label><textarea id="edit-links" rows="2" placeholder="One link per line"></textarea></div>
     <div class="modal-actions">
       <button class="btn" onclick="closeModal('edit-modal')">Cancel</button>
       <button class="btn btn-primary" onclick="saveEdit()">Save changes</button>
@@ -366,7 +421,7 @@ textarea{resize:vertical}
       <button class="modal-close" onclick="closeModal('schedule-modal')">×</button>
     </div>
     <div class="form-group"><label>Post title *</label><input id="sched-title" placeholder="What are you posting about?"></div>
-    <div class="form-group"><label>Draft (optional)</label><textarea id="sched-draft" rows="3" placeholder="Your draft or key points..."></textarea></div>
+    <div class="form-group"><label>Draft (optional)</label><textarea id="sched-draft" rows="2" placeholder="Key points..."></textarea></div>
     <div class="grid2">
       <div class="form-group"><label>Date *</label><input type="date" id="sched-date"></div>
       <div class="form-group"><label>Time *</label><input type="time" id="sched-time" value="09:00"></div>
@@ -374,8 +429,8 @@ textarea{resize:vertical}
     <div class="form-group"><label>Category</label>
       <select id="sched-cat"><option value="AI">AI</option><option value="Marketing">Marketing</option><option value="Personal Brand">Personal Brand</option><option value="News">News</option></select>
     </div>
-    <div style="background:var(--yellow-bg);border:1px solid var(--yellow-cal);border-radius:var(--radius);padding:10px;font-size:12px;color:var(--yellow);margin-bottom:12px">
-      ⚡ Shows as <strong>yellow</strong> on calendar. Auto-turns <strong>green</strong> after scheduled time passes.
+    <div style="background:var(--yellow-bg);border:1px solid var(--yellow-cal);border-radius:var(--radius);padding:10px;font-size:12px;color:var(--yellow);margin-bottom:4px">
+      ⚡ Shows yellow on calendar. Auto-turns green after scheduled time passes.
     </div>
     <div class="modal-actions">
       <button class="btn" onclick="closeModal('schedule-modal')">Cancel</button>
@@ -387,11 +442,8 @@ textarea{resize:vertical}
 <div class="toast" id="toast"></div>
 
 <script>
-// ─── Supabase init using official JS library ──────────────
-const SB_URL = 'https://hkxwlyotfswofmegnxmv.supabase.co';
-const SB_KEY = 'sb_publishable_ioO0El5vb-8K4UEhKK5ZHg_XFyKd5oB';
-const { createClient } = supabase;
-const db = createClient(SB_URL, SB_KEY);
+// ─── Config ───────────────────────────────────────────────
+const GS_URL = 'https://script.google.com/macros/s/AKfycbxBVRTJYABmGJkL78QHv0mARJPwTDSkdcCF6dJdDPDZ93HBs88gBsWEp19P-sPyc_NuEw/exec';
 
 const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -401,73 +453,99 @@ function ls(k,d){try{const v=localStorage.getItem(k);return v!==null?JSON.parse(
 function lss(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}
 function uuid(){return 'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
 function esc(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'):''}
-function dk(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function dk(d){return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
 function todayK(){return dk(new Date())}
 function monday(d){const t=new Date(d),day=t.getDay(),diff=t.getDate()-day+(day===0?-6:1);return new Date(t.setDate(diff))}
 
 let toastT;
 function toast(msg,dur=2500){const el=$('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),dur);}
-function syncBadge(s,msg){const el=$('sync-badge');el.className='sync-status sync-'+(s==='ok'?'ok':s==='err'?'err':'mid');el.innerHTML=`<span class="dot"></span> ${msg}`;}
+function syncBadge(s,msg){const el=$('sync-badge');el.className='sync-pill sync-'+(s==='ok'?'ok':s==='err'?'err':'mid');el.innerHTML=`<span class="dot"></span> ${msg}`;}
 function closeModal(id){$(id).classList.remove('open');}
 
 $('header-date').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
 
-// ─── DB helpers using Supabase JS client ──────────────────
-async function dbGetAll(table){
-  const {data,error}=await db.from(table).select('*').order('created',{ascending:false});
-  if(error) throw error;
-  return data||[];
+// ─── Google Sheets API ────────────────────────────────────
+async function gsLoad(){
+  const r=await fetch(GS_URL+'?action=load');
+  const d=await r.json();
+  if(d.error)throw new Error(d.error);
+  return d;
 }
 
-async function dbUpsert(table,row){
-  const {error}=await db.from(table).upsert(row,{onConflict:'id'});
-  if(error) throw error;
+async function gsSave(table,row){
+  const r=await fetch(GS_URL,{method:'POST',body:JSON.stringify({action:'save',table,row})});
+  const d=await r.json();
+  if(d.error)throw new Error(d.error);
+  return d;
 }
 
-async function dbDelete(table,id){
-  const {error}=await db.from(table).delete().eq('id',id);
-  if(error) throw error;
+async function gsDelete(table,deleteId){
+  const r=await fetch(GS_URL,{method:'POST',body:JSON.stringify({action:'save',table,deleteId})});
+  const d=await r.json();
+  if(d.error)throw new Error(d.error);
+  return d;
+}
+
+async function gsSetup(){
+  const r=await fetch(GS_URL+'?action=setup');
+  return r.json();
+}
+
+// ─── Data ─────────────────────────────────────────────────
+let posted={};
+let scheduled={};
+let ideas=[];
+let creators=[];
+let performance=[];
+
+function saveLocal(){
+  lss('posted',posted);lss('scheduled',scheduled);
+  lss('ideas',ideas);lss('creators',creators);lss('performance',performance);
+}
+
+function loadLocal(){
+  posted=ls('posted',{});scheduled=ls('scheduled',{});
+  ideas=ls('ideas',[]);creators=ls('creators',[]);performance=ls('performance',[]);
+}
+
+async function syncSave(table,row){
+  saveLocal();
+  try{await gsSave(table,row);syncBadge('ok','Synced ✓');}
+  catch{syncBadge('err','Saved locally');}
+}
+
+async function syncDelete(table,id){
+  saveLocal();
+  try{await gsDelete(table,id);syncBadge('ok','Synced ✓');}
+  catch{syncBadge('err','Saved locally');}
 }
 
 // ─── STREAK ───────────────────────────────────────────────
-let posted={};
-let scheduled={};
 let calView=null;
-
-async function loadPosted(){
-  try{
-    const rows=await dbGetAll('lch_posted');
-    posted={};
-    rows.forEach(r=>{posted[r.day]=r.type||'posted';});
-  }catch(e){posted=ls('_posted',{});}
-}
-
-async function toggleDay(k){
-  if(posted[k]==='posted'){
-    delete posted[k];
-    try{await dbDelete('lch_posted',k);syncBadge('ok','Synced ✓');}
-    catch{lss('_posted',posted);}
-    toast('Day unmarked');
-  }else if(posted[k]==='scheduled'){
-    toast('Scheduled post — click to mark complete');return;
-  }else{
-    posted[k]='posted';
-    try{await dbUpsert('lch_posted',{id:k,day:k,type:'posted',created:Date.now()});syncBadge('ok','Synced ✓');}
-    catch{syncBadge('err','Saved locally');lss('_posted',posted);}
-    toast('✓ Logged!');
-  }
-  renderStreak();
-}
 
 function checkScheduledPosts(){
   const now=new Date();
   Object.entries(scheduled).forEach(([day,s])=>{
     if(new Date(s.schedAt)<=now&&posted[day]!=='posted'){
-      posted[day]='posted';delete scheduled[day];
-      lss('_scheduled',scheduled);
-      dbUpsert('lch_posted',{id:day,day:day,type:'posted',created:Date.now()}).catch(()=>{});
+      posted[day]='posted';delete scheduled[day];saveLocal();
+      gsSave('Posted',{id:day,day,type:'posted',created:Date.now()}).catch(()=>{});
     }
   });
+}
+
+async function toggleDay(k){
+  if(posted[k]==='posted'){
+    delete posted[k];
+    toast('Day unmarked');
+    await syncDelete('Posted',k);
+  }else if(posted[k]==='scheduled'){
+    toast('Scheduled post on this day — click to mark posted');return;
+  }else{
+    posted[k]='posted';
+    toast('✓ Logged!');
+    await syncSave('Posted',{id:k,day:k,type:'posted',created:Date.now()});
+  }
+  renderStreak();
 }
 
 function renderStreak(){
@@ -495,9 +573,8 @@ function renderStreak(){
   const pct=Math.min(Math.round((mc/wd)*100),100),rem=Math.max(wd-mc,0);
   $('stat-month').textContent=mc;$('stat-pct').textContent=pct+'%';$('stat-remain').textContent=rem;
   $('pace-bar').style.width=pct+'%';
-  $('pace-note').textContent=rem>0?`${rem} more posts to hit 5×/week pace`:mc>=wd?'Goal reached! 🎉':'Exceeded your goal! 🚀';
-  if(!calView)calView={y,m};
-  renderCal();
+  $('pace-note').textContent=rem>0?`${rem} more posts to hit 5×/week pace`:mc>=wd?'Goal reached! 🎉':'Exceeded goal! 🚀';
+  if(!calView)calView={y,m};renderCal();
 }
 
 function calPrev(){calView.m--;if(calView.m<0){calView.m=11;calView.y--;}renderCal();}
@@ -506,7 +583,7 @@ function calToday(){const n=new Date();calView={y:n.getFullYear(),m:n.getMonth()
 
 function renderCal(){
   if(!calView)return;
-  const {y,m}=calView;
+  const{y,m}=calView;
   $('cal-title').textContent=MONTHS[m]+' '+y;
   $('cal-day-labels').innerHTML=DAYS.map(d=>`<div class="day-label">${d}</div>`).join('');
   const off=(new Date(y,m,1).getDay()||7)-1;
@@ -516,9 +593,9 @@ function renderCal(){
   for(let i=0;i<off;i++)h+='<div class="cal-cell empty"></div>';
   for(let d=1;d<=dim;d++){
     const k=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const isPosted=posted[k]==='posted',isSched=scheduled[k]&&posted[k]!=='posted',isToday=k===today;
-    let cls='cal-cell'+(isPosted?' posted-cell':isSched?' scheduled-cell':isToday?' today-cell':'');
-    const ttl=isSched?`Scheduled: ${scheduled[k].title}`:isPosted?'Posted':'';
+    const ip=posted[k]==='posted',is=scheduled[k]&&posted[k]!=='posted',it=k===today;
+    const cls='cal-cell'+(ip?' posted-cell':is?' scheduled-cell':it?' today-cell':'');
+    const ttl=is?`Scheduled: ${scheduled[k].title}`:ip?'Posted':'';
     h+=`<button class="${cls}" onclick="calCellClick('${k}')" title="${ttl}">${d}</button>`;
   }
   $('cal-grid').innerHTML=h;
@@ -527,10 +604,8 @@ function renderCal(){
 function calCellClick(k){
   if(scheduled[k]&&posted[k]!=='posted'){
     if(confirm(`Scheduled: "${scheduled[k].title}"\nMark as posted now?`)){
-      posted[k]='posted';delete scheduled[k];
-      lss('_scheduled',scheduled);
-      renderStreak();toast('✓ Marked as posted!');
-      dbUpsert('lch_posted',{id:k,day:k,type:'posted',created:Date.now()}).catch(()=>{});
+      posted[k]='posted';delete scheduled[k];saveLocal();renderStreak();toast('✓ Marked as posted!');
+      gsSave('Posted',{id:k,day:k,type:'posted',created:Date.now()}).catch(()=>{});
     }
   }else{toggleDay(k);}
 }
@@ -548,28 +623,21 @@ function saveSchedule(){
   if(!date||!time){toast('Pick a date and time');return;}
   scheduled[date]={title,draft:$('sched-draft').value.trim(),category:$('sched-cat').value,schedAt:date+'T'+time+':00'};
   posted[date]='scheduled';
-  lss('_scheduled',scheduled);
-  closeModal('schedule-modal');renderStreak();
+  saveLocal();closeModal('schedule-modal');renderStreak();
   toast(`✓ Scheduled for ${date} at ${time}!`);
-  dbUpsert('lch_posted',{id:date,day:date,type:'scheduled',created:Date.now()}).catch(()=>{});
+  gsSave('Posted',{id:date,day:date,type:'scheduled',created:Date.now()}).catch(()=>{});
   const idea={id:uuid(),title,draft:$('sched-draft').value.trim(),source:'Scheduled',category:$('sched-cat').value,links:'',status:'Draft',created:Date.now()};
   ideas.unshift(idea);renderIdeas();
-  dbUpsert('lch_ideas',idea).catch(()=>{});
+  gsSave('Ideas',idea).catch(()=>{});
 }
 
 setInterval(()=>{checkScheduledPosts();renderCal();},60000);
 
 // ─── IDEAS ────────────────────────────────────────────────
-let ideas=[];
 let ideaFilter='all';
 let editingId=null;
 
 function catClass(c){return{'AI':'AI','Marketing':'Marketing','Personal Brand':'Personal','News':'News'}[c]||'Idea'}
-
-async function loadIdeas(){
-  try{ideas=await dbGetAll('lch_ideas');}
-  catch{ideas=ls('_ideas',[]);}
-}
 
 function renderIdeas(){
   const list=$('ideas-list');
@@ -583,8 +651,8 @@ function renderIdeas(){
   if(!f.length){list.innerHTML='<div class="empty-state">No ideas match this filter.</div>';return;}
   list.innerHTML=f.map(idea=>{
     const links=(idea.links||'').split('\n').map(l=>l.trim()).filter(Boolean);
-    const linksHtml=links.length?`<div class="idea-links-section"><div class="text-xs text-muted" style="margin-bottom:4px;font-weight:500">LINKS</div>${links.map(l=>`<div class="idea-link-row">🔗 <a href="${esc(l)}" target="_blank" rel="noopener">${esc(l.length>65?l.slice(0,65)+'...':l)}</a></div>`).join('')}</div>`:'';
-    const draftHtml=idea.draft?`<div class="idea-draft-full">${esc(idea.draft)}</div>`:'<p class="text-xs text-muted" style="margin-bottom:8px">No draft text added yet.</p>';
+    const linksHtml=links.length?`<div class="idea-links-section">${links.map(l=>`<div class="idea-link-row">🔗 <a href="${esc(l)}" target="_blank" rel="noopener">${esc(l.length>60?l.slice(0,60)+'...':l)}</a></div>`).join('')}</div>`:'';
+    const draftHtml=idea.draft?`<div class="idea-draft-full">${esc(idea.draft)}</div>`:'<p class="text-xs text-muted" style="margin-bottom:8px">No draft yet.</p>';
     const isPosted=idea.status==='Posted';
     let quickBtns='';
     if(idea.status==='Idea')quickBtns=`<button class="btn btn-sm" onclick="quickStatus('${idea.id}','Draft')">→ Draft</button>`;
@@ -603,8 +671,7 @@ function renderIdeas(){
       </div>
       ${quickBtns?`<div class="quick-status"><span class="quick-label">MOVE TO:</span>${quickBtns}</div>`:''}
       <div class="idea-body" id="ibody-${idea.id}">
-        ${draftHtml}
-        ${linksHtml}
+        ${draftHtml}${linksHtml}
         <div class="idea-actions">
           <button class="btn btn-sm" onclick="openEdit('${idea.id}')">✏️ Edit</button>
           <div class="spacer"></div>
@@ -628,14 +695,12 @@ function filterIdeas(el){
 }
 
 async function addIdea(){
-  const t=$('idea-title').value.trim();
-  if(!t){toast('Please enter a topic');return;}
+  const t=$('idea-title').value.trim();if(!t){toast('Please enter a topic');return;}
   const idea={id:uuid(),title:t,draft:$('idea-draft').value.trim(),source:$('idea-source').value.trim(),category:$('idea-cat').value,links:$('idea-links').value.trim(),status:$('idea-status').value,created:Date.now()};
-  ideas.unshift(idea);renderIdeas();
+  ideas.unshift(idea);renderIdeas();toast('✓ Idea saved!');
   ['idea-title','idea-draft','idea-source','idea-links'].forEach(id=>$(id).value='');
   $('idea-status').value='Idea';
-  try{await dbUpsert('lch_ideas',idea);syncBadge('ok','Synced ✓');toast('✓ Idea saved!');}
-  catch{syncBadge('err','Saved locally');lss('_ideas',ideas);toast('✓ Idea saved locally');}
+  await syncSave('Ideas',idea);
 }
 
 async function quickStatus(id,newStatus){
@@ -643,20 +708,18 @@ async function quickStatus(id,newStatus){
   idea.status=newStatus;
   if(newStatus==='Posted'){
     posted[todayK()]='posted';
-    try{await dbUpsert('lch_posted',{id:todayK(),day:todayK(),type:'posted',created:Date.now()});}catch{}
-    toast('✓ Posted! Today logged in your streak!');
+    toast('✓ Posted! Today logged in streak!');
     renderStreak();
+    gsSave('Posted',{id:todayK(),day:todayK(),type:'posted',created:Date.now()}).catch(()=>{});
   }else{toast('✓ Moved to '+newStatus);}
   renderIdeas();
-  try{await dbUpsert('lch_ideas',idea);syncBadge('ok','Synced ✓');}
-  catch{syncBadge('err','Saved locally');lss('_ideas',ideas);}
+  await syncSave('Ideas',idea);
 }
 
 async function delIdea(id){
   if(!confirm('Delete this idea?'))return;
   ideas=ideas.filter(i=>i.id!==id);renderIdeas();toast('Deleted');
-  try{await dbDelete('lch_ideas',id);syncBadge('ok','Synced ✓');}
-  catch{syncBadge('err','Saved locally');lss('_ideas',ideas);}
+  await syncDelete('Ideas',id);
 }
 
 function openEdit(id){
@@ -674,12 +737,139 @@ async function saveEdit(){
   idea.title=$('edit-title').value.trim();idea.draft=$('edit-draft').value.trim();
   idea.category=$('edit-cat').value;idea.status=$('edit-status').value;
   idea.source=$('edit-source').value.trim();idea.links=$('edit-links').value.trim();
-  closeModal('edit-modal');renderIdeas();
-  try{await dbUpsert('lch_ideas',idea);syncBadge('ok','Synced ✓');toast('✓ Changes saved!');}
-  catch{syncBadge('err','Saved locally');lss('_ideas',ideas);toast('✓ Saved locally');}
+  closeModal('edit-modal');renderIdeas();toast('✓ Changes saved!');
+  await syncSave('Ideas',idea);
 }
 
-// ─── AI GENERATOR ─────────────────────────────────────────
+// ─── PERFORMANCE ──────────────────────────────────────────
+function renderPerformance(){
+  renderInsights();
+  const list=$('perf-list');
+  if(!performance.length){list.innerHTML='<div class="empty-state">No posts logged yet — add your first one!</div>';return;}
+  const sorted=[...performance].sort((a,b)=>new Date(b.date)-new Date(a.date));
+  list.innerHTML=sorted.map(p=>{
+    const eng=p.impressions>0?((((Number(p.likes)||0)+(Number(p.comments)||0))/Number(p.impressions))*100).toFixed(1):0;
+    const barW=Math.min(Number(eng)*10,100);
+    return`<div class="perf-card">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+        <div style="flex:1">
+          <div class="perf-title">${esc(p.title)}</div>
+          <div class="perf-meta">${p.date} · <span class="badge badge-${catClass(p.category)}">${esc(p.category)}</span></div>
+          <div class="perf-stats">
+            <div class="perf-stat"><div class="perf-stat-val">${Number(p.impressions||0).toLocaleString()}</div><div class="perf-stat-lbl">👁 Impressions</div></div>
+            <div class="perf-stat"><div class="perf-stat-val">${p.likes||0}</div><div class="perf-stat-lbl">❤️ Likes</div></div>
+            <div class="perf-stat"><div class="perf-stat-val">${p.comments||0}</div><div class="perf-stat-lbl">💬 Comments</div></div>
+            <div class="perf-stat"><div class="perf-stat-val">${eng}%</div><div class="perf-stat-lbl">📈 Eng. rate</div></div>
+          </div>
+          <div class="eng-bar" style="width:${barW}%"></div>
+        </div>
+        <button class="btn btn-sm btn-danger" onclick="delPerf('${p.id}')">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function catClass(c){return{'AI':'AI','Marketing':'Marketing','Personal Brand':'Personal','News':'News'}[c]||'Idea'}
+
+function renderInsights(){
+  const sec=$('insights-section');
+  if(performance.length<2){
+    sec.innerHTML=`<div class="card"><div class="card-title">📊 Insights</div><div class="empty-state" style="padding:1rem 0">Log at least 2 posts to see insights and patterns.</div></div>`;
+    return;
+  }
+  // Category analysis
+  const catStats={};
+  performance.forEach(p=>{
+    const cat=p.category||'AI';
+    if(!catStats[cat])catStats[cat]={impressions:0,engagement:0,count:0};
+    catStats[cat].impressions+=Number(p.impressions||0);
+    catStats[cat].engagement+=Number(p.likes||0)+Number(p.comments||0);
+    catStats[cat].count++;
+  });
+  const catAvg=Object.entries(catStats).map(([cat,s])=>({cat,avgImpressions:Math.round(s.impressions/s.count),avgEng:s.count>0?(s.engagement/s.count).toFixed(1):0,count:s.count})).sort((a,b)=>b.avgImpressions-a.avgImpressions);
+
+  // Day analysis
+  const dayStats={};
+  performance.forEach(p=>{
+    if(!p.date)return;
+    const dow=new Date(p.date).toLocaleDateString('en-US',{weekday:'short'});
+    if(!dayStats[dow])dayStats[dow]={impressions:0,count:0};
+    dayStats[dow].impressions+=Number(p.impressions||0);
+    dayStats[dow].count++;
+  });
+  const dayAvg=Object.entries(dayStats).map(([day,s])=>({day,avg:Math.round(s.impressions/s.count),count:s.count})).sort((a,b)=>b.avg-a.avg);
+
+  // Best and worst
+  const sorted=[...performance].sort((a,b)=>Number(b.impressions||0)-Number(a.impressions||0));
+  const best=sorted[0];
+  const worst=sorted[sorted.length-1];
+  const totalImpressions=performance.reduce((s,p)=>s+Number(p.impressions||0),0);
+  const avgImpressions=Math.round(totalImpressions/performance.length);
+  const totalEng=performance.reduce((s,p)=>s+Number(p.likes||0)+Number(p.comments||0),0);
+  const avgEng=totalImpressions>0?((totalEng/totalImpressions)*100).toFixed(1):0;
+  const maxBar=catAvg[0]?.avgImpressions||1;
+  const maxDayBar=dayAvg[0]?.avg||1;
+
+  sec.innerHTML=`
+  <div class="card" style="margin-bottom:1rem">
+    <div class="card-title">📊 Your insights</div>
+    <div class="grid2" style="margin-bottom:1rem;gap:.75rem">
+      <div class="stat-card"><div class="stat-label">Avg impressions</div><div class="stat-val">${avgImpressions.toLocaleString()}</div></div>
+      <div class="stat-card"><div class="stat-label">Avg eng. rate</div><div class="stat-val">${avgEng}%</div></div>
+    </div>
+    ${catAvg.length>1?`
+    <div style="margin-bottom:1rem">
+      <div class="text-xs text-muted font-600" style="margin-bottom:8px">BY CATEGORY (avg impressions)</div>
+      ${catAvg.map(c=>`<div class="chart-bar-wrap">
+        <div class="chart-bar-label">${esc(c.cat)}</div>
+        <div class="chart-bar-track"><div class="chart-bar-fill" style="width:${Math.round((c.avgImpressions/maxBar)*100)}%">${c.avgImpressions.toLocaleString()}</div></div>
+      </div>`).join('')}
+    </div>`:''}
+    ${dayAvg.length>1?`
+    <div style="margin-bottom:1rem">
+      <div class="text-xs text-muted font-600" style="margin-bottom:8px">BY DAY (avg impressions)</div>
+      ${dayAvg.map(d=>`<div class="chart-bar-wrap">
+        <div class="chart-bar-label">${esc(d.day)}</div>
+        <div class="chart-bar-track"><div class="chart-bar-fill" style="width:${Math.round((d.avg/maxDayBar)*100)}%">${d.avg.toLocaleString()}</div></div>
+      </div>`).join('')}
+    </div>`:''}
+  </div>
+  <div class="insight-card purple" style="margin-bottom:8px">
+    <div class="insight-title" style="color:var(--accent-text)">🏆 Best performing post</div>
+    <div class="insight-text" style="color:var(--accent-text)">"${esc(best.title)}" — ${Number(best.impressions||0).toLocaleString()} impressions</div>
+  </div>
+  ${catAvg.length>1?`<div class="insight-card green" style="margin-bottom:8px">
+    <div class="insight-title" style="color:var(--green)">📈 Top category</div>
+    <div class="insight-text" style="color:var(--green)">${esc(catAvg[0].cat)} posts average ${catAvg[0].avgImpressions.toLocaleString()} impressions — post more of these!</div>
+  </div>`:''}
+  ${dayAvg.length>1?`<div class="insight-card blue" style="margin-bottom:8px">
+    <div class="insight-title" style="color:var(--blue)">📅 Best day to post</div>
+    <div class="insight-text" style="color:var(--blue)">${esc(dayAvg[0].day)} gets you the most reach — schedule your best content then.</div>
+  </div>`:''}
+  ${performance.length>=5?`<div class="insight-card yellow">
+    <div class="insight-title" style="color:var(--yellow)">💡 Suggestion</div>
+    <div class="insight-text" style="color:var(--yellow)">You've logged ${performance.length} posts. ${catAvg[0]?.cat} content is your strongest — make sure at least 2 of your 5 weekly posts are in this category.</div>
+  </div>`:''}
+  `;
+}
+
+async function addPerformance(){
+  const title=$('perf-title').value.trim();if(!title){toast('Enter a post title');return;}
+  const date=$('perf-date').value;if(!date){toast('Pick a date');return;}
+  const p={id:uuid(),title,date,category:$('perf-cat').value,impressions:$('perf-impressions').value||0,likes:$('perf-likes').value||0,comments:$('perf-comments').value||0,created:Date.now()};
+  performance.unshift(p);renderPerformance();toast('✓ Post logged!');
+  ['perf-title','perf-impressions','perf-likes','perf-comments'].forEach(id=>$(id).value='');
+  $('perf-date').value='';
+  await syncSave('Performance',p);
+}
+
+async function delPerf(id){
+  if(!confirm('Delete this entry?'))return;
+  performance=performance.filter(p=>p.id!==id);renderPerformance();toast('Deleted');
+  await syncDelete('Performance',id);
+}
+
+// ─── GENERATOR ────────────────────────────────────────────
 let lastInput='',lastTone='';
 function initGenerator(){
   const k=ls('api_key','');
@@ -692,7 +882,7 @@ function clearApiKey(){lss('api_key','');$('api-key-input').value='';$('api-stat
 
 async function generatePost(){
   const inp=$('gen-input').value.trim();if(!inp){toast('Enter a topic first');return;}
-  const key=ls('api_key','');if(!key){toast('Please enter your Claude API key above');return;}
+  const key=ls('api_key','');if(!key){toast('No API key — ask me in chat instead!');return;}
   const tone=$('gen-tone').value;lastInput=inp;lastTone=tone;
   const btn=$('gen-btn'),out=$('gen-output');
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Generating...';
@@ -702,14 +892,14 @@ async function generatePost(){
     const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',
       headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,
-        system:`You are an expert LinkedIn content writer specializing in AI and marketing. Write posts in this structure:\n1. Hook (1-2 sentences)\n2. Insight (3-5 sentences of value)\n3. CTA (1 sentence)\nRules: under 200 words, professional but conversational, max 3 hashtags.${tone?'\nTone: '+tone:''}`,
+        system:`You are an expert LinkedIn content writer specializing in AI and marketing. Write posts in this structure:\n1. Hook (1-2 sentences that stop the scroll)\n2. Insight (3-5 sentences of genuine value)\n3. CTA (1 sentence inviting engagement)\nRules: under 200 words, professional but conversational, max 3 hashtags, no hollow phrases.${tone?'\nTone: '+tone:''}`,
         messages:[{role:'user',content:'Write a LinkedIn post about: '+inp}]})});
     if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.error?.message||'HTTP '+r.status);}
     const d=await r.json();
     const txt=d.content?.find(b=>b.type==='text')?.text||'No content returned.';
     out.textContent=txt;out.classList.add('has-content');
     $('copy-btn').style.display='';$('regen-btn').style.display='';$('gen-save-row').style.display='';
-  }catch(e){out.textContent='Error: '+e.message+'\n\nCheck your API key and try again.';}
+  }catch(e){out.textContent='Error: '+e.message;}
   btn.disabled=false;btn.innerHTML='✨ Generate post';
 }
 function regenerate(){$('gen-input').value=lastInput;$('gen-tone').value=lastTone;generatePost();}
@@ -718,17 +908,10 @@ async function saveToBank(){
   const txt=$('gen-output').textContent;if(!txt.trim())return;
   const idea={id:uuid(),title:lastInput.slice(0,80)+(lastInput.length>80?'...':''),draft:txt,source:'AI Generator',category:'AI',links:'',status:'Draft',created:Date.now()};
   ideas.unshift(idea);toast('✓ Saved to ideas bank!');
-  try{await dbUpsert('lch_ideas',idea);}catch{lss('_ideas',ideas);}
+  await syncSave('Ideas',idea);
 }
 
 // ─── INSPIRATION ──────────────────────────────────────────
-let creators=[];
-
-async function loadCreators(){
-  try{creators=await dbGetAll('lch_creators');}
-  catch{creators=ls('_creators',[]);}
-}
-
 function renderCreators(){
   const list=$('insp-list');
   if(!creators.length){list.innerHTML='<div class="empty-state">No creators saved yet.</div>';return;}
@@ -749,54 +932,14 @@ function renderCreators(){
 async function addCreator(){
   const n=$('insp-name').value.trim();if(!n){toast('Enter a name');return;}
   const c={id:uuid(),name:n,url:$('insp-url').value.trim(),about:$('insp-about').value.trim(),created:Date.now()};
-  creators.push(c);renderCreators();
+  creators.push(c);renderCreators();toast('✓ Creator saved!');
   ['insp-name','insp-url','insp-about'].forEach(id=>$(id).value='');
-  try{await dbUpsert('lch_creators',c);syncBadge('ok','Synced ✓');toast('✓ Creator saved!');}
-  catch{syncBadge('err','Saved locally');lss('_creators',creators);toast('✓ Saved locally');}
+  await syncSave('Creators',c);
 }
 
 async function delCreator(id){
   creators=creators.filter(c=>c.id!==id);renderCreators();toast('Removed');
-  try{await dbDelete('lch_creators',id);syncBadge('ok','Synced ✓');}
-  catch{lss('_creators',creators);}
-}
-
-// ─── Migration ────────────────────────────────────────────
-async function migrateLocalData(){
-  const btn=$('migrate-btn');
-  btn.disabled=true;btn.textContent='Migrating...';
-  let count=0;
-  try{
-    const allIdeas=[...ls('ideas',[]),...ls('_lch_ideas',[]),...ls('ideas_v2',[]),...ls('_ideas',[])];
-    const seen=new Set(ideas.map(i=>i.id));
-    for(const idea of allIdeas){
-      if(!idea.id)idea.id=uuid();
-      if(seen.has(idea.id))continue;seen.add(idea.id);
-      const row={id:idea.id,title:idea.title||'',draft:idea.draft||'',source:idea.source||'',category:idea.category||'AI',links:idea.links||'',status:idea.status||'Idea',created:idea.created||Date.now()};
-      await dbUpsert('lch_ideas',row);ideas.unshift(row);count++;
-    }
-    const oldPosted={...ls('posted_days',{}),...ls('_posted',{})};
-    for(const day of Object.keys(oldPosted)){
-      if(!posted[day]){posted[day]='posted';await dbUpsert('lch_posted',{id:day,day:day,type:'posted',created:Date.now()});count++;}
-    }
-    const allCreators=[...ls('creators',[]),...ls('_lch_creators',[]),...ls('creators_v2',[]),...ls('_creators',[])];
-    const seenC=new Set(creators.map(c=>c.id));
-    for(const c of allCreators){
-      if(!c.id)c.id=uuid();
-      if(seenC.has(c.id))continue;seenC.add(c.id);
-      const row={id:c.id,name:c.name||'',url:c.url||'',about:c.about||'',created:c.created||Date.now()};
-      await dbUpsert('lch_creators',row);creators.push(row);count++;
-    }
-    renderIdeas();renderCreators();renderStreak();
-    lss('migrated',true);
-    $('migrate-bar').style.display='none';
-    syncBadge('ok','Synced ✓');
-    toast('✓ Migrated '+count+' items! All devices now in sync.',4000);
-  }catch(e){
-    btn.disabled=false;btn.textContent='Retry migration';
-    toast('Migration error — try again');
-    console.error(e);
-  }
+  await syncDelete('Creators',id);
 }
 
 // ─── Navigation ───────────────────────────────────────────
@@ -806,29 +949,41 @@ function showSection(id,btn){
   $('sec-'+id).classList.add('active');btn.classList.add('active');
   if(id==='streak')renderStreak();
   if(id==='ideas')renderIdeas();
+  if(id==='performance')renderPerformance();
   if(id==='inspiration')renderCreators();
   if(id==='generator')initGenerator();
 }
 
 // ─── Boot ─────────────────────────────────────────────────
 async function boot(){
+  loadLocal();
+  renderStreak();renderIdeas();renderCreators();
   syncBadge('mid','Connecting...');
-  scheduled=ls('_scheduled',{});
   try{
-    const {error}=await db.from('lch_ideas').select('id').limit(1);
-    if(error)throw error;
+    await gsSetup();
+    const data=await gsLoad();
+    // Merge Google Sheets data
+    if(data.Ideas&&data.Ideas.length>0){
+      const existingIds=new Set(ideas.map(i=>i.id));
+      data.Ideas.forEach(row=>{if(row.id&&!existingIds.has(row.id))ideas.push(row);});
+    }
+    if(data.Posted&&data.Posted.length>0){
+      data.Posted.forEach(row=>{if(row.day)posted[row.day]=row.type||'posted';});
+    }
+    if(data.Creators&&data.Creators.length>0){
+      const existingIds=new Set(creators.map(c=>c.id));
+      data.Creators.forEach(row=>{if(row.id&&!existingIds.has(row.id))creators.push(row);});
+    }
+    if(data.Performance&&data.Performance.length>0){
+      const existingIds=new Set(performance.map(p=>p.id));
+      data.Performance.forEach(row=>{if(row.id&&!existingIds.has(row.id))performance.push(row);});
+    }
+    saveLocal();
     syncBadge('ok','Synced ✓');
-    await Promise.all([loadPosted(),loadIdeas(),loadCreators()]);
+    renderStreak();renderIdeas();renderCreators();
   }catch(e){
     syncBadge('err','Offline — using local data');
-    posted=ls('_posted',{});
-    ideas=ls('_ideas',[]);
-    creators=ls('_creators',[]);
-  }
-  renderStreak();renderIdeas();renderCreators();
-  if(!ls('migrated',false)){
-    const hasOld=ls('ideas',[]).length>0||ls('_lch_ideas',[]).length>0||Object.keys(ls('posted_days',{})).length>0||ls('creators',[]).length>0;
-    if(hasOld)$('migrate-bar').style.display='block';
+    console.error('Sync error:',e);
   }
 }
 
