@@ -138,6 +138,13 @@ textarea{resize:vertical}
 .qbar{display:flex;gap:6px;align-items:center;padding:8px 12px;border-top:1px solid var(--border);background:var(--bg2);flex-wrap:wrap}
 .qlbl{font-size:11px;color:var(--text3);font-weight:500}
 .iact{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.react-bar{display:flex;gap:4px;padding:6px 12px;border-top:1px solid var(--border)}
+.rbtn{background:none;border:none;cursor:pointer;font-size:16px;padding:2px 6px;border-radius:6px;transition:transform .15s,background .15s;line-height:1}
+.rbtn:hover{background:var(--bg2);transform:scale(1.15)}
+.rbtn.active-star{background:#FFF8E1}
+.rbtn.active-love{background:#FBEAF0}
+.loved-badge{position:absolute;top:-4px;right:-4px;width:12px;height:12px;background:#FF4D6D;border-radius:50%;border:2px solid var(--bg)}
+.ic{position:relative}
 .pfc{border:1px solid var(--border);border-radius:var(--radius);padding:12px;margin-bottom:8px;background:var(--bg)}
 .pfv{font-size:18px;font-weight:700}
 .pfl{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.04em}
@@ -245,15 +252,39 @@ textarea{resize:vertical}
 
 <!-- IDEAS -->
 <div id="sec-ideas" class="sec">
-  <div class="g2" style="align-items:start">
-    <div class="card stickyf" style="position:sticky;top:70px">
+
+  <!-- Paste bar — collapsed by default -->
+  <div class="card" style="margin-bottom:1rem">
+    <div style="display:flex;align-items:center;justify-content:space-between;cursor:pointer" onclick="togglePasteBar()">
+      <div class="ctitle" style="margin:0">📋 Paste posts to auto-add</div>
+      <span id="paste-arrow" style="font-size:12px;color:var(--text2)">&#9660; Expand</span>
+    </div>
+    <div id="pastebar" style="display:none;margin-top:12px">
+      <textarea id="paste-post" rows="4" placeholder="Paste one or multiple posts here. Use format:&#10;POST 1 -&#10;Your post content...&#10;&#10;POST 2 -&#10;Your post content..."></textarea>
+      <button class="btn btn-p btn-fw" style="margin-top:8px" onclick="parsePost()">⚡ Split &amp; add all posts</button>
+    </div>
+  </div>
+
+  <!-- Filter + count bar -->
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:8px">
+    <div class="fbar" style="margin:0">
+      <button class="fc active" data-f="all" onclick="filterIdeas(this)">Ideas</button>
+      <button class="fc" data-f="st:Draft" onclick="filterIdeas(this)">Draft</button>
+      <button class="fc" data-f="st:Posted" onclick="filterIdeas(this)">Posted</button>
+      <button class="fc" data-f="cat:AI" onclick="filterIdeas(this)">AI</button>
+      <button class="fc" data-f="cat:Marketing" onclick="filterIdeas(this)">Marketing</button>
+      <button class="fc" data-f="cat:Personal Brand" onclick="filterIdeas(this)">Personal Brand</button>
+      <button class="fc" data-f="cat:News" onclick="filterIdeas(this)">News</button>
+      <button class="fc" data-f="rx:love" onclick="filterIdeas(this)">❤️ Post next</button>
+      <button class="fc" data-f="rx:star" onclick="filterIdeas(this)">⭐ Starred</button>
+    </div>
+    <button class="btn btn-p btn-sm" onclick="toggleAddForm()">+ New idea</button>
+  </div>
+
+  <!-- Add form — collapsed by default -->
+  <div id="addform" style="display:none;margin-bottom:1rem">
+    <div class="card">
       <div class="ctitle">Add new idea</div>
-      <div class="fg">
-        <label>📋 Paste a post to auto-fill</label>
-        <textarea id="paste-post" rows="3" placeholder="Paste any LinkedIn post here — title and draft fill automatically..."></textarea>
-        <button class="btn btn-sm" style="margin-top:6px;width:100%" onclick="parsePost()">⚡ Auto-fill from paste</button>
-      </div>
-      <div class="divider"></div>
       <div class="fg"><label>Topic / title *</label><input id="ititle" placeholder="e.g. How AI is reshaping email marketing"></div>
       <div class="fg"><label>Draft text (optional)</label><textarea id="idraft" rows="3" placeholder="Key points, angle, or full draft..."></textarea></div>
       <div class="g2">
@@ -266,21 +297,14 @@ textarea{resize:vertical}
       <div class="fg"><label>Status</label>
         <select id="istatus"><option value="Idea">Idea</option><option value="Draft">Draft</option></select>
       </div>
-      <button class="btn btn-p btn-fw" onclick="addIdea()">+ Add to bank</button>
-    </div>
-    <div>
-      <div class="fbar">
-        <button class="fc active" data-f="all" onclick="filterIdeas(this)">Ideas</button>
-        <button class="fc" data-f="cat:AI" onclick="filterIdeas(this)">AI</button>
-        <button class="fc" data-f="cat:Marketing" onclick="filterIdeas(this)">Marketing</button>
-        <button class="fc" data-f="cat:Personal Brand" onclick="filterIdeas(this)">Personal Brand</button>
-        <button class="fc" data-f="cat:News" onclick="filterIdeas(this)">News</button>
-        <button class="fc" data-f="st:Draft" onclick="filterIdeas(this)">Draft</button>
-        <button class="fc" data-f="st:Posted" onclick="filterIdeas(this)">Posted</button>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-p" style="flex:1;justify-content:center" onclick="addIdea()">+ Add idea</button>
+        <button class="btn" onclick="toggleAddForm()">Cancel</button>
       </div>
-      <div id="ilist"></div>
     </div>
   </div>
+
+  <div id="ilist"></div>
 </div>
 
 <!-- PERFORMANCE -->
@@ -591,6 +615,28 @@ function saveSchedule(){
 setInterval(function(){checkScheduled();renderCal();},60000);
 
 // IDEAS
+async function setReaction(id, type){
+  var idea=ideas.find(function(i){return i.id===id;});
+  if(!idea)return;
+  // Toggle — clicking same reaction removes it
+  idea.reaction = idea.reaction===type ? '' : type;
+  saveLocal();
+  renderIdeas();
+  var msg=idea.reaction==='love'?'❤️ Marked as post next!':idea.reaction==='star'?'⭐ Starred!':'Reaction removed';
+  showToast(msg);
+  await gsSave('Ideas',idea);
+}
+
+function togglePasteBar(){
+  var pb=el('pastebar'),arr=el('paste-arrow');
+  var open=pb.style.display==='none';
+  pb.style.display=open?'block':'none';
+  arr.innerHTML=open?'&#9650; Collapse':'&#9660; Expand';
+}
+function toggleAddForm(){
+  var f=el('addform');
+  f.style.display=f.style.display==='none'?'block':'none';
+}
 var ideaFilter='all',editId=null;
 
 function catCls(c){var m={'AI':'AI','Marketing':'Marketing','Personal Brand':'Personal','News':'News'};return m[c]||'Idea';}
@@ -646,39 +692,111 @@ function parsePost(){
 
 function renderIdeas(){
   var list=el('ilist');
-  if(!ideas.length){list.innerHTML='<div class="empty">No ideas yet — add your first one!</div>';return;}
+  if(!ideas.length){list.innerHTML='<div class="empty">No ideas yet.</div>';return;}
   var f=ideas.filter(function(i){
     if(ideaFilter==='all')return i.status==='Idea';
     if(ideaFilter.indexOf('cat:')==0)return i.category===ideaFilter.slice(4);
     if(ideaFilter.indexOf('st:')==0)return i.status===ideaFilter.slice(3);
+    if(ideaFilter.indexOf('rx:')==0)return i.reaction===ideaFilter.slice(3);
     return true;
   });
+  // Sort: loved first, starred second, then by status, then newest
   f.sort(function(a,b){
+    var react={love:0,star:1,none:2};
+    var ar=react[a.reaction||'none'],br=react[b.reaction||'none'];
+    if(ar!==br)return ar-br;
     var order={Idea:0,Draft:1,Posted:2};
     var diff=(order[a.status]||0)-(order[b.status]||0);
-    return diff!==0?diff:(b.created||0)-(a.created||0);
+    return diff!==0?diff:(Number(b.created)||0)-(Number(a.created)||0);
   });
   if(!f.length){list.innerHTML='<div class="empty">No ideas match this filter.</div>';return;}
-  var html='';
+  list.innerHTML='';
   f.forEach(function(idea){
+    var wrap=document.createElement('div');
+    wrap.className='ic'+(idea.status==='Posted'?' faded':'');
+    wrap.id='ic-'+idea.id;
+
+    var hdr=document.createElement('div');
+    hdr.className='ich';
+    var left=document.createElement('div');
+    left.style.cssText='flex:1;min-width:0';
+    var titleDiv=document.createElement('div');
+    titleDiv.className='itxt';titleDiv.textContent=idea.title||'';
+    left.appendChild(titleDiv);
+    if(idea.source){var srcDiv=document.createElement('div');srcDiv.className='isrc';srcDiv.textContent='\uD83D\uDD8E '+idea.source;left.appendChild(srcDiv);}
+    var right=document.createElement('div');right.className='ibdg';
+    var cb=document.createElement('span');cb.className='badge b-'+catCls(idea.category);cb.textContent=idea.category;
+    var sb=document.createElement('span');sb.className='badge b-'+idea.status;sb.textContent=idea.status;
+    var arr=document.createElement('span');arr.className='iarr';arr.id='arr-'+idea.id;arr.innerHTML='&#9660;';
+    right.appendChild(cb);right.appendChild(sb);right.appendChild(arr);
+    hdr.appendChild(left);hdr.appendChild(right);
+    hdr.addEventListener('click',(function(id){return function(){expandIdea(id);};})(idea.id));
+    wrap.appendChild(hdr);
+
+    if(idea.status!=='Posted'){
+      var qbar=document.createElement('div');qbar.className='qbar';
+      var ql=document.createElement('span');ql.className='qlbl';ql.textContent='MOVE TO:';
+      qbar.appendChild(ql);
+      if(idea.status==='Idea'){
+        var b1=document.createElement('button');b1.className='btn btn-sm';b1.textContent='\u2192 Draft';
+        b1.addEventListener('click',(function(id){return function(){qStatus(id,'Draft');};})(idea.id));
+        qbar.appendChild(b1);
+      }
+      if(idea.status==='Draft'){
+        var b2=document.createElement('button');b2.className='btn btn-sm';b2.textContent='\u2190 Idea';
+        b2.addEventListener('click',(function(id){return function(){qStatus(id,'Idea');};})(idea.id));
+        var b3=document.createElement('button');b3.className='btn btn-sm btn-g';b3.textContent='\u2713 Mark Posted';
+        b3.addEventListener('click',(function(id){return function(){qStatus(id,'Posted');};})(idea.id));
+        qbar.appendChild(b2);qbar.appendChild(b3);
+      }
+      wrap.appendChild(qbar);
+    }
+
+    var body=document.createElement('div');body.className='ibody';body.id='ib-'+idea.id;
+    if(idea.draft){var dv=document.createElement('div');dv.className='idraft';dv.textContent=idea.draft;body.appendChild(dv);}
+    else{var np=document.createElement('p');np.className='xs muted';np.style.marginBottom='8px';np.textContent='No draft yet.';body.appendChild(np);}
     var links=(idea.links||'').split('\n').map(function(l){return l.trim();}).filter(Boolean);
-    var linksHtml=links.length?'<div style="margin-bottom:10px">'+links.map(function(l){return '<div class="ilink">🔗 <a href="'+esc(l)+'" target="_blank" rel="noopener">'+esc(l.length>60?l.slice(0,60)+'...':l)+'</a></div>';}).join('')+'</div>':'';
-    var draftHtml=idea.draft?'<div class="idraft">'+esc(idea.draft)+'</div>':'<p class="xs muted" style="margin-bottom:8px">No draft yet.</p>';
-    var isPosted=idea.status==='Posted';
-    var qbtns='';
-    if(idea.status==='Idea')qbtns='<button class="btn btn-sm" onclick="qStatus(\''+idea.id+'\',\'Draft\')">&#8594; Draft</button>';
-    if(idea.status==='Draft')qbtns='<button class="btn btn-sm" onclick="qStatus(\''+idea.id+'\',\'Idea\')">&#8592; Idea</button><button class="btn btn-sm btn-g" onclick="qStatus(\''+idea.id+'\',\'Posted\')">&#10003; Mark Posted</button>';
-    html+='<div class="ic'+(isPosted?' faded':'')+'" id="ic-'+idea.id+'">';
-    html+='<div class="ich" onclick="expandIdea(\''+idea.id+'\')">';
-    html+='<div style="flex:1;min-width:0"><div class="itxt">'+esc(idea.title)+'</div>'+(idea.source?'<div class="isrc">&#128278; '+esc(idea.source)+'</div>':'')+'</div>';
-    html+='<div class="ibdg"><span class="badge b-'+catCls(idea.category)+'">'+esc(idea.category)+'</span><span class="badge b-'+idea.status+'">'+esc(idea.status)+'</span><span class="iarr" id="arr-'+idea.id+'">&#9660;</span></div>';
-    html+='</div>';
-    if(qbtns)html+='<div class="qbar"><span class="qlbl">MOVE TO:</span>'+qbtns+'</div>';
-    html+='<div class="ibody" id="ib-'+idea.id+'">'+draftHtml+linksHtml;
-    html+='<div class="iact"><button class="btn btn-sm" onclick="openEdit(\''+idea.id+'\')">&#9998; Edit</button><div class="sp"></div><button class="btn btn-sm btn-d" onclick="delIdea(\''+idea.id+'\')">&#128465; Delete</button></div>';
-    html+='</div></div>';
+    if(links.length){
+      var ld=document.createElement('div');ld.style.marginBottom='10px';
+      links.forEach(function(l){
+        var lr=document.createElement('div');lr.className='ilink';
+        lr.innerHTML='\uD83D\uDD17 ';
+        var la=document.createElement('a');la.href=l;la.target='_blank';la.rel='noopener';la.textContent=l.length>60?l.slice(0,60)+'...':l;
+        lr.appendChild(la);ld.appendChild(lr);
+      });
+      body.appendChild(ld);
+    }
+    var acts=document.createElement('div');acts.className='iact';
+    var eb=document.createElement('button');eb.className='btn btn-sm';eb.innerHTML='&#9998; Edit';
+    eb.addEventListener('click',(function(id){return function(e){e.stopPropagation();openEdit(id);};})(idea.id));
+    var sp=document.createElement('div');sp.className='sp';
+    var db=document.createElement('button');db.className='btn btn-sm btn-d';db.innerHTML='&#128465; Delete';
+    db.addEventListener('click',(function(id){return function(e){e.stopPropagation();delIdea(id);};})(idea.id));
+    acts.appendChild(eb);acts.appendChild(sp);acts.appendChild(db);
+    body.appendChild(acts);
+    wrap.appendChild(body);
+
+    // Reaction bar — star and love
+    var rbar=document.createElement('div');rbar.className='react-bar';
+    var starBtn=document.createElement('button');
+    starBtn.className='rbtn'+(idea.reaction==='star'?' active-star':'');
+    starBtn.title='Star — worth posting soon';
+    starBtn.innerHTML=idea.reaction==='star'?'&#11088;':'&#10032;';
+    starBtn.addEventListener('click',(function(id){return function(e){e.stopPropagation();setReaction(id,'star');};})(idea.id));
+    var loveBtn=document.createElement('button');
+    loveBtn.className='rbtn'+(idea.reaction==='love'?' active-love':'');
+    loveBtn.title='Love — post this next!';
+    loveBtn.innerHTML=idea.reaction==='love'?'&#10084;&#65039;':'&#129293;';
+    loveBtn.addEventListener('click',(function(id){return function(e){e.stopPropagation();setReaction(id,'love');};})(idea.id));
+    var rlbl=document.createElement('span');
+    rlbl.className='xs muted';rlbl.style.marginLeft='4px';
+    if(idea.reaction==='love')rlbl.textContent='Post this next!';
+    else if(idea.reaction==='star')rlbl.textContent='Starred for later';
+    rbar.appendChild(starBtn);rbar.appendChild(loveBtn);rbar.appendChild(rlbl);
+    wrap.appendChild(rbar);
+
+    list.appendChild(wrap);
   });
-  list.innerHTML=html;
 }
 
 function expandIdea(id){
