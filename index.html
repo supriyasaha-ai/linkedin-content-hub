@@ -711,6 +711,7 @@ function renderIdeas(){
   });
   if(!f.length){list.innerHTML='<div class="empty">No ideas match this filter.</div>';return;}
   list.innerHTML='';
+  console.log('Rendering ideas IDs:',f.map(function(i){return i.id;}));
   f.forEach(function(idea){
     var wrap=document.createElement('div');
     wrap.className='ic'+(idea.status==='Posted'?' faded':'');
@@ -925,18 +926,12 @@ async function qStatus(id,ns){
 }
 
 async function delIdea(id){
-  var before=ideas.length;
+  var card=document.getElementById('ic-'+id);
+  if(card)card.remove();
   ideas=ideas.filter(function(i){return String(i.id)!==String(id);});
-  var after=ideas.length;
-  if(after<before){
-    renderIdeas();showToast('🗑 Deleted');saveLocal();
-    gsDel('Ideas',id).catch(function(){});
-  }else{
-    // ID not found in array — force remove by index using card element
-    var card=document.getElementById('ic-'+id);
-    if(card){card.remove();showToast('🗑 Deleted');}
-    else{showToast('Could not find idea — refresh and try again');}
-  }
+  saveLocal();
+  showToast('🗑 Deleted');
+  gsDel('Ideas',id).catch(function(){});
 }
 
 function openEdit(id){
