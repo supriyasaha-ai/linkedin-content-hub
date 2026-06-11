@@ -759,10 +759,12 @@ function renderIdeas(){
     var delBin=document.createElement('button');
     delBin.className='btn btn-sm btn-d';delBin.style.cssText='padding:3px 7px;font-size:13px';
     delBin.innerHTML='&#128465;';delBin.title='Delete';
-    delBin.addEventListener('click',(function(id){return function(e){e.stopPropagation();delIdea(id);};})(idea.id));
+    delBin.setAttribute('data-id', String(idea.id));
+    delBin.addEventListener('click',function(e){e.stopPropagation();delIdea(this.getAttribute('data-id'));});
     right.appendChild(cb);right.appendChild(sb);right.appendChild(arr);right.appendChild(delBin);
     hdr.appendChild(left);hdr.appendChild(right);
-    hdr.addEventListener('click',(function(id){return function(){expandIdea(id);};})(idea.id));
+    hdr.setAttribute('data-id', String(idea.id));
+    hdr.addEventListener('click',function(e){if(e.target.tagName==='A'||e.target.tagName==='BUTTON')return;expandIdea(this.getAttribute('data-id'));});
     wrap.appendChild(hdr);
 
     if(idea.status!=='Posted'){
@@ -771,14 +773,17 @@ function renderIdeas(){
       qbar.appendChild(ql);
       if(idea.status==='Idea'){
         var b1=document.createElement('button');b1.className='btn btn-sm';b1.textContent='\u2192 Draft';
-        b1.addEventListener('click',(function(id){return function(){qStatus(id,'Draft');};})(idea.id));
+        b1.setAttribute('data-id', String(idea.id));
+        b1.addEventListener('click',function(){qStatus(this.getAttribute('data-id'),'Draft');});
         qbar.appendChild(b1);
       }
       if(idea.status==='Draft'){
         var b2=document.createElement('button');b2.className='btn btn-sm';b2.textContent='\u2190 Idea';
-        b2.addEventListener('click',(function(id){return function(){qStatus(id,'Idea');};})(idea.id));
+        b2.setAttribute('data-id', String(idea.id));
+        b2.addEventListener('click',function(){qStatus(this.getAttribute('data-id'),'Idea');});
         var b3=document.createElement('button');b3.className='btn btn-sm btn-g';b3.textContent='\u2713 Mark Posted';
-        b3.addEventListener('click',(function(id){return function(){qStatus(id,'Posted');};})(idea.id));
+        b3.setAttribute('data-id', String(idea.id));
+        b3.addEventListener('click',function(){qStatus(this.getAttribute('data-id'),'Posted');});
         qbar.appendChild(b2);qbar.appendChild(b3);
       }
       wrap.appendChild(qbar);
@@ -800,10 +805,12 @@ function renderIdeas(){
     }
     var acts=document.createElement('div');acts.className='iact';
     var eb=document.createElement('button');eb.className='btn btn-sm';eb.innerHTML='&#9998; Edit';
-    eb.addEventListener('click',(function(id){return function(e){e.stopPropagation();openEdit(id);};})(idea.id));
+    eb.setAttribute('data-id', String(idea.id));
+    eb.addEventListener('click',function(e){e.stopPropagation();openEdit(this.getAttribute('data-id'));});
     var sp=document.createElement('div');sp.className='sp';
     var db=document.createElement('button');db.className='btn btn-sm btn-d';db.innerHTML='&#128465; Delete';
-    db.addEventListener('click',(function(id){return function(e){e.stopPropagation();delIdea(id);};})(idea.id));
+    db.setAttribute('data-id', String(idea.id));
+    db.addEventListener('click',function(e){e.stopPropagation();delIdea(this.getAttribute('data-id'));});
     acts.appendChild(eb);acts.appendChild(sp);acts.appendChild(db);
     body.appendChild(acts);
     wrap.appendChild(body);
@@ -814,12 +821,14 @@ function renderIdeas(){
     starBtn.className='rbtn'+(idea.reaction==='star'?' active-star':'');
     starBtn.title='Star — worth posting soon';
     starBtn.innerHTML=idea.reaction==='star'?'&#11088;':'&#10032;';
-    starBtn.addEventListener('click',(function(id){return function(e){e.stopPropagation();setReaction(id,'star');};})(idea.id));
+    starBtn.setAttribute('data-id', String(idea.id));
+    starBtn.addEventListener('click',function(e){e.stopPropagation();setReaction(this.getAttribute('data-id'),'star');});
     var loveBtn=document.createElement('button');
     loveBtn.className='rbtn'+(idea.reaction==='love'?' active-love':'');
     loveBtn.title='Love — post this next!';
     loveBtn.innerHTML=idea.reaction==='love'?'&#10084;&#65039;':'&#129293;';
-    loveBtn.addEventListener('click',(function(id){return function(e){e.stopPropagation();setReaction(id,'love');};})(idea.id));
+    loveBtn.setAttribute('data-id', String(idea.id));
+    loveBtn.addEventListener('click',function(e){e.stopPropagation();setReaction(this.getAttribute('data-id'),'love');});
     var rlbl=document.createElement('span');
     rlbl.className='xs muted';rlbl.style.marginLeft='4px';
     if(idea.reaction==='love')rlbl.textContent='Post this next!';
