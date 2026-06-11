@@ -723,12 +723,44 @@ function renderIdeas(){
     var titleDiv=document.createElement('div');
     titleDiv.className='itxt';titleDiv.textContent=idea.title||'';
     left.appendChild(titleDiv);
-    if(idea.source){var srcDiv=document.createElement('div');srcDiv.className='isrc';srcDiv.textContent='\uD83D\uDD8E '+idea.source;left.appendChild(srcDiv);}
+    // Show source as clickable link if it looks like a URL
+    if(idea.source){
+      var srcDiv=document.createElement('div');srcDiv.className='isrc';
+      var srcText=idea.source;
+      if(srcText.indexOf('http')==0||srcText.indexOf('www.')==0){
+        var srcLink=document.createElement('a');
+        srcLink.href=srcText;srcLink.target='_blank';srcLink.rel='noopener';
+        srcLink.textContent='\uD83D\uDD17 '+srcText.slice(0,60)+(srcText.length>60?'...':'');
+        srcLink.style.cssText='color:var(--accent);text-decoration:none;font-size:11px';
+        srcLink.addEventListener('click',function(e){e.stopPropagation();});
+        srcDiv.appendChild(srcLink);
+      }else{
+        srcDiv.textContent='\uD83D\uDD8E '+srcText;
+      }
+      left.appendChild(srcDiv);
+    }
+    // Also show first link from links field as quick-access
+    var firstLink=(idea.links||'').split('\n').map(function(l){return l.trim();}).filter(Boolean)[0];
+    if(firstLink&&firstLink.indexOf('http')==0){
+      var qlDiv=document.createElement('div');qlDiv.className='isrc';
+      var ql=document.createElement('a');
+      ql.href=firstLink;ql.target='_blank';ql.rel='noopener';
+      ql.textContent='\uD83D\uDD17 Open post';
+      ql.style.cssText='color:var(--accent);text-decoration:none;font-size:11px;font-weight:500';
+      ql.addEventListener('click',function(e){e.stopPropagation();});
+      qlDiv.appendChild(ql);
+      left.appendChild(qlDiv);
+    }
     var right=document.createElement('div');right.className='ibdg';
     var cb=document.createElement('span');cb.className='badge b-'+catCls(idea.category);cb.textContent=idea.category;
     var sb=document.createElement('span');sb.className='badge b-'+idea.status;sb.textContent=idea.status;
     var arr=document.createElement('span');arr.className='iarr';arr.id='arr-'+idea.id;arr.innerHTML='&#9660;';
-    right.appendChild(cb);right.appendChild(sb);right.appendChild(arr);
+    // Delete bin always visible on card
+    var delBin=document.createElement('button');
+    delBin.className='btn btn-sm btn-d';delBin.style.cssText='padding:3px 7px;font-size:13px';
+    delBin.innerHTML='&#128465;';delBin.title='Delete';
+    delBin.addEventListener('click',(function(id){return function(e){e.stopPropagation();delIdea(id);};})(idea.id));
+    right.appendChild(cb);right.appendChild(sb);right.appendChild(arr);right.appendChild(delBin);
     hdr.appendChild(left);hdr.appendChild(right);
     hdr.addEventListener('click',(function(id){return function(){expandIdea(id);};})(idea.id));
     wrap.appendChild(hdr);
@@ -752,7 +784,7 @@ function renderIdeas(){
       wrap.appendChild(qbar);
     }
 
-    var body=document.createElement('div');body.className='ibody';body.id='ib-'+idea.id;
+    var body=document.createElement('div');body.className='ibody';body.id='ib-'+idea.id;body.style.display='none';
     if(idea.draft){var dv=document.createElement('div');dv.className='idraft';dv.textContent=idea.draft;body.appendChild(dv);}
     else{var np=document.createElement('p');np.className='xs muted';np.style.marginBottom='8px';np.textContent='No draft yet.';body.appendChild(np);}
     var links=(idea.links||'').split('\n').map(function(l){return l.trim();}).filter(Boolean);
@@ -801,8 +833,12 @@ function renderIdeas(){
 
 function expandIdea(id){
   var body=el('ib-'+id),arr=el('arr-'+id);
-  var open=body.classList.contains('open');
-  body.classList.toggle('open',!open);arr.classList.toggle('open',!open);
+  if(!body||!arr)return;
+  var isOpen=body.style.display==='block';
+  body.style.display=isOpen?'none':'block';
+  body.style.borderTop='1px solid var(--border)';
+  body.style.padding='12px';
+  arr.style.transform=isOpen?'':'rotate(180deg)';
 }
 
 function filterIdeas(btn){
