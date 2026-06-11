@@ -925,8 +925,18 @@ async function qStatus(id,ns){
 }
 
 async function delIdea(id){
+  var before=ideas.length;
   ideas=ideas.filter(function(i){return String(i.id)!==String(id);});
-  renderIdeas();showToast('🗑 Deleted');saveLocal();await gsDel('Ideas',id);
+  var after=ideas.length;
+  if(after<before){
+    renderIdeas();showToast('🗑 Deleted');saveLocal();
+    gsDel('Ideas',id).catch(function(){});
+  }else{
+    // ID not found in array — force remove by index using card element
+    var card=document.getElementById('ic-'+id);
+    if(card){card.remove();showToast('🗑 Deleted');}
+    else{showToast('Could not find idea — refresh and try again');}
+  }
 }
 
 function openEdit(id){
