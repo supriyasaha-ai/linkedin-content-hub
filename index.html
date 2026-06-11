@@ -806,7 +806,24 @@ function renderIdeas(){
     var acts=document.createElement('div');acts.className='iact';
     var eb=document.createElement('button');eb.className='btn btn-sm';eb.innerHTML='&#9998; Edit';
     eb.setAttribute('data-id', String(idea.id));
-    eb.addEventListener('click',function(e){e.stopPropagation();openEdit(this.getAttribute('data-id'));});
+    eb.setAttribute('data-title', idea.title||'');
+    eb.setAttribute('data-draft', idea.draft||'');
+    eb.setAttribute('data-cat', idea.category||'AI');
+    eb.setAttribute('data-status', idea.status||'Idea');
+    eb.setAttribute('data-source', idea.source||'');
+    eb.setAttribute('data-links', idea.links||'');
+    eb.addEventListener('click',function(e){
+      e.stopPropagation();
+      var btn=this;
+      document.getElementById('etitle').value=btn.getAttribute('data-title');
+      document.getElementById('edraft').value=btn.getAttribute('data-draft');
+      document.getElementById('ecat').value=btn.getAttribute('data-cat');
+      document.getElementById('estatus').value=btn.getAttribute('data-status');
+      document.getElementById('esource').value=btn.getAttribute('data-source');
+      document.getElementById('elinks').value=btn.getAttribute('data-links');
+      editId=btn.getAttribute('data-id');
+      document.getElementById('editModal').classList.add('open');
+    });
     var sp=document.createElement('div');sp.className='sp';
     var db=document.createElement('button');db.className='btn btn-sm btn-d';db.innerHTML='&#128465; Delete';
     db.setAttribute('data-id', String(idea.id));
