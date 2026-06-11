@@ -925,9 +925,8 @@ async function qStatus(id,ns){
 }
 
 async function delIdea(id){
-  if(!confirm('Delete this idea?'))return;
-  ideas=ideas.filter(function(i){return i.id!==id;});
-  renderIdeas();showToast('Deleted');saveLocal();await gsDel('Ideas',id);
+  ideas=ideas.filter(function(i){return String(i.id)!==String(id);});
+  renderIdeas();showToast('🗑 Deleted');saveLocal();await gsDel('Ideas',id);
 }
 
 function openEdit(id){
