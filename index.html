@@ -755,13 +755,35 @@ function renderIdeas(){
     var cb=document.createElement('span');cb.className='badge b-'+catCls(idea.category);cb.textContent=idea.category;
     var sb=document.createElement('span');sb.className='badge b-'+idea.status;sb.textContent=idea.status;
     var arr=document.createElement('span');arr.className='iarr';arr.id='arr-'+idea.id;arr.innerHTML='&#9660;';
-    // Delete bin always visible on card
+    // Edit button always visible
+    var editBin=document.createElement('button');
+    editBin.className='btn btn-sm';editBin.style.cssText='padding:3px 7px;font-size:13px';
+    editBin.innerHTML='&#9998;';editBin.title='Edit';
+    editBin.setAttribute('data-id', String(idea.id));
+    editBin.setAttribute('data-title', idea.title||'');
+    editBin.setAttribute('data-draft', idea.draft||'');
+    editBin.setAttribute('data-cat', idea.category||'AI');
+    editBin.setAttribute('data-status', idea.status||'Idea');
+    editBin.setAttribute('data-source', idea.source||'');
+    editBin.setAttribute('data-links', idea.links||'');
+    editBin.addEventListener('click',function(e){
+      e.stopPropagation();
+      editId=this.getAttribute('data-id');
+      document.getElementById('etitle').value=this.getAttribute('data-title');
+      document.getElementById('edraft').value=this.getAttribute('data-draft');
+      document.getElementById('ecat').value=this.getAttribute('data-cat');
+      document.getElementById('estatus').value=this.getAttribute('data-status');
+      document.getElementById('esource').value=this.getAttribute('data-source');
+      document.getElementById('elinks').value=this.getAttribute('data-links');
+      document.getElementById('editModal').classList.add('open');
+    });
+    // Delete bin always visible
     var delBin=document.createElement('button');
     delBin.className='btn btn-sm btn-d';delBin.style.cssText='padding:3px 7px;font-size:13px';
     delBin.innerHTML='&#128465;';delBin.title='Delete';
     delBin.setAttribute('data-id', String(idea.id));
     delBin.addEventListener('click',function(e){e.stopPropagation();delIdea(this.getAttribute('data-id'));});
-    right.appendChild(cb);right.appendChild(sb);right.appendChild(arr);right.appendChild(delBin);
+    right.appendChild(cb);right.appendChild(sb);right.appendChild(arr);right.appendChild(editBin);right.appendChild(delBin);
     hdr.appendChild(left);hdr.appendChild(right);
     hdr.setAttribute('data-id', String(idea.id));
     hdr.addEventListener('click',function(e){if(e.target.tagName==='A'||e.target.tagName==='BUTTON')return;expandIdea(this.getAttribute('data-id'));});
